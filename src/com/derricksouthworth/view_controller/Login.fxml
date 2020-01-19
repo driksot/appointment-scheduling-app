@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="270.0" prefWidth="300.0" stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.LoginController">
     <children>
-        <Label alignment="CENTER" layoutX="38.0" layoutY="6.0" styleClass="header" text="Welcome" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label fx:id="lblLogInTitle" alignment="CENTER" layoutX="38.0" layoutY="6.0" styleClass="header" text="Welcome" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <font>
                 <Font name="System Bold" size="36.0" />
             </font>
@@ -24,8 +24,8 @@
             <children>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <Label text="User Name" HBox.hgrow="ALWAYS" />
-                        <TextField HBox.hgrow="ALWAYS" />
+                        <Label fx:id="lblUserName" text="User Name" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="txtUserName" HBox.hgrow="ALWAYS" />
                     </children>
                     <padding>
                         <Insets left="20.0" right="20.0" />
@@ -36,8 +36,8 @@
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="24.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <Label text="Password" HBox.hgrow="ALWAYS" />
-                        <PasswordField HBox.hgrow="ALWAYS" />
+                        <Label fx:id="lblPassword" text="Password" HBox.hgrow="ALWAYS" />
+                        <PasswordField fx:id="pwdPassword" HBox.hgrow="ALWAYS" />
                     </children>
                     <padding>
                         <Insets left="20.0" right="20.0" />
@@ -45,11 +45,10 @@
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <Button mnemonicParsing="false" text="Sign In" />
+                        <Button fx:id="btnSignIn" mnemonicParsing="false" onAction="#submitSignIn" text="Sign In" />
                     </children>
                 </HBox>
             </children>
         </VBox>
     </children>
 </AnchorPane>
-
