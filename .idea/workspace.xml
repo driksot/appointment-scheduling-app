@@ -2,23 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/DAO/DBConnect.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/DAO/Query.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/DAO/UserDaoImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/model/Appointment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/model/City.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/model/Country.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/model/Customer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/model/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/utilities/TimeFiles.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/utilities/app.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/Login.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/Controller.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/schedulingapp/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/sample.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/Login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/Login.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/LoginController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +93,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dynamic.classpath" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Documents/appointment-scheduling-app" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="recentsLimit" value="5" />
   </component>
@@ -214,7 +200,8 @@
       <option name="presentableId" value="Default" />
       <updated>1359379246138</updated>
       <workItem from="1359379250712" duration="1302000" />
-      <workItem from="1579396806191" duration="3099000" />
+      <workItem from="1579396806191" duration="3417000" />
+      <workItem from="1579461864225" duration="103000" />
     </task>
     <servers />
   </component>
@@ -230,10 +217,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="237" key="#com.intellij.ide.util.MemberChooser/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1579398408008" />
-    <state x="740" y="276" key="FileChooserDialogImpl" timestamp="1579397106675">
+    <state x="740" y="276" key="FileChooserDialogImpl" timestamp="1579462196855">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="276" key="FileChooserDialogImpl/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1579397106675" />
+    <state x="740" y="276" key="FileChooserDialogImpl/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1579462196855" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
