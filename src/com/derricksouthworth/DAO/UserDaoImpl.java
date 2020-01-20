@@ -19,7 +19,7 @@ import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
 
 public class UserDaoImpl {
     /**
-     * Handles Read task for CRUD for all User Objects
+     * Handles READ task for CRUD on all User Objects
      * @return
      * @throws SQLException
      * @throws ParseException
