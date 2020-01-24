@@ -3,28 +3,33 @@
  */
 
 .header {
-    -fx-background-color: #454749;
-    -fx-text-fill: white;
+    -fx-background-color: #1D4D4F;
+    -fx-text-fill: #E5DFDF;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0.0, 0, 1);
 }
 
 .button {
     -fx-background-color: transparent;
-    -fx-text-fill: white;
+    -fx-text-fill: #E5DFDF;
 }
 
 .button:hover {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0.0, 0, 1);
-    -fx-background-color: #909090;
+    -fx-background-color: #6BA8A9;
 }
 
 .button:pressed {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.7), 5, 0.0, 0, 1);
-    -fx-background-color: #909090;
+    -fx-background-color: #6BA8A9;
 }
 
-.active {
-    -fx-background-color: #909090;
+.nav {
+    -fx-background-color: #1D4D4F;
+    -fx-text-fill: #E5DFDF;
+}
+
+.default-pane {
+    -fx-background-color: #E5DFDF;
 }
 
 .text-field {
@@ -38,12 +43,12 @@
 
 .table-view .column-header,
 .table-view .column-header-background .filler {
-    -fx-background-color:  #454749;
-    -fx-border-color: white;
+    -fx-background-color:  #357376;
+    -fx-border-color: #E5DFDF;
 }
 
 .table-view .column-header .label {
-    -fx-text-fill: white;
+    -fx-text-fill: #E5DFDF;
 }
 
 .combo-box-base {
@@ -55,10 +60,10 @@
 }
 
 .myDialog:header *.header-panel {
-    -fx-background-color: #454749;
+    -fx-background-color: #6BA8A9;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0.0, 0, 1);
 }
 
 .myDialog:header *.header-panel *.label {
-    -fx-text-fill: white;
+    -fx-text-fill: #E5DFDF;
 }

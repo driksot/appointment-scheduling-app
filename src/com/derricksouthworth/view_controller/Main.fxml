@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.MainController">
+<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.MainController">
    <left>
-      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #707070;" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="100.0" styleClass="nav" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="btn_appointments" mnemonicParsing="false" onMouseClicked="#appointments" prefHeight="40.0" prefWidth="101.0" text="Appointments">
                <VBox.margin>
@@ -36,12 +36,15 @@
          <effect>
             <DropShadow />
          </effect>
+         <padding>
+            <Insets top="30.0" />
+         </padding>
       </VBox>
    </left>
    <top>
       <HBox BorderPane.alignment="CENTER" />
    </top>
    <center>
-      <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #909090;" BorderPane.alignment="CENTER" />
+      <Pane prefHeight="200.0" prefWidth="200.0" styleClass="default-pane" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
