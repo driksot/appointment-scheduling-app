@@ -2,11 +2,9 @@ package com.derricksouthworth.DAO;
 
 import com.derricksouthworth.model.City;
 import com.derricksouthworth.model.Customer;
-import com.derricksouthworth.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -14,7 +12,6 @@ import java.util.Calendar;
 
 import static com.derricksouthworth.DAO.CityDaoImpl.getCity;
 import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
-import static com.derricksouthworth.DAO.DBConnect.conn;
 
 /**
  * Implement CRUD for Customer Objects
@@ -92,7 +89,24 @@ public class CustomerDaoImpl {
         DBConnect.closeConnection();
     }
 
-    public static void addCustomer() {
-
+    /**
+     * Handles CREATE task for given Customer Object
+     * @param customer
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
+    public static void addCustomer(Customer customer) throws SQLException, ClassNotFoundException {
+        DBConnect.makeConnection();
+        String sqlStatement = "INSERT INTO customer (customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) " +
+                "VALUES (" + customer.getCustomerID() + ", " +
+                customer.getCustomerName() + ", " +
+                "1, " + //TODO add addressId to Customer constructor
+                "1, " +
+                "NOW(), " +
+                "user, " + //TODO set createdBy to current user
+                "NOW(), " +
+                "user"; //TODO set lastUpdateBy to current user
+        Query.makeQuery(sqlStatement);
+        DBConnect.closeConnection();
     }
 }

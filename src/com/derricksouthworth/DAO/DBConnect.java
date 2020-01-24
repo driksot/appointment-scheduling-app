@@ -37,4 +37,8 @@ public class DBConnect {
         conn.close();
         System.out.println("Connection Closed");
     }
+
+    public static Connection getConn() {
+        return conn;
+    }
 }
