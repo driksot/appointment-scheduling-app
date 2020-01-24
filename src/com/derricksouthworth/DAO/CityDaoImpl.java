@@ -58,17 +58,18 @@ public class CityDaoImpl {
      */
     public static City getCity(String cityName) throws SQLException, ClassNotFoundException, ParseException {
         DBConnect.makeConnection();
-        String sqlStatement = "SELECT * FROM city WHERE cityName = '" + cityName + "'";
+        String sqlStatement = "SELECT * FROM city INNER JOIN country ON city.countryId = country.countryId WHERE city = '" + cityName + "'";
         Query.makeQuery(sqlStatement);
         ResultSet result = Query.getResult();
         while(result.next()) {
             int cityID = result.getInt("cityId");
+            String cityNameG = result.getString("city");
             Country country = getCountry(result.getString("country"));
             Calendar createDate = stringToCalendar(result.getString("createDate"));
             String createdBy = result.getString("createdBy");
             Calendar lastUpdate = stringToCalendar(result.getString("lastUpdate"));
             String lastUpdateBy = result.getString("lastUpdateBy");
-            City cityResult = new City(cityID, cityName, country, createDate, createdBy, lastUpdate, lastUpdateBy);
+            City cityResult = new City(cityID, cityNameG, country, createDate, createdBy, lastUpdate, lastUpdateBy);
             return cityResult;
         }
         DBConnect.closeConnection();

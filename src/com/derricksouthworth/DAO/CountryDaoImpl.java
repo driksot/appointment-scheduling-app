@@ -27,7 +27,7 @@ public class CountryDaoImpl {
 
     public static Country getCountry(String countryName) throws SQLException, ClassNotFoundException, ParseException {
         DBConnect.makeConnection();
-        String sqlStatement = "SELECT * FROM country WHERE countryName = '" + countryName + "'";
+        String sqlStatement = "SELECT * FROM country WHERE country = '" + countryName + "'";
         Query.makeQuery(sqlStatement);
         ResultSet result = Query.getResult();
         while(result.next()) {

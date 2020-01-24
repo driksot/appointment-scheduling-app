@@ -30,11 +30,14 @@ public class CustomerDaoImpl {
     public static ObservableList<Customer> getAllCustomers() throws SQLException, ClassNotFoundException, ParseException {
         DBConnect.makeConnection();
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
-        String sqlStatement = "SELECT * FROM customer";
+        String sqlStatement = "SELECT customer.customerId, customer.customerName, address.address, address.address2, city.city, address.postalCode, address.phone, customer.createDate, " +
+                "customer.createdBy, customer.lastUpdate, customer.lastUpdateBy " +
+                "FROM customer INNER JOIN address ON customer.addressId = address.addressId " +
+                "INNER JOIN city ON address.cityId = city.cityId";
         Query.makeQuery(sqlStatement);
         ResultSet result = Query.getResult();
         while(result.next()) {
-            int customerID = result.getInt("customerID");
+            int customerID = result.getInt("customerId");
             String customerName = result.getString("customerName");
             String address = result.getString("address");
             String address2 = result.getString("address2");
@@ -95,18 +98,30 @@ public class CustomerDaoImpl {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public static void addCustomer(Customer customer) throws SQLException, ClassNotFoundException {
+    public static void addCustomer(Customer customer) throws SQLException, ClassNotFoundException, ParseException {
         DBConnect.makeConnection();
-        String sqlStatement = "INSERT INTO customer (customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) " +
-                "VALUES (" + customer.getCustomerID() + ", " +
-                customer.getCustomerName() + ", " +
-                "1, " + //TODO add addressId to Customer constructor
-                "1, " +
-                "NOW(), " +
-                "user, " + //TODO set createdBy to current user
-                "NOW(), " +
-                "user"; //TODO set lastUpdateBy to current user
-        Query.makeQuery(sqlStatement);
+        String sqlStatementAddress = "INSERT INTO address " +
+                "SET addressId = '" + getAllCustomers().size() + 1 + "', " +
+                "address = '" + customer.getAddress() + "', " +
+                "address2 = '" + customer.getAddress2() + "', " +
+                "cityId = '" + customer.getCity().getCityID() + "', " +
+                "postalCode = '" + customer.getPostalCode() + "', " +
+                "phone = '" + customer.getPhone() + "', " +
+                "createDate = NOW(), " +
+                "createdBy = 'user', " +
+                "lastUpdate = NOW(), " +
+                "lastUpdateBy = 'user'";
+        Query.makeQuery(sqlStatementAddress);
+        String sqlStatementCustomer = "INSERT INTO customer " +
+                "SET customerId = '" + customer.getCustomerID() + "', " +
+                "customerName = '" + customer.getCustomerName() + "', " +
+                "addressId = '" + getAllCustomers().size() + 1 + "', " +
+                "active = 1, " +
+                "createDate = NOW(), " +
+                "createdBy = 'user', " +
+                "lastUpdate = NOW(), " +
+                "lastUpdateBy = 'user'";
+        Query.makeQuery(sqlStatementCustomer);
         DBConnect.closeConnection();
     }
 }
