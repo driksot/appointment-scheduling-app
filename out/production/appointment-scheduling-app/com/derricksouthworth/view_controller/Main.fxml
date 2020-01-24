@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.MainController">
+   <left>
+      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #707070;" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="btn_appointments" mnemonicParsing="false" onMouseClicked="#appointments" prefHeight="40.0" prefWidth="101.0" text="Appointments">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="btn_customers" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#customers" prefHeight="40.0" prefWidth="101.0" text="Customers">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="btn_reports" layoutX="10.0" layoutY="35.0" mnemonicParsing="false" onMouseClicked="#reports" prefHeight="40.0" prefWidth="101.0" text="Reports">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="btn_exit" layoutX="10.0" layoutY="60.0" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="40.0" prefWidth="101.0" text="Exit">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </VBox>
+   </left>
+   <top>
+      <HBox BorderPane.alignment="CENTER" />
+   </top>
+   <center>
+      <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #909090;" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>
