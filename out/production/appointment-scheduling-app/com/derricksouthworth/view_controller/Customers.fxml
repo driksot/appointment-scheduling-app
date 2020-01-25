@@ -11,9 +11,9 @@
    <children>
       <ButtonBar prefHeight="40.0" prefWidth="200.0" styleClass="nav">
         <buttons>
-          <Button fx:id="btnAddCustomer" mnemonicParsing="false" onMouseClicked="#addCustomer" text="New" />
-            <Button fx:id="btnUpdateCustomer" layoutX="505.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#updateCustomer" text="Edit" />
-            <Button fx:id="btnRemoveCustomer" layoutX="505.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#removeCustomer" text="Delete" />
+          <Button fx:id="btnAddCustomer" mnemonicParsing="false" onAction="#addCustomer" text="New" />
+            <Button fx:id="btnUpdateCustomer" layoutX="505.0" layoutY="18.0" mnemonicParsing="false" onAction="#updateCustomer" text="Edit" />
+            <Button fx:id="btnRemoveCustomer" layoutX="505.0" layoutY="18.0" mnemonicParsing="false" onAction="#removeCustomer" text="Delete" />
         </buttons>
          <VBox.margin>
             <Insets />

@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.AppointmentsController">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.AppointmentsController">
    <children>
       <ButtonBar prefHeight="40.0" prefWidth="200.0" styleClass="nav">
         <buttons>
-          <Button mnemonicParsing="false" text="New" />
-            <Button layoutX="535.0" layoutY="18.0" mnemonicParsing="false" text="Edit" />
-            <Button layoutX="535.0" layoutY="18.0" mnemonicParsing="false" text="Delete" />
+          <Button fx:id="btnAddAppointment" mnemonicParsing="false" onAction="#addAppointment" text="New" />
+            <Button fx:id="btnUpdateAppointment" layoutX="535.0" layoutY="18.0" mnemonicParsing="false" onAction="#updateAppointment" text="Edit" />
+            <Button fx:id="btnRemoveAppointment" layoutX="535.0" layoutY="18.0" mnemonicParsing="false" onAction="#removeAppointment" text="Delete" />
         </buttons>
          <padding>
             <Insets left="15.0" right="15.0" />
@@ -25,7 +25,7 @@
       </ButtonBar>
       <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" styleClass="default-pane" VBox.vgrow="ALWAYS">
          <children>
-            <TableView prefHeight="200.0" prefWidth="151.0">
+            <TableView fx:id="tblCustomer" prefHeight="200.0" prefWidth="151.0">
               <columns>
                 <TableColumn prefWidth="60.0" text="ID" />
                 <TableColumn prefWidth="90.0" text="Customer" />
@@ -37,13 +37,13 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TableView prefHeight="311.0" prefWidth="419.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TableView fx:id="tblMonthlyAppointments" prefHeight="311.0" prefWidth="419.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columns>
-                                  <TableColumn prefWidth="75.0" text="Type" />
-                                  <TableColumn prefWidth="75.0" text="Location" />
-                                    <TableColumn prefWidth="75.0" text="Contact" />
-                                    <TableColumn prefWidth="75.0" text="Start" />
-                                    <TableColumn prefWidth="75.0" text="End" />
+                                  <TableColumn fx:id="colMAppointmentType" prefWidth="75.0" text="Type" />
+                                  <TableColumn fx:id="colMAppointmentLocation" prefWidth="75.0" text="Location" />
+                                    <TableColumn fx:id="colMAppointmentContact" prefWidth="75.0" text="Contact" />
+                                    <TableColumn fx:id="colMAppointmentStart" prefWidth="75.0" text="Start" />
+                                    <TableColumn fx:id="colMAppointmentEnd" prefWidth="75.0" text="End" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -60,13 +60,13 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TableView prefHeight="311.0" prefWidth="419.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TableView fx:id="tblWeeklyAppointments" prefHeight="311.0" prefWidth="419.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columns>
-                                  <TableColumn prefWidth="75.0" text="Type" />
-                                  <TableColumn prefWidth="75.0" text="Location" />
-                                    <TableColumn prefWidth="75.0" text="Contact" />
-                                    <TableColumn prefWidth="75.0" text="Start" />
-                                    <TableColumn prefWidth="75.0" text="End" />
+                                  <TableColumn fx:id="colWAppointmentType" prefWidth="75.0" text="Type" />
+                                  <TableColumn fx:id="colWAppointmentLocation" prefWidth="75.0" text="Location" />
+                                    <TableColumn fx:id="colWAppointmentContact" prefWidth="75.0" text="Contact" />
+                                    <TableColumn fx:id="colWAppointmentStart" prefWidth="75.0" text="Start" />
+                                    <TableColumn fx:id="colWAppointmentEnd" prefWidth="75.0" text="End" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

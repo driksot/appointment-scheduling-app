@@ -16,7 +16,7 @@ public class Customer {
     private String customerName;
     private String address;
     private String address2;
-    private City city;
+    private String city;
     private String postalCode;
     private String phone;
     private Calendar createDate;
@@ -38,7 +38,7 @@ public class Customer {
      * @param lastUpdate
      * @param lastUpdateBy
      */
-    public Customer(int customerID, String customerName, String address, String address2, City city, String postalCode, String phone, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdateBy) {
+    public Customer(int customerID, String customerName, String address, String address2, String city, String postalCode, String phone, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdateBy) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.address = address;
@@ -92,7 +92,7 @@ public class Customer {
         return address2;
     }
 
-    public City getCity() {
+    public String getCity() {
         return city;
     }
 
@@ -142,7 +142,7 @@ public class Customer {
         this.address2 = address2;
     }
 
-    public void setCity(City city) {
+    public void setCity(String city) {
         this.city = city;
     }
 

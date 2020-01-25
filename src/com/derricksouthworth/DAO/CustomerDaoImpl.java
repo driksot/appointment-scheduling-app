@@ -41,7 +41,7 @@ public class CustomerDaoImpl {
             String customerName = result.getString("customerName");
             String address = result.getString("address");
             String address2 = result.getString("address2");
-            City city = getCity(result.getString("city"));
+            String city = result.getString("city");
             String postalCode = result.getString("postalCode");
             String phone = result.getString("phone");
             Calendar createDate = stringToCalendar(result.getString("createDate"));
@@ -104,7 +104,7 @@ public class CustomerDaoImpl {
                 "SET addressId = '" + getAllCustomers().size() + 1 + "', " +
                 "address = '" + customer.getAddress() + "', " +
                 "address2 = '" + customer.getAddress2() + "', " +
-                "cityId = '" + customer.getCity().getCityID() + "', " +
+                "cityId = '" + getCity(customer.getCity()).getCityID() + "', " +
                 "postalCode = '" + customer.getPostalCode() + "', " +
                 "phone = '" + customer.getPhone() + "', " +
                 "createDate = NOW(), " +

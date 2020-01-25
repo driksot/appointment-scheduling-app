@@ -1,16 +1,13 @@
 package com.derricksouthworth.view_controller;
 
-import com.derricksouthworth.DAO.CustomerDaoImpl;
-import com.derricksouthworth.DAO.DBConnect;
 import com.derricksouthworth.model.Customer;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -60,22 +57,18 @@ public class CustomersController implements Initializable {
     private TableColumn<Customer, String> colCustomerPhone;
 
     @FXML
-    void addCustomer(MouseEvent event) {
+    void addCustomer(ActionEvent event) {
+        
+    }
+
+    @FXML
+    void removeCustomer(ActionEvent event) {
 
     }
 
     @FXML
-    void removeCustomer(MouseEvent event) {
+    void updateCustomer(ActionEvent event) {
 
-    }
-
-    @FXML
-    void updateCustomer(MouseEvent event) {
-
-    }
-
-    public void populateCustomerTable() throws ParseException, SQLException, ClassNotFoundException {
-        tblCustomers.setItems(getAllCustomers());
     }
 
     @Override
