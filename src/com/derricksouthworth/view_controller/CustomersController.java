@@ -1,6 +1,10 @@
 package com.derricksouthworth.view_controller;
 
+import com.derricksouthworth.DAO.CustomerDaoImpl;
+import com.derricksouthworth.model.City;
 import com.derricksouthworth.model.Customer;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,6 +17,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ResourceBundle;
 
+import static com.derricksouthworth.DAO.CityDaoImpl.getAllCities;
 import static com.derricksouthworth.DAO.CustomerDaoImpl.getAllCustomers;
 
 /**
@@ -101,13 +106,35 @@ public class CustomersController implements Initializable {
     private TextField txtAddCustomerAddress2;
 
     @FXML
-    private TextField txtAddCustomerCity;
+    private ComboBox<String> cmbAddCustomerCity;
+
+    @FXML
+    private Button btnAddCity;
 
     @FXML
     private TextField txtAddCustomerPostalCode;
 
     @FXML
     private TextField txtAddCustomerPhone;
+
+    private ObservableList<String> cities;
+
+    {
+        try {
+            cities = getCities();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void addCity(ActionEvent event) {
+
+    }
 
     @FXML
     void addCustomer(ActionEvent event) {
@@ -131,11 +158,34 @@ public class CustomersController implements Initializable {
 
     @FXML
     void confirmAddCustomer(ActionEvent event) {
-
+        int customerID = Integer.parseInt(txtAddCustomerID.getText());
+        String customerName = txtAddCustomerName.getText();
+        String address = txtAddCustomerAddress.getText();
+        String address2 = txtAddCustomerAddress2.getText();
+        String city = cmbAddCustomerCity.getSelectionModel().getSelectedItem();
+        int cityID = cmbAddCustomerCity.getSelectionModel().getSelectedIndex() + 1;
+        String postalCode = txtAddCustomerPostalCode.getText();
+        String phone = txtAddCustomerPhone.getText();
+        // TODO validate input
+        Customer customer = new Customer(customerID, customerName, address, address2, city, postalCode, phone);
+        try {
+            CustomerDaoImpl.addCustomer(customer, cityID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        loadMainTable();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        loadMainTable();
+    }
+
+    private void loadMainTable() {
         loadMain();
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colCustomerAddress1.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -162,6 +212,16 @@ public class CustomersController implements Initializable {
 
     private void loadAdd() {
         vboxAddCustomer.toFront();
+        cmbAddCustomerCity.setItems(cities);
+    }
+
+    private ObservableList<String> getCities() throws ParseException, SQLException, ClassNotFoundException {
+        ObservableList<City> allCities = getAllCities();
+        ObservableList<String> result = FXCollections.observableArrayList();
+        for (City city : allCities) {
+            result.add(city.getCityName());
+        }
+        return result;
     }
 }
 

@@ -1,12 +1,22 @@
 package com.derricksouthworth.view_controller;
 
+import com.derricksouthworth.model.Customer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
-public class AppointmentsController {
+import java.net.URL;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ResourceBundle;
+
+import static com.derricksouthworth.DAO.CustomerDaoImpl.getAllCustomers;
+
+public class AppointmentsController implements Initializable {
 
     @FXML
     private Button btnAddAppointment;
@@ -18,7 +28,13 @@ public class AppointmentsController {
     private Button btnRemoveAppointment;
 
     @FXML
-    private TableView<?> tblCustomer;
+    private TableView<Customer> tblCustomer;
+
+    @FXML
+    private TableColumn<Customer, Integer> colCustomerID;
+
+    @FXML
+    private TableColumn<Customer, String> colCustomerName;
 
     @FXML
     private TableView<?> tblMonthlyAppointments;
@@ -71,5 +87,20 @@ public class AppointmentsController {
 
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        colCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+
+        try {
+            tblCustomer.setItems(getAllCustomers());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
