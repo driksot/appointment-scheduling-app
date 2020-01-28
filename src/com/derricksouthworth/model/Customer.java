@@ -52,6 +52,26 @@ public class Customer {
         this.lastUpdateBy = lastUpdateBy;
     }
 
+    /**
+     * Constructor
+     * @param customerID
+     * @param customerName
+     * @param address
+     * @param address2
+     * @param city
+     * @param postalCode
+     * @param phone
+     */
+    public Customer(int customerID, String customerName, String address, String address2, String city, String postalCode, String phone) {
+        this.customerID = customerID;
+        this.customerName = customerName;
+        this.address = address;
+        this.address2 = address2;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.phone = phone;
+    }
+
     // Add Appointment Object to customerAppointments list
     public void addCustomerAppointment(Appointment appointment) {
         customerAppointments.add(appointment);
@@ -168,5 +188,11 @@ public class Customer {
 
     public void setLastUpdateBy(String lastUpdateBy) {
         this.lastUpdateBy = lastUpdateBy;
+    }
+
+    public static boolean isValidCustomerName(String customerName) {
+        if(!customerName.matches("[A-Z]+([ '-][a-zA-Z]+)*")) return false;
+        if(customerName.length() == 0) return false;
+        return true;
     }
 }

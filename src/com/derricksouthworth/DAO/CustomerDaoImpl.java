@@ -1,6 +1,5 @@
 package com.derricksouthworth.DAO;
 
-import com.derricksouthworth.model.City;
 import com.derricksouthworth.model.Customer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -56,6 +55,42 @@ public class CustomerDaoImpl {
     }
 
     /**
+     * Handles READ task for desired Customer Object
+     * @param customerName
+     * @return
+     * @throws SQLException
+     * @throws ParseException
+     * @throws ClassNotFoundException
+     */
+    public static Customer getCustomer(String customerName) throws SQLException, ParseException, ClassNotFoundException {
+        DBConnect.makeConnection();
+        ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+        String sqlStatement = "SELECT customer.customerId, address.address, address.address2, city.city, address.postalCode, address.phone, customer.createDate, " +
+                "customer.createdBy, customer.lastUpdate, customer.lastUpdateBy " +
+                "FROM customer INNER JOIN address ON customer.addressId = address.addressId " +
+                "INNER JOIN city ON address.cityId = city.cityId " +
+                "WHERE customer.customerName = " + customerName;
+        Query.makeQuery(sqlStatement);
+        ResultSet result = Query.getResult();
+        while(result.next()) {
+            int customerID = result.getInt("customerId");
+            String address = result.getString("address");
+            String address2 = result.getString("address2");
+            String city = result.getString("city");
+            String postalCode = result.getString("postalCode");
+            String phone = result.getString("phone");
+            Calendar createDate = stringToCalendar(result.getString("createDate"));
+            String createdBy = result.getString("createdBy");
+            Calendar lastUpdate = stringToCalendar(result.getString("lastUpdate"));
+            String lastUpdateBy = result.getString("lastUpdateBy");
+            Customer customerResult = new Customer(customerID, customerName, address, address2, city, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy);
+            return customerResult;
+        }
+        DBConnect.closeConnection();
+        return null;
+    }
+
+    /**
      * Handles UPDATE task for given Customer Object
      * @param customer
      * @throws SQLException
@@ -98,13 +133,13 @@ public class CustomerDaoImpl {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public static void addCustomer(Customer customer) throws SQLException, ClassNotFoundException, ParseException {
+    public static void addCustomer(Customer customer, int cityID) throws SQLException, ClassNotFoundException, ParseException {
         DBConnect.makeConnection();
         String sqlStatementAddress = "INSERT INTO address " +
                 "SET addressId = '" + getAllCustomers().size() + 1 + "', " +
                 "address = '" + customer.getAddress() + "', " +
                 "address2 = '" + customer.getAddress2() + "', " +
-                "cityId = '" + getCity(customer.getCity()).getCityID() + "', " +
+                "cityId = '" + cityID + "', " +
                 "postalCode = '" + customer.getPostalCode() + "', " +
                 "phone = '" + customer.getPhone() + "', " +
                 "createDate = NOW(), " +
