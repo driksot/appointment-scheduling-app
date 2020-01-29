@@ -20,35 +20,43 @@ import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
 
 public class CustomerDaoImpl {
     /**
+     * Take results from ResultSet and Construct Customer
+     * @param result
+     * @param customerName
+     * @return
+     * @throws SQLException
+     * @throws ParseException
+     */
+    private static Customer buildCustomer(ResultSet result, String customerName) throws SQLException, ParseException {
+        int customerID = result.getInt(Query.COLUMN_CUSTOMER_ID);
+        String address = result.getString(Query.COLUMN_ADDRESS);
+        String address2 = result.getString(Query.COLUMN_ADDRESS_2);
+        String city = result.getString(Query.COLUMN_CITY_NAME);
+        String postalCode = result.getString(Query.COLUMN_POSTAL_CODE);
+        String phone = result.getString(Query.COLUMN_PHONE);
+        Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
+        String createdBy = result.getString(Query.COLUMN_CREATED_BY);
+        Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
+        String lastUpdateBy = result.getString(Query.COLUMN_LAST_UPDATE_BY);
+        Customer customerResult = new Customer(customerID, customerName, address, address2, city, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy);
+        return customerResult;
+    }
+
+    /**
      * Handles READ task for all Customer Objects
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException
      * @throws ParseException
      */
-    public static ObservableList<Customer> getAllCustomers() throws SQLException, ClassNotFoundException, ParseException {
+    public static ObservableList<Customer> getAllCustomers() throws SQLException, ParseException {
         DBConnect.makeConnection();
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
-        String sqlStatement = "SELECT customer.customerId, customer.customerName, address.address, address.address2, city.city, address.postalCode, address.phone, customer.createDate, " +
-                "customer.createdBy, customer.lastUpdate, customer.lastUpdateBy " +
-                "FROM customer INNER JOIN address ON customer.addressId = address.addressId " +
-                "INNER JOIN city ON address.cityId = city.cityId";
+        String sqlStatement = Query.QUERY_GET_ALL_CUSTOMERS;
         Query.makeQuery(sqlStatement);
         ResultSet result = Query.getResult();
         while(result.next()) {
-            int customerID = result.getInt("customerId");
-            String customerName = result.getString("customerName");
-            String address = result.getString("address");
-            String address2 = result.getString("address2");
-            String city = result.getString("city");
-            String postalCode = result.getString("postalCode");
-            String phone = result.getString("phone");
-            Calendar createDate = stringToCalendar(result.getString("createDate"));
-            String createdBy = result.getString("createdBy");
-            Calendar lastUpdate = stringToCalendar(result.getString("lastUpdate"));
-            String lastUpdateBy = result.getString("lastUpdateBy");
-            Customer customerResult = new Customer(customerID, customerName, address, address2, city, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy);
-            allCustomers.add(customerResult);
+            String customerName = result.getString(Query.COLUMN_CUSTOMER_NAME);
+            allCustomers.add(buildCustomer(result, customerName));
         }
         DBConnect.closeConnection();
         return allCustomers;
@@ -60,31 +68,18 @@ public class CustomerDaoImpl {
      * @return
      * @throws SQLException
      * @throws ParseException
-     * @throws ClassNotFoundException
      */
-    public static Customer getCustomer(String customerName) throws SQLException, ParseException, ClassNotFoundException {
+    public static Customer getCustomer(String customerName) throws SQLException, ParseException {
         DBConnect.makeConnection();
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
-        String sqlStatement = "SELECT customer.customerId, address.address, address.address2, city.city, address.postalCode, address.phone, customer.createDate, " +
-                "customer.createdBy, customer.lastUpdate, customer.lastUpdateBy " +
-                "FROM customer INNER JOIN address ON customer.addressId = address.addressId " +
-                "INNER JOIN city ON address.cityId = city.cityId " +
-                "WHERE customer.customerName = " + customerName;
+        StringBuilder sb = new StringBuilder(Query.QUERY_GET_CUSTOMER);
+        sb.append(customerName);
+        sb.append("\"");
+        String sqlStatement = sb.toString();
         Query.makeQuery(sqlStatement);
         ResultSet result = Query.getResult();
         while(result.next()) {
-            int customerID = result.getInt("customerId");
-            String address = result.getString("address");
-            String address2 = result.getString("address2");
-            String city = result.getString("city");
-            String postalCode = result.getString("postalCode");
-            String phone = result.getString("phone");
-            Calendar createDate = stringToCalendar(result.getString("createDate"));
-            String createdBy = result.getString("createdBy");
-            Calendar lastUpdate = stringToCalendar(result.getString("lastUpdate"));
-            String lastUpdateBy = result.getString("lastUpdateBy");
-            Customer customerResult = new Customer(customerID, customerName, address, address2, city, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy);
-            return customerResult;
+            return buildCustomer(result, customerName);
         }
         DBConnect.closeConnection();
         return null;

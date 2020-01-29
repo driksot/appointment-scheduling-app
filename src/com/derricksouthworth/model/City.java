@@ -10,7 +10,7 @@ import java.util.Calendar;
 public class City {
     private int cityID;
     private String cityName;
-    private Country country;
+    private String country;
     private Calendar createDate;
     private String createdBy;
     private Calendar lastUpdate;
@@ -26,7 +26,7 @@ public class City {
      * @param lastUpdate
      * @param lastUpdateBy
      */
-    public City(int cityID, String cityName, Country country, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdateBy) {
+    public City(int cityID, String cityName, String country, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdateBy) {
         this.cityID = cityID;
         this.cityName = cityName;
         this.country = country;
@@ -46,7 +46,7 @@ public class City {
         return cityName;
     }
 
-    public Country getCountry() {
+    public String getCountry() {
         return country;
     }
 
@@ -76,7 +76,7 @@ public class City {
         this.cityName = cityName;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(String country) {
         this.country = country;
     }
 

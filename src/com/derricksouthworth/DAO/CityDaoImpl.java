@@ -1,7 +1,6 @@
 package com.derricksouthworth.DAO;
 
 import com.derricksouthworth.model.City;
-import com.derricksouthworth.model.Country;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,7 +9,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Calendar;
 
-import static com.derricksouthworth.DAO.CountryDaoImpl.getCountry;
 import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
 
 /**
@@ -21,29 +19,40 @@ import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
 
 public class CityDaoImpl {
     /**
+     * Take results from ResultSet and Construct City
+     * @param result
+     * @param cityName
+     * @return
+     * @throws SQLException
+     * @throws ParseException
+     */
+    private static City buildCity(ResultSet result, String cityName) throws SQLException, ParseException {
+        int cityID = result.getInt(Query.COLUMN_CITY_ID);
+        String country = result.getString(Query.COLUMN_COUNTRY_NAME);
+        Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
+        String createdBy = result.getString(Query.COLUMN_CREATED_BY);
+        Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
+        String lastUpdateBy = result.getString(Query.COLUMN_LAST_UPDATE_BY);
+        City cityResult = new City(cityID, cityName, country, createDate, createdBy, lastUpdate, lastUpdateBy);
+        return cityResult;
+    }
+
+    /**
      * Handles READ task for CRUD on all City Objects
      * @return
      * @throws SQLException
      * @throws ClassNotFoundException
      * @throws ParseException
      */
-    public static ObservableList<City> getAllCities() throws SQLException, ClassNotFoundException, ParseException {
+    public static ObservableList<City> getAllCities() throws SQLException, ParseException {
         DBConnect.makeConnection();
         ObservableList<City> allCities = FXCollections.observableArrayList();
-        String sqlStatement = "SELECT city.cityId, city.city, country.country, city.createDate, city.createdBy, city.lastUpdate, city.lastUpdateBy " +
-                "FROM city INNER JOIN country ON city.countryId = country.countryId";
+        String sqlStatement = Query.QUERY_GET_ALL_CITIES;
         Query.makeQuery(sqlStatement);
         ResultSet result = Query.getResult();
         while(result.next()) {
-            int cityID = result.getInt("cityId");
-            String cityName = result.getString("city");
-            Country country = getCountry(result.getString("country"));
-            Calendar createDate = stringToCalendar(result.getString("createDate"));
-            String createdBy = result.getString("createdBy");
-            Calendar lastUpdate = stringToCalendar(result.getString("lastUpdate"));
-            String lastUpdateBy = result.getString("lastUpdateBy");
-            City cityResult = new City(cityID, cityName, country, createDate, createdBy, lastUpdate, lastUpdateBy);
-            allCities.add(cityResult);
+            String cityName = result.getString(Query.COLUMN_CITY_NAME);
+            allCities.add(buildCity(result, cityName));
         }
         DBConnect.closeConnection();
         return allCities;
@@ -57,22 +66,17 @@ public class CityDaoImpl {
      * @throws ClassNotFoundException
      * @throws ParseException
      */
-    public static City getCity(String cityName) throws SQLException, ClassNotFoundException, ParseException {
+    public static City getCity(String cityName) throws SQLException, ParseException {
         DBConnect.makeConnection();
         City cityResult;
-        String sqlStatement = "SELECT * FROM city INNER JOIN country ON city.countryId = country.countryId WHERE city = '" + cityName + "'";
+        StringBuilder sb = new StringBuilder(Query.QUERY_GET_CITY);
+        sb.append(cityName);
+        sb.append("\"");
+        String sqlStatement = sb.toString();
         Query.makeQuery(sqlStatement);
         ResultSet result = Query.getResult();
         while(result.next()) {
-            int cityID = result.getInt("cityId");
-            String cityNameG = result.getString("city");
-            Country country = getCountry(result.getString("country"));
-            Calendar createDate = stringToCalendar(result.getString("createDate"));
-            String createdBy = result.getString("createdBy");
-            Calendar lastUpdate = stringToCalendar(result.getString("lastUpdate"));
-            String lastUpdateBy = result.getString("lastUpdateBy");
-            cityResult = new City(cityID, cityNameG, country, createDate, createdBy, lastUpdate, lastUpdateBy);
-            return cityResult;
+            return buildCity(result, cityName);
         }
         DBConnect.closeConnection();
         return null;

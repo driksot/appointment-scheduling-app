@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.CustomersController">
+<StackPane stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.CustomersController">
    <children>
       <VBox fx:id="vboxCustomerMain" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="600.0" stylesheets="@../utilities/app.css">
          <children>
@@ -39,7 +39,6 @@
                 <TableColumn fx:id="colCustomerAddress1" prefWidth="75.0" text="Address 1" />
                   <TableColumn fx:id="colCustomerAddress2" prefWidth="75.0" text="Address 2" />
                   <TableColumn fx:id="colCustomerCity" prefWidth="75.0" text="City" />
-                  <TableColumn fx:id="colCustomerCountry" prefWidth="75.0" text="Country" />
                   <TableColumn fx:id="colCustomerPostalCode" prefWidth="75.0" text="ZIP" />
                   <TableColumn fx:id="colCustomerPhone" prefWidth="75.0" text="Phone" />
               </columns>
@@ -104,7 +103,7 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <TextField fx:id="txtAddCustomerID" />
+                                    <TextField fx:id="txtAddCustomerID" editable="false" />
                                     <TextField fx:id="txtAddCustomerName" GridPane.rowIndex="1" />
                                     <TextField fx:id="txtAddCustomerAddress" GridPane.rowIndex="2" />
                                     <TextField fx:id="txtAddCustomerAddress2" GridPane.rowIndex="3" />

@@ -96,8 +96,6 @@ public class AppointmentsController implements Initializable {
             tblCustomer.setItems(getAllCustomers());
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }

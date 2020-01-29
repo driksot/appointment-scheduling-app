@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<StackPane stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.AppointmentsController">
+<StackPane stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.AppointmentsController">
    <children>
       <VBox fx:id="vboxAppointmentsMain" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
          <children>

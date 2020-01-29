@@ -1,6 +1,7 @@
 package com.derricksouthworth.view_controller;
 
 import com.derricksouthworth.DAO.CustomerDaoImpl;
+import com.derricksouthworth.DAO.Query;
 import com.derricksouthworth.model.City;
 import com.derricksouthworth.model.Customer;
 import javafx.collections.FXCollections;
@@ -126,8 +127,6 @@ public class CustomersController implements Initializable {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
     }
 
@@ -137,8 +136,9 @@ public class CustomersController implements Initializable {
     }
 
     @FXML
-    void addCustomer(ActionEvent event) {
+    void addCustomer(ActionEvent event) throws SQLException, ParseException {
         loadAdd();
+        txtAddCustomerID.setText(Integer.toString(getAllCustomers().size() + 1));
     }
 
     @FXML
@@ -187,19 +187,16 @@ public class CustomersController implements Initializable {
 
     private void loadMainTable() {
         loadMain();
-        colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        colCustomerAddress1.setCellValueFactory(new PropertyValueFactory<>("address"));
-        colCustomerAddress2.setCellValueFactory(new PropertyValueFactory<>("address2"));
-        colCustomerCity.setCellValueFactory(new PropertyValueFactory<>("city"));
-        colCustomerCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
-        colCustomerPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
-        colCustomerPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        colCustomerName.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_CUSTOMER_NAME));
+        colCustomerAddress1.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_ADDRESS));
+        colCustomerAddress2.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_ADDRESS_2));
+        colCustomerCity.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_CITY_NAME));
+        colCustomerPostalCode.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_POSTAL_CODE));
+        colCustomerPhone.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_PHONE));
 
         try {
             tblCustomers.setItems(getAllCustomers());
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
@@ -215,7 +212,7 @@ public class CustomersController implements Initializable {
         cmbAddCustomerCity.setItems(cities);
     }
 
-    private ObservableList<String> getCities() throws ParseException, SQLException, ClassNotFoundException {
+    private ObservableList<String> getCities() throws ParseException, SQLException {
         ObservableList<City> allCities = getAllCities();
         ObservableList<String> result = FXCollections.observableArrayList();
         for (City city : allCities) {

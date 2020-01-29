@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.CustomersController">
+<StackPane stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.CustomersController">
    <children>
       <VBox fx:id="vboxCustomerMain" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="600.0" stylesheets="@../utilities/app.css">
          <children>
@@ -39,7 +39,6 @@
                 <TableColumn fx:id="colCustomerAddress1" prefWidth="75.0" text="Address 1" />
                   <TableColumn fx:id="colCustomerAddress2" prefWidth="75.0" text="Address 2" />
                   <TableColumn fx:id="colCustomerCity" prefWidth="75.0" text="City" />
-                  <TableColumn fx:id="colCustomerCountry" prefWidth="75.0" text="Country" />
                   <TableColumn fx:id="colCustomerPostalCode" prefWidth="75.0" text="ZIP" />
                   <TableColumn fx:id="colCustomerPhone" prefWidth="75.0" text="Phone" />
               </columns>
@@ -104,13 +103,22 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <TextField fx:id="txtAddCustomerID" />
+                                    <TextField fx:id="txtAddCustomerID" editable="false" />
                                     <TextField fx:id="txtAddCustomerName" GridPane.rowIndex="1" />
                                     <TextField fx:id="txtAddCustomerAddress" GridPane.rowIndex="2" />
                                     <TextField fx:id="txtAddCustomerAddress2" GridPane.rowIndex="3" />
                                     <TextField fx:id="txtAddCustomerPostalCode" GridPane.rowIndex="5" />
                                     <TextField fx:id="txtAddCustomerPhone" GridPane.rowIndex="6" />
-                                    <ComboBox fx:id="cmbAddCustomerCity" maxWidth="1.7976931348623157E308" style="-fx-background-color: #E5DFDF; -fx-border-color: #BCBCBC;" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
+                                    <ComboBox fx:id="cmbAddCustomerCity" maxWidth="1.7976931348623157E308" style="-fx-background-color: #E5DFDF; -fx-border-color: #BCBCBC;" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
+                                       <GridPane.margin>
+                                          <Insets right="85.0" />
+                                       </GridPane.margin>
+                                    </ComboBox>
+                                    <Button fx:id="btnAddCity" alignment="CENTER" maxWidth="-Infinity" minWidth="65.0" mnemonicParsing="false" onAction="#addCity" prefWidth="80.0" style="-fx-background-color: #1D4D4F;" text="Add City" GridPane.rowIndex="4">
+                                       <GridPane.margin>
+                                          <Insets left="275.0" />
+                                       </GridPane.margin>
+                                    </Button>
                                  </children>
                               </GridPane>
                            </children>

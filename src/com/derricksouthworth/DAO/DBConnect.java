@@ -19,23 +19,30 @@ public class DBConnect {
     //Password:  53688186170
 
     static Connection conn;
-    private static final String databaseName = "U04aFY";
-    private static final String DB_URL = "jdbc:mysql://3.227.166.251/" + databaseName;
-    private static final String username = "U04aFY";
-    private static final String password = "53688186170";
-    private static final String driver = "com.mysql.jdbc.Driver";
+    private static final String DATABASE_NAME = "U04aFY";
+    private static final String DB_URL = "jdbc:mysql://3.227.166.251/" + DATABASE_NAME;
+    private static final String USERNAME = "U04aFY";
+    private static final String PASSWORD = "53688186170";
+    private static final String DRIVER = "com.mysql.jdbc.Driver";
 
     // Connect to database
-    public static void makeConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(driver);
-        conn = (Connection) DriverManager.getConnection(DB_URL, username, password);
-        System.out.println("Connection Successful");
+    public static boolean makeConnection() {
+        try {
+            conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Couldn't connect to database: " + e.getMessage());
+            return false;
+        }
     }
 
     // Disconnect from database
-    public static void closeConnection() throws SQLException {
-        conn.close();
-        System.out.println("Connection Closed");
+    public static void closeConnection() {
+        try {
+            if(conn != null) conn.close();
+        } catch (SQLException e) {
+            System.out.println("Couldn't close connection: " + e.getMessage());
+        }
     }
 
     public static Connection getConn() {
