@@ -73,17 +73,17 @@ public class CityDaoImpl {
      * @throws ParseException
      */
     public static City getCity(String cityName) throws SQLException, ParseException {
-        DBConnect.getInstance().makeConnection();
-        StringBuilder sb = new StringBuilder(Query.QUERY_GET_CITY);
-        sb.append(cityName);
-        sb.append("\"");
-        String sqlStatement = sb.toString();
-        Query.makeQuery(sqlStatement);
-        ResultSet result = Query.getResult();
-        while(result.next()) {
-            return buildCity(result, cityName);
-        }
-        DBConnect.getInstance().closeConnection();
+//        DBConnect.getInstance().makeConnection();
+//        StringBuilder sb = new StringBuilder(Query.QUERY_GET_CITY);
+//        sb.append(cityName);
+//        sb.append("\"");
+//        String sqlStatement = sb.toString();
+//        Query.makeQuery(sqlStatement);
+//        ResultSet result = Query.getResult();
+//        while(result.next()) {
+//            return buildCity(result, cityName);
+//        }
+//        DBConnect.getInstance().closeConnection();
         return null;
     }
 

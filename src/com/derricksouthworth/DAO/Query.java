@@ -113,53 +113,39 @@ public class Query {
                     TABLE_COUNTRY + "." + COLUMN_COUNTRY_ID + " WHERE " +
                     TABLE_CITY + "." + COLUMN_CITY_NAME + " = \"";
 
+    public static final String QUERY_GET_ALL_COUNTRIES =
+            "SELECT * FROM " + TABLE_COUNTRY;
+
+    public static final String INSERT_ADDRESS =
+            "INSERT INTO " + TABLE_ADDRESS + " SET " +
+                    COLUMN_ADDRESS_ID + " = ?, " +
+                    COLUMN_ADDRESS + " = ?, " +
+                    COLUMN_ADDRESS_2 + " = ?, " +
+                    COLUMN_CITY_ID + " = ?, " +
+                    COLUMN_POSTAL_CODE + " = ?, " +
+                    COLUMN_PHONE + " = ?, " +
+                    COLUMN_CREATE_DATE + " = NOW(), " +
+                    COLUMN_CREATED_BY + " = ?, " +
+                    COLUMN_LAST_UPDATE + " = NOW(), " +
+                    COLUMN_LAST_UPDATE_BY + " = ?";
+
+    public static final String INSERT_CUSTOMER =
+            "INSERT INTO " + TABLE_CUSTOMER + " SET " +
+                    COLUMN_CUSTOMER_ID + " = ?, " +
+                    COLUMN_CUSTOMER_NAME + " = ?, " +
+                    COLUMN_ADDRESS_ID + " = ?, " +
+                    COLUMN_CUSTOMER_ACTIVE + " = 1, " +
+                    COLUMN_CREATE_DATE + " = NOW(), " +
+                    COLUMN_CREATED_BY + " = ?, " +
+                    COLUMN_LAST_UPDATE + " = NOW(), " +
+                    COLUMN_LAST_UPDATE_BY + " = ?";
+
+    public static final String QUERY_MAX_ID_FROM_ADDRESS =
+            "SELECT MAX(" + COLUMN_ADDRESS_ID + ") FROM " + TABLE_ADDRESS;
+
     public static String buildQueryUser(String userName, String password) {
         return "SELECT * FROM " + TABLE_USER + " WHERE " +
                 COLUMN_USER_NAME + " = '" + userName + "' AND " +
                 COLUMN_USER_PASSWORD + " = '" + password + "'";
-    }
-
-    public static String buildQueryAddAddress(int addressID, String address, String address2, int cityID, String postalCode, String phone) {
-        return "INSERT INTO " + TABLE_ADDRESS + " SET " +
-                COLUMN_ADDRESS_ID + " = '" + addressID + "', " +
-                COLUMN_ADDRESS + " = '" + address + "', " +
-                COLUMN_ADDRESS_2 + " = '" + address2 + "', " +
-                COLUMN_CITY_ID + " = '" + cityID + "', " +
-                COLUMN_POSTAL_CODE + " = '" + postalCode + "', " +
-                COLUMN_PHONE + " = '" + phone + "', ";
-    }
-
-    public static String buildQueryAddCustomer(int customerID, String customerName, int addressID) {
-        return "INSERT INTO " + TABLE_CUSTOMER + " SET " +
-                COLUMN_CUSTOMER_ID + " = '" + customerID + "', " +
-                COLUMN_CUSTOMER_NAME + " = '" + customerName + "', " +
-                COLUMN_ADDRESS_ID + " = '" + addressID + "', " +
-                COLUMN_CUSTOMER_ACTIVE + " = 1, ";
-    }
-
-    private static String query;
-    private static Statement statement;
-    private static ResultSet result;
-
-    // Execute query or update depending on the first word of given query
-    public static void makeQuery(String q) {
-        query = q;
-        try {
-            statement = DBConnect.getInstance().getConn().createStatement();
-            if(query.toLowerCase().startsWith("select")) {
-                result = statement.executeQuery(q);
-            } else if(query.toLowerCase().startsWith("delete") ||
-                    query.toLowerCase().startsWith("update") ||
-                    query.toLowerCase().startsWith("insert")) {
-                statement.executeUpdate(q);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Getter
-    public static ResultSet getResult() {
-        return result;
     }
 }

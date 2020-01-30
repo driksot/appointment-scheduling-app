@@ -77,17 +77,17 @@ public class CustomerDaoImpl {
      * @throws ParseException
      */
     public static Customer getCustomer(String customerName) throws SQLException, ParseException {
-        DBConnect.getInstance().makeConnection();
-        StringBuilder sb = new StringBuilder(Query.QUERY_GET_CUSTOMER);
-        sb.append(customerName);
-        sb.append("\"");
-        String sqlStatement = sb.toString();
-        Query.makeQuery(sqlStatement);
-        ResultSet result = Query.getResult();
-        while(result.next()) {
-            return buildCustomer(result, customerName);
-        }
-        DBConnect.getInstance().closeConnection();
+//        DBConnect.getInstance().makeConnection();
+//        StringBuilder sb = new StringBuilder(Query.QUERY_GET_CUSTOMER);
+//        sb.append(customerName);
+//        sb.append("\"");
+//        String sqlStatement = sb.toString();
+//        Query.makeQuery(sqlStatement);
+//        ResultSet result = Query.getResult();
+//        while(result.next()) {
+//            return buildCustomer(result, customerName);
+//        }
+//        DBConnect.getInstance().closeConnection();
         return null;
     }
 
@@ -115,13 +115,15 @@ public class CustomerDaoImpl {
      */
     public static void deleteCustomer(int customerID) {
         try {
-            PreparedStatement ps = conn.prepareStatement(Query.DELETE_CUSTOMER);
-            ps.setInt(1, customerID);
+            PreparedStatement statement = conn.prepareStatement(Query.DELETE_CUSTOMER);
+            statement.setInt(1, customerID);
 
-            int rowsDeleted = ps.executeUpdate();
+            int rowsDeleted = statement.executeUpdate();
             if(rowsDeleted > 0) {
                 System.out.println("A customer was deleted successfully.");
             }
+            // TODO DELETE corresponding address record
+            statement.close();
         } catch (SQLException e) {
             System.out.println("Customer Delete failed: " + e.getMessage());
             e.printStackTrace();
@@ -133,21 +135,52 @@ public class CustomerDaoImpl {
      * @param customer
      */
     public static void addCustomer(Customer customer, int cityID) {
-        DBConnect.getInstance().makeConnection();
-        StringBuilder sbAddress = new StringBuilder(Query.buildQueryAddAddress(getAllCustomers().size() + 1,
-                customer.getAddress(), customer.getAddress2(), cityID, customer.getPostalCode(), customer.getPhone()));
-        sbAddress.append(Query.COLUMN_CREATE_DATE + " = NOW(), ");
-        sbAddress.append(Query.COLUMN_CREATED_BY + " = '" + currentUser + "', ");
-        sbAddress.append(Query.COLUMN_LAST_UPDATE + " = NOW(), ");
-        sbAddress.append(Query.COLUMN_LAST_UPDATE_BY + " = '" + currentUser + "'");
-        Query.makeQuery(sbAddress.toString());
-        StringBuilder sbCustomer = new StringBuilder(Query.buildQueryAddCustomer(customer.getCustomerID(),
-                customer.getCustomerName(), getAllCustomers().size() + 1));
-        sbCustomer.append(Query.COLUMN_CREATE_DATE + " = NOW(), ");
-        sbCustomer.append(Query.COLUMN_CREATED_BY + " = '" + currentUser + "', ");
-        sbCustomer.append(Query.COLUMN_LAST_UPDATE + " = NOW(), ");
-        sbCustomer.append(Query.COLUMN_LAST_UPDATE_BY + " = '" + currentUser + "'");
-        Query.makeQuery(sbCustomer.toString());
-        DBConnect.getInstance().closeConnection();
+        int maxAddressID = getMaxAddressID();
+        try {
+            PreparedStatement addressStatement = conn.prepareStatement(Query.INSERT_ADDRESS);
+            addressStatement.setInt(1, maxAddressID);
+            addressStatement.setString(2, customer.getAddress());
+            addressStatement.setString(3, customer.getAddress2());
+            addressStatement.setInt(4, cityID);
+            addressStatement.setString(5, customer.getPostalCode());
+            addressStatement.setString(6, customer.getPhone());
+            addressStatement.setString(7, currentUser);
+            addressStatement.setString(8, currentUser);
+            addressStatement.executeUpdate();
+
+            PreparedStatement customerStatement = conn.prepareStatement(Query.INSERT_CUSTOMER);
+            customerStatement.setInt(1, customer.getCustomerID());
+            customerStatement.setString(2, customer.getCustomerName());
+            customerStatement.setInt(3, maxAddressID);
+            customerStatement.setString(4, currentUser);
+            customerStatement.setString(5, currentUser);
+            customerStatement.executeUpdate();
+
+            addressStatement.close();
+            customerStatement.close();
+        } catch (SQLException e) {
+            System.out.println("Customer Addition failed: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Query to get new max ID for Address Table
+     * @return
+     */
+    private static int getMaxAddressID() {
+        int maxID = 0;
+        String sqlStatement = Query.QUERY_MAX_ID_FROM_ADDRESS;
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(sqlStatement);
+            if(result.next()) {
+                maxID = result.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Unable to get max address ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return maxID + 1;
     }
 }
