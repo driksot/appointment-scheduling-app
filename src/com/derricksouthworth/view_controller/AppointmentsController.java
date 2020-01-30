@@ -92,13 +92,7 @@ public class AppointmentsController implements Initializable {
         colCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
 
-        try {
-            tblCustomer.setItems(getAllCustomers());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        tblCustomer.setItems(getAllCustomers());
     }
 }
 

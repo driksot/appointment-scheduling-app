@@ -12,10 +12,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.derricksouthworth.DAO.CityDaoImpl.getAllCities;
@@ -42,6 +44,9 @@ public class CustomersController implements Initializable {
 
     @FXML
     private TableView<Customer> tblCustomers;
+
+    @FXML
+    private TableColumn<Customer, Integer> colCustomerID;
 
     @FXML
     private TableColumn<Customer, String> colCustomerName;
@@ -118,17 +123,7 @@ public class CustomersController implements Initializable {
     @FXML
     private TextField txtAddCustomerPhone;
 
-    private ObservableList<String> cities;
-
-    {
-        try {
-            cities = getCities();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    private ObservableList<String> cities = getCities();
 
     @FXML
     void addCity(ActionEvent event) {
@@ -143,7 +138,21 @@ public class CustomersController implements Initializable {
 
     @FXML
     void removeCustomer(ActionEvent event) {
+        int customerID = tblCustomers.getSelectionModel().getSelectedItem().getCustomerID();
 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Confirm Customer Record Deletion?");
+        alert.setContentText("Are you sure you want to delete this customer record?");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+            CustomerDaoImpl.deleteCustomer(customerID);
+            System.out.println("Customer record deleted.");
+        } else {
+            System.out.println("Canceled customer record deletion.");
+        }
     }
 
     @FXML
@@ -168,15 +177,7 @@ public class CustomersController implements Initializable {
         String phone = txtAddCustomerPhone.getText();
         // TODO validate input
         Customer customer = new Customer(customerID, customerName, address, address2, city, postalCode, phone);
-        try {
-            CustomerDaoImpl.addCustomer(customer, cityID);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        CustomerDaoImpl.addCustomer(customer, cityID);
         loadMainTable();
     }
 
@@ -187,20 +188,15 @@ public class CustomersController implements Initializable {
 
     private void loadMainTable() {
         loadMain();
-        colCustomerName.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_CUSTOMER_NAME));
-        colCustomerAddress1.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_ADDRESS));
-        colCustomerAddress2.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_ADDRESS_2));
-        colCustomerCity.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_CITY_NAME));
-        colCustomerPostalCode.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_POSTAL_CODE));
-        colCustomerPhone.setCellValueFactory(new PropertyValueFactory<>(Query.COLUMN_PHONE));
+        colCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        colCustomerAddress1.setCellValueFactory(new PropertyValueFactory<>("address"));
+        colCustomerAddress2.setCellValueFactory(new PropertyValueFactory<>("address2"));
+        colCustomerCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        colCustomerPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        colCustomerPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
 
-        try {
-            tblCustomers.setItems(getAllCustomers());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        tblCustomers.setItems(getAllCustomers());
     }
 
     private void loadMain() {
@@ -212,7 +208,7 @@ public class CustomersController implements Initializable {
         cmbAddCustomerCity.setItems(cities);
     }
 
-    private ObservableList<String> getCities() throws ParseException, SQLException {
+    private ObservableList<String> getCities() {
         ObservableList<City> allCities = getAllCities();
         ObservableList<String> result = FXCollections.observableArrayList();
         for (City city : allCities) {

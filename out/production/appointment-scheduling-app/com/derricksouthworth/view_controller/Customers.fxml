@@ -35,6 +35,7 @@
             </ButtonBar>
             <TableView fx:id="tblCustomers" prefHeight="200.0" prefWidth="200.0" styleClass="default-pane" VBox.vgrow="ALWAYS">
               <columns>
+                  <TableColumn fx:id="colCustomerID" prefWidth="75.0" text="ID" />
                 <TableColumn fx:id="colCustomerName" prefWidth="75.0" text="Name" />
                 <TableColumn fx:id="colCustomerAddress1" prefWidth="75.0" text="Address 1" />
                   <TableColumn fx:id="colCustomerAddress2" prefWidth="75.0" text="Address 2" />

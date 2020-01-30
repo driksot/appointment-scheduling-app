@@ -2,6 +2,9 @@ package com.derricksouthworth.view_controller;
 
 import com.derricksouthworth.DAO.DBConnect;
 import com.derricksouthworth.DAO.Query;
+import com.derricksouthworth.DAO.UserDaoImpl;
+import com.derricksouthworth.model.User;
+import com.derricksouthworth.schedulingapp.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,20 +45,11 @@ public class LoginController {
     private Button btnSignIn;
 
     @FXML
-    private void submitSignIn(ActionEvent event) throws SQLException, ClassNotFoundException, IOException {
-        DBConnect.makeConnection();
-        String userName = txtUserName.getText().trim();
-        String password = pwdPassword.getText().trim();
-        //String sqlStatement = "SELECT * FROM user WHERE userName = " + userName + " AND password = " + password;
-        //Query.makeQuery(sqlStatement);
-        //ResultSet result = Query.getResult();
-        String query = "SELECT * FROM user WHERE userName = ? AND password = ?";
-        Connection conn = DBConnect.getConn();
-        PreparedStatement ps = conn.prepareStatement(query);
-        ps.setString(1, userName);
-        ps.setString(2, password);
-        ResultSet result = ps.executeQuery();
-        if(result.next()) {
+    private void submitSignIn(ActionEvent event) throws IOException {
+        String userName = txtUserName.getText();
+        String password = txtUserName.getText();
+        boolean isValid = UserDaoImpl.login(userName, password);
+        if(isValid) {
             Stage stage = (Stage) btnSignIn.getScene().getWindow();
             Parent scene = FXMLLoader.load(getClass().getResource("Main.fxml"));
             stage.setScene(new Scene(scene));
@@ -67,7 +61,6 @@ public class LoginController {
             alert.setContentText("Incorrect username or password!");
             alert.showAndWait();
         }
-        DBConnect.closeConnection();
     }
 
 }
