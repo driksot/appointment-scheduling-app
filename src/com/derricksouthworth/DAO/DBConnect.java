@@ -2,6 +2,7 @@ package com.derricksouthworth.DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -25,10 +26,15 @@ public class DBConnect {
     private static final String PASSWORD = "53688186170";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
 
+    private PreparedStatement queryAllCustomers;
+    private PreparedStatement queryAllCities;
+
     // Connect to database
-    public static boolean makeConnection() {
+    public boolean makeConnection() {
         try {
             conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            queryAllCustomers = conn.prepareStatement(Query.QUERY_GET_ALL_CUSTOMERS);
+            queryAllCities = conn.prepareStatement(Query.QUERY_GET_ALL_CITIES);
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to database: " + e.getMessage());
@@ -37,9 +43,17 @@ public class DBConnect {
     }
 
     // Disconnect from database
-    public static void closeConnection() {
+    public void closeConnection() {
         try {
-            if(conn != null) conn.close();
+            if(queryAllCustomers != null) {
+                queryAllCustomers.close();
+            }
+            if(queryAllCities != null) {
+                queryAllCities.close();
+            }
+            if(conn != null) {
+                conn.close();
+            }
         } catch (SQLException e) {
             System.out.println("Couldn't close connection: " + e.getMessage());
         }
@@ -47,5 +61,15 @@ public class DBConnect {
 
     public static Connection getConn() {
         return conn;
+    }
+
+    private static DBConnect instance = new DBConnect();
+
+    private DBConnect() {
+
+    }
+
+    public static DBConnect getInstance() {
+        return instance;
     }
 }

@@ -36,6 +36,12 @@ public class User {
         this.lastUpdateBy = lastUpdateBy;
     }
 
+    public User(int userID, String userName, String password) {
+        this.userID = userID;
+        this.userName = userName;
+        this.password = password;
+    }
+
     // Getters
 
     public int getUserID() {

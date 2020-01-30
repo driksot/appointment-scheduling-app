@@ -4,8 +4,10 @@ import com.derricksouthworth.model.City;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.util.Calendar;
 
@@ -18,6 +20,9 @@ import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
  */
 
 public class CityDaoImpl {
+
+    private static Connection conn = DBConnect.getInstance().getConn();
+    private static ObservableList<City> allCities = FXCollections.observableArrayList();
     /**
      * Take results from ResultSet and Construct City
      * @param result
@@ -33,29 +38,31 @@ public class CityDaoImpl {
         String createdBy = result.getString(Query.COLUMN_CREATED_BY);
         Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
         String lastUpdateBy = result.getString(Query.COLUMN_LAST_UPDATE_BY);
-        City cityResult = new City(cityID, cityName, country, createDate, createdBy, lastUpdate, lastUpdateBy);
-        return cityResult;
+        City city = new City(cityID, cityName, country, createDate, createdBy, lastUpdate, lastUpdateBy);
+        return city;
     }
 
     /**
      * Handles READ task for CRUD on all City Objects
      * @return
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws ParseException
      */
-    public static ObservableList<City> getAllCities() throws SQLException, ParseException {
-        DBConnect.makeConnection();
-        ObservableList<City> allCities = FXCollections.observableArrayList();
-        String sqlStatement = Query.QUERY_GET_ALL_CITIES;
-        Query.makeQuery(sqlStatement);
-        ResultSet result = Query.getResult();
-        while(result.next()) {
-            String cityName = result.getString(Query.COLUMN_CITY_NAME);
-            allCities.add(buildCity(result, cityName));
+    public static ObservableList<City> getAllCities() {
+        allCities.clear();
+        try {
+            Statement statement = conn.createStatement();
+            String sqlStatement = Query.QUERY_GET_ALL_CITIES;
+            ResultSet result = statement.executeQuery(sqlStatement);
+            while(result.next()) {
+                String cityName = result.getString(Query.COLUMN_CITY_NAME);
+                allCities.add(buildCity(result, cityName));
+            }
+            result.close();
+            statement.close();
+            return allCities;
+        } catch (SQLException | ParseException e) {
+            e.printStackTrace();
+            return null;
         }
-        DBConnect.closeConnection();
-        return allCities;
     }
 
     /**
@@ -63,12 +70,10 @@ public class CityDaoImpl {
      * @param cityName
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException
      * @throws ParseException
      */
     public static City getCity(String cityName) throws SQLException, ParseException {
-        DBConnect.makeConnection();
-        City cityResult;
+        DBConnect.getInstance().makeConnection();
         StringBuilder sb = new StringBuilder(Query.QUERY_GET_CITY);
         sb.append(cityName);
         sb.append("\"");
@@ -78,12 +83,8 @@ public class CityDaoImpl {
         while(result.next()) {
             return buildCity(result, cityName);
         }
-        DBConnect.closeConnection();
+        DBConnect.getInstance().closeConnection();
         return null;
-    }
-
-    public static void updateCity() {
-
     }
 
     /**
@@ -93,23 +94,23 @@ public class CityDaoImpl {
      * @throws ClassNotFoundException
      */
     public static void deleteCity(City city) throws SQLException, ClassNotFoundException {
-        DBConnect.makeConnection();
-        String sqlStatement = "DELETE FROM city WHERE cityId = '" + city.getCityID() + "'";
-        Query.makeQuery(sqlStatement);
-        DBConnect.closeConnection();
+//        DBConnect.makeConnection();
+//        String sqlStatement = "DELETE FROM city WHERE cityId = '" + city.getCityID() + "'";
+//        Query.makeQuery(sqlStatement);
+//        DBConnect.closeConnection();
     }
 
     public static void addCity(City city, int countryID) throws SQLException, ClassNotFoundException, ParseException {
-        DBConnect.makeConnection();
-        String sqlStatement = "INSERT INTO city " +
-                "SET cityId = '" + getAllCities().size() + 1 + "', " +
-                "city = '" + city.getCityName() + "', " +
-                "countryId = " + countryID + "', " +
-                "createDate = NOW(), " +
-                "createdBy = user, " +
-                "lastUpdate = NOW(), " +
-                "lastUpdateBy = user";
-        Query.makeQuery(sqlStatement);
-        DBConnect.closeConnection();
+//        DBConnect.makeConnection();
+//        String sqlStatement = "INSERT INTO city " +
+//                "SET cityId = '" + getAllCities().size() + 1 + "', " +
+//                "city = '" + city.getCityName() + "', " +
+//                "countryId = " + countryID + "', " +
+//                "createDate = NOW(), " +
+//                "createdBy = user, " +
+//                "lastUpdate = NOW(), " +
+//                "lastUpdateBy = user";
+//        Query.makeQuery(sqlStatement);
+//        DBConnect.closeConnection();
     }
 }
