@@ -148,8 +148,9 @@ public class CustomersController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get() == ButtonType.OK) {
+            System.out.println("Customer record deletion confirmed.");
             CustomerDaoImpl.deleteCustomer(customerID);
-            System.out.println("Customer record deleted.");
+            loadMainTable();
         } else {
             System.out.println("Canceled customer record deletion.");
         }

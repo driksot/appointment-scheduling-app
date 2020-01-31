@@ -73,21 +73,20 @@ public class CustomerDaoImpl {
      * Handles READ task for desired Customer Object
      * @param customerName
      * @return
-     * @throws SQLException
-     * @throws ParseException
      */
-    public static Customer getCustomer(String customerName) throws SQLException, ParseException {
-//        DBConnect.getInstance().makeConnection();
-//        StringBuilder sb = new StringBuilder(Query.QUERY_GET_CUSTOMER);
-//        sb.append(customerName);
-//        sb.append("\"");
-//        String sqlStatement = sb.toString();
-//        Query.makeQuery(sqlStatement);
-//        ResultSet result = Query.getResult();
-//        while(result.next()) {
-//            return buildCustomer(result, customerName);
-//        }
-//        DBConnect.getInstance().closeConnection();
+    public static Customer getCustomer(String customerName) {
+        try {
+            Statement statement = conn.createStatement();
+            StringBuilder sqlStatement = new StringBuilder(Query.QUERY_GET_CUSTOMER);
+            sqlStatement.append(customerName);
+            sqlStatement.append("\"");
+            ResultSet result = statement.executeQuery(sqlStatement.toString());
+            if(result.next()) {
+                return buildCustomer(result, customerName);
+            }
+        } catch (SQLException | ParseException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -95,14 +94,19 @@ public class CustomerDaoImpl {
      * Handles UPDATE task for given Customer Object
      * @param customer
      */
-    public static void updateCustomer(Customer customer, int addressID) {
+    public static void updateCustomer(Customer customer) {
         try {
-            PreparedStatement ps = conn.prepareStatement(Query.UPDATE_CUSTOMER);
-            ps.setString(1, customer.getCustomerName());
-            ps.setInt(2, addressID);
-            ps.setString(3, currentUser);
-            ps.setInt(4, customer.getCustomerID());
-            ps.executeUpdate();
+            PreparedStatement statement = conn.prepareStatement(Query.UPDATE_CUSTOMER);
+            statement.setString(1, customer.getCustomerName());
+            statement.setString(2, customer.getAddress());
+            statement.setString(3, customer.getAddress2());
+            statement.setString(4, customer.getPostalCode());
+            statement.setString(5, customer.getPhone());
+            statement.setString(6, currentUser);
+            statement.setString(7, currentUser);
+            statement.setInt(8, customer.getCustomerID());
+            statement.executeUpdate();
+            statement.close();
         } catch (SQLException e) {
             System.out.println("Customer Update failed: " + e.getMessage());
             e.printStackTrace();
@@ -120,12 +124,11 @@ public class CustomerDaoImpl {
 
             int rowsDeleted = statement.executeUpdate();
             if(rowsDeleted > 0) {
-                System.out.println("A customer was deleted successfully.");
+                System.out.println("Customer record was deleted successfully.");
             }
-            // TODO DELETE corresponding address record
             statement.close();
         } catch (SQLException e) {
-            System.out.println("Customer Delete failed: " + e.getMessage());
+            System.out.println("Customer Record Delete failed: " + e.getMessage());
             e.printStackTrace();
         }
     }

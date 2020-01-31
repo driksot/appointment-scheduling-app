@@ -79,14 +79,25 @@ public class Query {
                     TABLE_CITY + "." + COLUMN_CITY_ID;
 
     public static final String UPDATE_CUSTOMER =
-            "INSERT INTO " + TABLE_CUSTOMER + " SET " +
-                    COLUMN_CUSTOMER_NAME + " = ?, " + COLUMN_ADDRESS_ID + " = ?, " +
-                    COLUMN_CUSTOMER_ACTIVE + " = 1, " +
-                    COLUMN_LAST_UPDATE + " = NOW(), " +  COLUMN_LAST_UPDATE_BY +
-                    " = ? WHERE " + COLUMN_CUSTOMER_ID + " = ?";
+            "UPDATE " + TABLE_CUSTOMER + ", " + TABLE_ADDRESS + " SET " +
+                    TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_NAME + " = ?, " +
+                    TABLE_ADDRESS + "." + COLUMN_ADDRESS + " = ?, " +
+                    TABLE_ADDRESS + "." + COLUMN_ADDRESS_2 + " = ?, " +
+                    TABLE_ADDRESS + "." + COLUMN_POSTAL_CODE + " = ?, " +
+                    TABLE_ADDRESS + "." + COLUMN_PHONE + " = ?, " +
+                    TABLE_CUSTOMER + "." + COLUMN_LAST_UPDATE + " = NOW(), " +
+                    TABLE_CUSTOMER + "." + COLUMN_LAST_UPDATE_BY + " = ?, " +
+                    TABLE_ADDRESS + "." + COLUMN_LAST_UPDATE + " = NOW(), " +
+                    TABLE_ADDRESS + "." + COLUMN_LAST_UPDATE_BY + " = ?, " + " WHERE " +
+                    TABLE_CUSTOMER + "." + COLUMN_ADDRESS_ID + " = " +
+                    TABLE_ADDRESS + "." + COLUMN_ADDRESS_ID + " AND " +
+                    TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_ID + " = ?";
 
     public static final String DELETE_CUSTOMER =
-            "DELETE FROM " + TABLE_CUSTOMER + " WHERE " +
+            "DELETE " + TABLE_CUSTOMER + ", " + TABLE_ADDRESS +
+                    " FROM " + TABLE_CUSTOMER + " INNER JOIN " + TABLE_ADDRESS + " ON " +
+                    TABLE_CUSTOMER + "." + COLUMN_ADDRESS_ID + " = " +
+                    TABLE_ADDRESS + "." + COLUMN_ADDRESS_ID + " WHERE " +
                     COLUMN_CUSTOMER_ID + " = ?";
 
     public static final String QUERY_GET_ALL_CITIES =
