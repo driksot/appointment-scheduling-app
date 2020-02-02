@@ -16,9 +16,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.CustomersController">
+<StackPane prefHeight="700.0" prefWidth="900.0" stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.CustomersController">
    <children>
-      <VBox fx:id="vboxCustomerMain" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="600.0" stylesheets="@../utilities/app.css">
+      <VBox fx:id="vboxCustomerMain" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="700.0" prefWidth="900.0" stylesheets="@../utilities/app.css">
          <children>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" styleClass="nav">
               <buttons>
@@ -55,7 +55,7 @@
             </TableView>
          </children>
       </VBox>
-      <VBox fx:id="vboxAddCustomer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+      <VBox fx:id="vboxAddCustomer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="900.0">
          <children>
             <ButtonBar prefHeight="40.0" prefWidth="200.0" styleClass="nav">
               <buttons>
@@ -68,7 +68,7 @@
             </ButtonBar>
             <Pane styleClass="default-pane" VBox.vgrow="ALWAYS">
                <children>
-                  <HBox alignment="CENTER" prefHeight="360.0" prefWidth="600.0">
+                  <HBox alignment="CENTER" prefHeight="660.0" prefWidth="900.0">
                      <children>
                         <VBox prefHeight="200.0" prefWidth="200.0">
                            <HBox.margin>
@@ -125,6 +125,87 @@
                            </children>
                         </VBox>
                      </children>
+                     <padding>
+                        <Insets bottom="270.0" left="150.0" right="150.0" top="70.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+      <VBox fx:id="vboxModifyCustomer" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="700.0" prefWidth="900.0">
+         <children>
+            <ButtonBar prefHeight="40.0" prefWidth="200.0" styleClass="nav">
+               <buttons>
+                  <Button fx:id="btnConfirmModCustomer" mnemonicParsing="false" onAction="#confirmModCustomer" text="Confirm" />
+                  <Button fx:id="btnCancelModCustomer" layoutX="535.0" layoutY="18.0" mnemonicParsing="false" onAction="#cancelModCustomer" text="Cancel" />
+               </buttons>
+               <padding>
+                  <Insets left="15.0" right="15.0" />
+               </padding>
+            </ButtonBar>
+            <Pane styleClass="default-pane" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="660.0" prefWidth="900.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="200.0">
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                           <children>
+                              <Label fx:id="lblCustomerIDMod" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Customer ID" textFill="#1d4d4f" VBox.vgrow="ALWAYS" />
+                              <Label fx:id="lblCustomerNameMod" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Customer Name" textFill="#1d4d4f" VBox.vgrow="ALWAYS" />
+                              <Label fx:id="lblAddressMod" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Address" textFill="#1d4d4f" VBox.vgrow="ALWAYS" />
+                              <Label fx:id="lblAddress2Mod" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Address (Cont.)" textFill="#1d4d4f" VBox.vgrow="ALWAYS" />
+                              <Label fx:id="lblCityMod" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="City" textFill="#1d4d4f" VBox.vgrow="ALWAYS" />
+                              <Label fx:id="lblPostalCodeMod" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Postal Code" textFill="#1d4d4f" VBox.vgrow="ALWAYS" />
+                              <Label fx:id="lblPhoneMod" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Phone Number" textFill="#1d4d4f" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                           <children>
+                              <GridPane VBox.vgrow="ALWAYS">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="20.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <TextField fx:id="txtModCustomerID" editable="false" />
+                                    <TextField fx:id="txtModCustomerName" GridPane.rowIndex="1" />
+                                    <TextField fx:id="txtModCustomerAddress" GridPane.rowIndex="2" />
+                                    <TextField fx:id="txtModCustomerAddress2" GridPane.rowIndex="3" />
+                                    <TextField fx:id="txtModCustomerPostalCode" GridPane.rowIndex="5" />
+                                    <TextField fx:id="txtModCustomerPhone" GridPane.rowIndex="6" />
+                                    <ComboBox fx:id="cmbModCustomerCity" maxWidth="1.7976931348623157E308" style="-fx-background-color: #E5DFDF; -fx-border-color: #BCBCBC;" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
+                                       <GridPane.margin>
+                                          <Insets right="85.0" />
+                                       </GridPane.margin>
+                                    </ComboBox>
+                                    <Button fx:id="btnModCity" alignment="CENTER" maxWidth="-Infinity" minWidth="65.0" mnemonicParsing="false" onAction="#addCity" prefWidth="80.0" style="-fx-background-color: #1D4D4F;" text="Add City" GridPane.rowIndex="4">
+                                       <GridPane.margin>
+                                          <Insets left="275.0" />
+                                       </GridPane.margin>
+                                    </Button>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="270.0" left="150.0" right="150.0" top="70.0" />
+                     </padding>
                   </HBox>
                </children>
             </Pane>

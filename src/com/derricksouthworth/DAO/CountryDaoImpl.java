@@ -4,8 +4,7 @@ import com.derricksouthworth.model.Country;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.ParseException;
 import java.util.Calendar;
 
@@ -18,28 +17,49 @@ import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
  */
 
 public class CountryDaoImpl {
-    public static ObservableList<Country> getAllCountries() throws SQLException, ClassNotFoundException {
-        DBConnect.getInstance().makeConnection();
-        ObservableList<Country> allCountries = FXCollections.observableArrayList();
-        DBConnect.getInstance().closeConnection();
-        return allCountries;
+
+    private static Connection conn = DBConnect.getInstance().getConn();
+    private static String currentUser = UserDaoImpl.getCurrentUser().getUserName();
+    private static ObservableList<Country> allCountries = FXCollections.observableArrayList();
+
+    private static Country buildCountry(ResultSet result, String countryName) throws SQLException, ParseException {
+        int countryID = result.getInt(Query.COLUMN_COUNTRY_ID);
+        Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
+        String createdBy = result.getString(Query.COLUMN_CREATED_BY);
+        Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
+        String lastUpdateBy = result.getString(Query.COLUMN_LAST_UPDATE_BY);
+        Country country = new Country(countryID, countryName, createDate, createdBy, lastUpdate, lastUpdateBy);
+        return country;
     }
 
-    public static Country getCountry(String countryName) throws SQLException, ClassNotFoundException, ParseException {
-//        DBConnect.makeConnection();
-//        String sqlStatement = "SELECT * FROM country WHERE country = '" + countryName + "'";
-//        Query.makeQuery(sqlStatement);
-//        ResultSet result = Query.getResult();
-//        while(result.next()) {
-//            int countryID = result.getInt("countryId");
-//            Calendar createDate = stringToCalendar(result.getString("createDate"));
-//            String createdBy = result.getString("createdBy");
-//            Calendar lastUpdate = stringToCalendar(result.getString("lastUpdate"));
-//            String lastUpdateBy = result.getString("lastUpdateBy");
-//            Country countryResult = new Country(countryID, countryName, createDate, createdBy, lastUpdate, lastUpdateBy);
-//            return countryResult;
-//        }
-//        DBConnect.closeConnection();
+    public static ObservableList<Country> getAllCountries() {
+        allCountries.clear();
+        try {
+            Statement statement = conn.createStatement();
+            String sqlStatement = Query.QUERY_GET_ALL_COUNTRIES;
+            ResultSet result = statement.executeQuery(sqlStatement);
+            while(result.next()) {
+                String countryName = result.getString(Query.COLUMN_COUNTRY_NAME);
+                allCountries.add(buildCountry(result, countryName));
+            }
+            return allCountries;
+        } catch (SQLException | ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Country getCountry(String countryName) {
+        try {
+            Statement statement = conn.createStatement();
+            String sqlStatement = String.format("%s%s\"", Query.QUERY_GET_COUNTRY, countryName);
+            ResultSet result = statement.executeQuery(sqlStatement);
+            if(result.next()) {
+                return buildCountry(result, countryName);
+            }
+        } catch (ParseException | SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

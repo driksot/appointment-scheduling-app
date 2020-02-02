@@ -8,26 +8,26 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.MainController">
+<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../utilities/app.css" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.MainController">
    <left>
-      <VBox prefHeight="200.0" prefWidth="100.0" styleClass="nav" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="100.0" styleClass="side-bar" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btn_appointments" mnemonicParsing="false" onMouseClicked="#appointments" prefHeight="40.0" prefWidth="101.0" text="Appointments">
+            <Button fx:id="btnAppointments" mnemonicParsing="false" onMouseClicked="#appointments" prefHeight="40.0" prefWidth="101.0" styleClass="side-bar" text="Appointments">
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="btn_customers" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#customers" prefHeight="40.0" prefWidth="101.0" text="Customers">
+            <Button fx:id="btnCustomers" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#customers" prefHeight="40.0" prefWidth="101.0" styleClass="side-bar" text="Customers">
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="btn_reports" layoutX="10.0" layoutY="35.0" mnemonicParsing="false" onMouseClicked="#reports" prefHeight="40.0" prefWidth="101.0" text="Reports">
+            <Button fx:id="btnReports" layoutX="10.0" layoutY="35.0" mnemonicParsing="false" onMouseClicked="#reports" prefHeight="40.0" prefWidth="101.0" styleClass="side-bar" text="Reports">
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin>
             </Button>
-            <Button fx:id="btn_exit" layoutX="10.0" layoutY="60.0" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="40.0" prefWidth="101.0" text="Exit">
+            <Button fx:id="btnExit" layoutX="10.0" layoutY="60.0" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="40.0" prefWidth="101.0" styleClass="side-bar" text="Exit">
                <VBox.margin>
                   <Insets top="15.0" />
                </VBox.margin>
@@ -45,6 +45,6 @@
       <HBox BorderPane.alignment="CENTER" />
    </top>
    <center>
-      <Pane prefHeight="200.0" prefWidth="200.0" styleClass="default-pane" BorderPane.alignment="CENTER" />
+      <Pane styleClass="default-pane" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

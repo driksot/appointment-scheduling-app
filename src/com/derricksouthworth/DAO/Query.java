@@ -42,24 +42,6 @@ public class Query {
     public static final String COLUMN_LAST_UPDATE = "lastUpdate";
     public static final String COLUMN_LAST_UPDATE_BY = "lastUpdateBy";
 
-    public static final String QUERY_GET_CUSTOMER =
-            "SELECT " + TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_ID + ", " +
-                    TABLE_ADDRESS + "." + COLUMN_ADDRESS + ", " +
-                    TABLE_ADDRESS + "." + COLUMN_ADDRESS_2 + ", " +
-                    TABLE_CITY + "." + COLUMN_CITY_NAME + ", " +
-                    TABLE_ADDRESS + "." + COLUMN_POSTAL_CODE + ", " +
-                    TABLE_ADDRESS + "." + COLUMN_PHONE + ", " +
-                    TABLE_CUSTOMER + "." + COLUMN_CREATE_DATE + ", " +
-                    TABLE_CUSTOMER + "." + COLUMN_CREATED_BY + ", " +
-                    TABLE_CUSTOMER + "." + COLUMN_LAST_UPDATE + ", " +
-                    TABLE_CUSTOMER + "." + COLUMN_LAST_UPDATE_BY + " FROM " +
-                    TABLE_CUSTOMER + " INNER JOIN " + TABLE_ADDRESS + " ON " +
-                    TABLE_CUSTOMER + "." + COLUMN_ADDRESS_ID + " = " +
-                    TABLE_ADDRESS + "." + COLUMN_ADDRESS_ID + " INNER JOIN " +
-                    TABLE_CITY + " ON " + TABLE_ADDRESS + "." + COLUMN_CITY_ID + " = " +
-                    TABLE_CITY + "." + COLUMN_CITY_ID + " WHERE " +
-                    TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_NAME + " = \"";
-
     public static final String QUERY_GET_ALL_CUSTOMERS =
             "SELECT " + TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_ID + ", " +
                     TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_NAME + ", " +
@@ -78,8 +60,28 @@ public class Query {
                     TABLE_CITY + " ON " + TABLE_ADDRESS + "." + COLUMN_CITY_ID + " = " +
                     TABLE_CITY + "." + COLUMN_CITY_ID;
 
+    public static final String QUERY_GET_CUSTOMER =
+            "SELECT " + TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_ID + ", " +
+                    TABLE_ADDRESS + "." + COLUMN_ADDRESS + ", " +
+                    TABLE_ADDRESS + "." + COLUMN_ADDRESS_2 + ", " +
+                    TABLE_CITY + "." + COLUMN_CITY_NAME + ", " +
+                    TABLE_ADDRESS + "." + COLUMN_POSTAL_CODE + ", " +
+                    TABLE_ADDRESS + "." + COLUMN_PHONE + ", " +
+                    TABLE_CUSTOMER + "." + COLUMN_CREATE_DATE + ", " +
+                    TABLE_CUSTOMER + "." + COLUMN_CREATED_BY + ", " +
+                    TABLE_CUSTOMER + "." + COLUMN_LAST_UPDATE + ", " +
+                    TABLE_CUSTOMER + "." + COLUMN_LAST_UPDATE_BY + " FROM " +
+                    TABLE_CUSTOMER + " INNER JOIN " + TABLE_ADDRESS + " ON " +
+                    TABLE_CUSTOMER + "." + COLUMN_ADDRESS_ID + " = " +
+                    TABLE_ADDRESS + "." + COLUMN_ADDRESS_ID + " INNER JOIN " +
+                    TABLE_CITY + " ON " + TABLE_ADDRESS + "." + COLUMN_CITY_ID + " = " +
+                    TABLE_CITY + "." + COLUMN_CITY_ID + " WHERE " +
+                    TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_NAME + " = \"";
+
     public static final String UPDATE_CUSTOMER =
-            "UPDATE " + TABLE_CUSTOMER + ", " + TABLE_ADDRESS + " SET " +
+            "UPDATE " + TABLE_CUSTOMER + " INNER JOIN " + TABLE_ADDRESS + " ON " +
+                    TABLE_CUSTOMER + "." + COLUMN_ADDRESS_ID + " = " +
+                    TABLE_ADDRESS + "." + COLUMN_ADDRESS_ID + " SET " +
                     TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_NAME + " = ?, " +
                     TABLE_ADDRESS + "." + COLUMN_ADDRESS + " = ?, " +
                     TABLE_ADDRESS + "." + COLUMN_ADDRESS_2 + " = ?, " +
@@ -88,9 +90,7 @@ public class Query {
                     TABLE_CUSTOMER + "." + COLUMN_LAST_UPDATE + " = NOW(), " +
                     TABLE_CUSTOMER + "." + COLUMN_LAST_UPDATE_BY + " = ?, " +
                     TABLE_ADDRESS + "." + COLUMN_LAST_UPDATE + " = NOW(), " +
-                    TABLE_ADDRESS + "." + COLUMN_LAST_UPDATE_BY + " = ?, " + " WHERE " +
-                    TABLE_CUSTOMER + "." + COLUMN_ADDRESS_ID + " = " +
-                    TABLE_ADDRESS + "." + COLUMN_ADDRESS_ID + " AND " +
+                    TABLE_ADDRESS + "." + COLUMN_LAST_UPDATE_BY + " = ?" + " WHERE " +
                     TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_ID + " = ?";
 
     public static final String DELETE_CUSTOMER =
@@ -99,6 +99,30 @@ public class Query {
                     TABLE_CUSTOMER + "." + COLUMN_ADDRESS_ID + " = " +
                     TABLE_ADDRESS + "." + COLUMN_ADDRESS_ID + " WHERE " +
                     COLUMN_CUSTOMER_ID + " = ?";
+
+    public static final String INSERT_ADDRESS =
+            "INSERT INTO " + TABLE_ADDRESS + " SET " +
+                    COLUMN_ADDRESS_ID + " = ?, " +
+                    COLUMN_ADDRESS + " = ?, " +
+                    COLUMN_ADDRESS_2 + " = ?, " +
+                    COLUMN_CITY_ID + " = ?, " +
+                    COLUMN_POSTAL_CODE + " = ?, " +
+                    COLUMN_PHONE + " = ?, " +
+                    COLUMN_CREATE_DATE + " = NOW(), " +
+                    COLUMN_CREATED_BY + " = ?, " +
+                    COLUMN_LAST_UPDATE + " = NOW(), " +
+                    COLUMN_LAST_UPDATE_BY + " = ?";
+
+    public static final String INSERT_CUSTOMER =
+            "INSERT INTO " + TABLE_CUSTOMER + " SET " +
+                    COLUMN_CUSTOMER_ID + " = ?, " +
+                    COLUMN_CUSTOMER_NAME + " = ?, " +
+                    COLUMN_ADDRESS_ID + " = ?, " +
+                    COLUMN_CUSTOMER_ACTIVE + " = 1, " +
+                    COLUMN_CREATE_DATE + " = NOW(), " +
+                    COLUMN_CREATED_BY + " = ?, " +
+                    COLUMN_LAST_UPDATE + " = NOW(), " +
+                    COLUMN_LAST_UPDATE_BY + " = ?";
 
     public static final String QUERY_GET_ALL_CITIES =
             "SELECT " + TABLE_CITY + "." + COLUMN_CITY_ID + ", " +
@@ -124,28 +148,38 @@ public class Query {
                     TABLE_COUNTRY + "." + COLUMN_COUNTRY_ID + " WHERE " +
                     TABLE_CITY + "." + COLUMN_CITY_NAME + " = \"";
 
-    public static final String QUERY_GET_ALL_COUNTRIES =
-            "SELECT * FROM " + TABLE_COUNTRY;
+    public static final String DELETE_CITY =
+            "DELETE FROM " + TABLE_CITY + " WHERE " +
+                    COLUMN_CITY_ID + " = ?";
 
-    public static final String INSERT_ADDRESS =
-            "INSERT INTO " + TABLE_ADDRESS + " SET " +
-                    COLUMN_ADDRESS_ID + " = ?, " +
-                    COLUMN_ADDRESS + " = ?, " +
-                    COLUMN_ADDRESS_2 + " = ?, " +
+    public static final String INSERT_CITY =
+            "INSERT INTO " + TABLE_CITY + " SET " +
                     COLUMN_CITY_ID + " = ?, " +
-                    COLUMN_POSTAL_CODE + " = ?, " +
-                    COLUMN_PHONE + " = ?, " +
+                    COLUMN_CITY_NAME + " = ?, " +
+                    COLUMN_COUNTRY_ID + " = ?, " +
                     COLUMN_CREATE_DATE + " = NOW(), " +
                     COLUMN_CREATED_BY + " = ?, " +
                     COLUMN_LAST_UPDATE + " = NOW(), " +
                     COLUMN_LAST_UPDATE_BY + " = ?";
 
-    public static final String INSERT_CUSTOMER =
-            "INSERT INTO " + TABLE_CUSTOMER + " SET " +
-                    COLUMN_CUSTOMER_ID + " = ?, " +
-                    COLUMN_CUSTOMER_NAME + " = ?, " +
-                    COLUMN_ADDRESS_ID + " = ?, " +
-                    COLUMN_CUSTOMER_ACTIVE + " = 1, " +
+    public static final String QUERY_GET_ALL_COUNTRIES =
+            "SELECT * FROM " + TABLE_COUNTRY;
+
+    public static final String QUERY_GET_COUNTRY =
+            "SELECT * FROM " + TABLE_COUNTRY + " WHERE " +
+                    COLUMN_COUNTRY_NAME + " = \"";
+
+    public static final String DELETE_COUNTRY =
+            "DELETE FROM " + TABLE_COUNTRY + " WHERE " +
+                    COLUMN_COUNTRY_ID + " = ?";
+
+    public static final String UPDATE_COUNTRY =
+            "";
+
+    public static final String INSERT_COUNTRY =
+            "INSERT INTO " + TABLE_COUNTRY + " SET " +
+                    COLUMN_COUNTRY_ID + " = ?, " +
+                    COLUMN_COUNTRY_NAME + " = ?, " +
                     COLUMN_CREATE_DATE + " = NOW(), " +
                     COLUMN_CREATED_BY + " = ?, " +
                     COLUMN_LAST_UPDATE + " = NOW(), " +

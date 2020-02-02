@@ -20,24 +20,30 @@ public class MainController {
     private BorderPane borderpane;
 
     @FXML
-    private Button btn_appointments;
+    private Button btnAppointments;
 
     @FXML
-    private Button btn_customers;
+    private Button btnCustomers;
 
     @FXML
-    private Button btn_reports;
+    private Button btnReports;
 
     @FXML
-    private Button btn_exit;
+    private Button btnExit;
 
     @FXML
     void appointments(MouseEvent event) {
+//        btn_appointments.setStyle("-fx-background-color: #E5DFDF;" + "-fx-text-fill: #1D4D4F;");
+//        btn_customers.setStyle("-fx-background-color: #1D4D4F;" + "-fx-text-fill: #E5DFDF");
+//        btn_reports.setStyle("-fx-background-color: #1D4D4F;" + "-fx-text-fill: #E5DFDF");
         loadUI("Appointments");
     }
 
     @FXML
     void customers(MouseEvent event) {
+//        btn_customers.setStyle("-fx-background-color: #E5DFDF;" + "-fx-text-fill: #1D4D4F");
+//        btn_appointments.setStyle("-fx-background-color: #1D4D4F;" + "-fx-text-fill: #E5DFDF");
+//        btn_reports.setStyle("-fx-background-color: #1D4D4F;" + "-fx-text-fill: #E5DFDF");
         loadUI("Customers");
     }
 

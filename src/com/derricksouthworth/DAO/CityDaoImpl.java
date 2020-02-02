@@ -4,10 +4,7 @@ import com.derricksouthworth.model.City;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.ParseException;
 import java.util.Calendar;
 
@@ -22,6 +19,7 @@ import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
 public class CityDaoImpl {
 
     private static Connection conn = DBConnect.getInstance().getConn();
+    private static String currentUser = UserDaoImpl.getCurrentUser().getUserName();
     private static ObservableList<City> allCities = FXCollections.observableArrayList();
     /**
      * Take results from ResultSet and Construct City
@@ -69,48 +67,60 @@ public class CityDaoImpl {
      * Handles READ task for CRUD on a desired City Object
      * @param cityName
      * @return
-     * @throws SQLException
-     * @throws ParseException
      */
-    public static City getCity(String cityName) throws SQLException, ParseException {
-//        DBConnect.getInstance().makeConnection();
-//        StringBuilder sb = new StringBuilder(Query.QUERY_GET_CITY);
-//        sb.append(cityName);
-//        sb.append("\"");
-//        String sqlStatement = sb.toString();
-//        Query.makeQuery(sqlStatement);
-//        ResultSet result = Query.getResult();
-//        while(result.next()) {
-//            return buildCity(result, cityName);
-//        }
-//        DBConnect.getInstance().closeConnection();
+    public static City getCity(String cityName) {
+        try {
+            Statement statement = conn.createStatement();
+            String sqlStatement = String.format("%s%s\"", Query.QUERY_GET_CITY, cityName);
+            ResultSet result = statement.executeQuery(sqlStatement);
+            if(result.next()) {
+                return buildCity(result, cityName);
+            }
+        } catch (ParseException | SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     /**
      * Handles DELETE task for CRUD for given City Object
      * @param city
-     * @throws SQLException
-     * @throws ClassNotFoundException
      */
-    public static void deleteCity(City city) throws SQLException, ClassNotFoundException {
-//        DBConnect.makeConnection();
-//        String sqlStatement = "DELETE FROM city WHERE cityId = '" + city.getCityID() + "'";
-//        Query.makeQuery(sqlStatement);
-//        DBConnect.closeConnection();
+    public static void deleteCity(City city) {
+        try {
+            PreparedStatement statement = conn.prepareStatement(Query.DELETE_CITY);
+            statement.setInt(1, city.getCityID());
+
+            int rowsDeleted = statement.executeUpdate();
+            if(rowsDeleted > 0) {
+                System.out.println("City record was deleted successfully.");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            System.out.println("City Record Delete failed: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    public static void addCity(City city, int countryID) throws SQLException, ClassNotFoundException, ParseException {
-//        DBConnect.makeConnection();
-//        String sqlStatement = "INSERT INTO city " +
-//                "SET cityId = '" + getAllCities().size() + 1 + "', " +
-//                "city = '" + city.getCityName() + "', " +
-//                "countryId = " + countryID + "', " +
-//                "createDate = NOW(), " +
-//                "createdBy = user, " +
-//                "lastUpdate = NOW(), " +
-//                "lastUpdateBy = user";
-//        Query.makeQuery(sqlStatement);
-//        DBConnect.closeConnection();
+    /**
+     * Handles CREATE task for given City Object
+     * @param city
+     * @param countryID
+     */
+    public static void addCity(City city, int countryID) {
+        try {
+            PreparedStatement statement = conn.prepareStatement(Query.INSERT_CITY);
+            statement.setInt(1, city.getCityID());
+            statement.setString(2, city.getCityName());
+            statement.setInt(3, countryID);
+            statement.setString(4, currentUser);
+            statement.setString(5, currentUser);
+            statement.executeUpdate();
+
+            statement.close();
+        } catch (SQLException e) {
+            System.out.println("Failed to create city: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

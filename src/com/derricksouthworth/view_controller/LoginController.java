@@ -1,23 +1,19 @@
 package com.derricksouthworth.view_controller;
 
-import com.derricksouthworth.DAO.DBConnect;
-import com.derricksouthworth.DAO.Query;
 import com.derricksouthworth.DAO.UserDaoImpl;
-import com.derricksouthworth.model.User;
-import com.derricksouthworth.schedulingapp.Main;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  *
@@ -30,24 +26,23 @@ public class LoginController {
     private Label lblLogInTitle;
 
     @FXML
-    private Label lblUserName;
+    private JFXTextField txtUserName;
 
     @FXML
-    private TextField txtUserName;
+    private JFXPasswordField pwdPassword;
 
     @FXML
-    private Label lblPassword;
+    private JFXButton btnSignIn;
 
-    @FXML
-    private PasswordField pwdPassword;
-
-    @FXML
-    private Button btnSignIn;
-
+    /**
+     * Verify that user name/ password pair exist in database prior to loading Main.fxml
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void submitSignIn(ActionEvent event) throws IOException {
         String userName = txtUserName.getText();
-        String password = txtUserName.getText();
+        String password = pwdPassword.getText();
         boolean isValid = UserDaoImpl.login(userName, password);
         if(isValid) {
             Stage stage = (Stage) btnSignIn.getScene().getWindow();

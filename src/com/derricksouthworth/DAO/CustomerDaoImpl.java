@@ -77,10 +77,8 @@ public class CustomerDaoImpl {
     public static Customer getCustomer(String customerName) {
         try {
             Statement statement = conn.createStatement();
-            StringBuilder sqlStatement = new StringBuilder(Query.QUERY_GET_CUSTOMER);
-            sqlStatement.append(customerName);
-            sqlStatement.append("\"");
-            ResultSet result = statement.executeQuery(sqlStatement.toString());
+            String sqlStatement = String.format("%s%s\"", Query.QUERY_GET_CUSTOMER, customerName);
+            ResultSet result = statement.executeQuery(sqlStatement);
             if(result.next()) {
                 return buildCustomer(result, customerName);
             }
@@ -105,7 +103,11 @@ public class CustomerDaoImpl {
             statement.setString(6, currentUser);
             statement.setString(7, currentUser);
             statement.setInt(8, customer.getCustomerID());
-            statement.executeUpdate();
+
+            int rowsUpdated = statement.executeUpdate();
+            if(rowsUpdated > 0) {
+                System.out.println("Customer record was updated successfully.");
+            }
             statement.close();
         } catch (SQLException e) {
             System.out.println("Customer Update failed: " + e.getMessage());
