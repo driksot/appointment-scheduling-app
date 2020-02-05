@@ -86,7 +86,7 @@ public class AddCustomerController implements Initializable {
      */
     @FXML
     void cancelAddCustomer(ActionEvent event) throws IOException {
-        Stage stage = (Stage) btnSubmit.getScene().getWindow();
+        Stage stage = (Stage) btnCancel.getScene().getWindow();
         Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();

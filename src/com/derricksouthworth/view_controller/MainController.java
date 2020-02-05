@@ -152,9 +152,17 @@ public class MainController implements Initializable {
     //  UI CONTROL METHODS
     //******************************************************************************************************************
 
+    /**
+     * Open add_appointment.fxml stage in new window
+     * @param event
+     * @throws IOException
+     */
     @FXML
-    void addAppointment(ActionEvent event) {
-
+    void addAppointment(ActionEvent event) throws IOException {
+        Stage stage = (Stage) btnAddAppointment.getScene().getWindow();
+        Parent scene = FXMLLoader.load(getClass().getResource("add_appointment.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
     }
 
     @FXML

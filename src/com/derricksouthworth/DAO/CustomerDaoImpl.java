@@ -22,6 +22,7 @@ public class CustomerDaoImpl {
 
     private static Connection conn = DBConnect.getInstance().getConn();
     private static String currentUser = DBConnect.getCurrentUser().getUserName();
+    private static int currentUserID = DBConnect.getCurrentUser().getUserID();
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
 
     /**
@@ -252,8 +253,37 @@ public class CustomerDaoImpl {
         }
     }
 
-    public static void addAppointment(Appointment appointment) {
-        Customer.addCustomerAppointment(appointment);
+    public static void addAppointment(Appointment appointment, int customerID) throws SQLException {
+        PreparedStatement addAppointment = null;
+        String sqlStatement = Query.INSERT_APPOINTMENT;
+
+        try {
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            addAppointment = conn.prepareStatement(sqlStatement);
+            addAppointment.setInt(1, appointment.getAppointmentID());
+            addAppointment.setInt(2, customerID);
+            addAppointment.setInt(3, currentUserID);
+            addAppointment.setString(4, appointment.getLocation());
+            addAppointment.setString(5, appointment.getContact());
+            addAppointment.setString(6, appointment.getType());
+            addAppointment.setString(7, appointment.getStart());
+            addAppointment.setString(8, appointment.getEnd());
+            addAppointment.setString(9, currentUser);
+            addAppointment.setString(10, currentUser);
+
+            addAppointment.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // close all jdbc resources
+        } finally {
+            if (addAppointment != null) {
+                addAppointment.close();
+            }
+            conn.setAutoCommit(true);
+        }
     }
 
     /**
