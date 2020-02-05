@@ -1,11 +1,13 @@
 package com.derricksouthworth.DAO;
 
+import com.derricksouthworth.model.Appointment;
 import com.derricksouthworth.model.Customer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.Calendar;
 
 import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
@@ -19,7 +21,7 @@ import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
 public class CustomerDaoImpl {
 
     private static Connection conn = DBConnect.getInstance().getConn();
-    private static String currentUser = UserDaoImpl.getCurrentUser().getUserName();
+    private static String currentUser = DBConnect.getCurrentUser().getUserName();
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
 
     /**
@@ -50,22 +52,37 @@ public class CustomerDaoImpl {
      * Handles READ task for all Customer Objects
      * @return
      */
-    public static ObservableList<Customer> getAllCustomers() {
+    public static ObservableList<Customer> getAllCustomers() throws SQLException {
+        Statement statement = null;
+        String sqlStatement = Query.QUERY_GET_ALL_CUSTOMERS;
+        ResultSet result = null;
+
+        // clear contents of list to avoid adding a customer more than once
         allCustomers.clear();
         try {
-            Statement statement = conn.createStatement();
-            String sqlStatement = Query.QUERY_GET_ALL_CUSTOMERS;
-            ResultSet result = statement.executeQuery(sqlStatement);
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.createStatement();
+
+            result = statement.executeQuery(sqlStatement);
             while(result.next()) {
-            String customerName = result.getString(Query.COLUMN_CUSTOMER_NAME);
-            allCustomers.add(buildCustomer(result, customerName));
+                String customerName = result.getString(Query.COLUMN_CUSTOMER_NAME);
+                allCustomers.add(buildCustomer(result, customerName));
             }
-            result.close();
-            statement.close();
             return allCustomers;
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
             return null;
+            // close all jdbc resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (result != null) {
+                result.close();
+            }
+            conn.setAutoCommit(true);
         }
     }
 
@@ -86,6 +103,72 @@ public class CustomerDaoImpl {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Handles READ task for appointments associated with give customer
+     * @param customer
+     * @return
+     * @throws SQLException
+     */
+    public static ObservableList<Appointment> getCustomerAppointments(Customer customer, String sortBy) throws SQLException {
+        PreparedStatement getAppointments = null;
+        String sqlStatement = Query.GET_CUSTOMER_APPOINTMENTS;
+        String sortedStatement = Query.GET_SORTED_CUSTOMER_APPOINTMENTS;
+        ResultSet result = null;
+        LocalDate appointmentStart = LocalDate.now();
+        LocalDate appointmentEnd = null;
+        if(sortBy == Query.SORT_BY_WEEK) appointmentEnd = LocalDate.now().plusWeeks(1);
+        if(sortBy == Query.SORT_BY_MONTH) appointmentEnd = LocalDate.now().plusMonths(1);
+
+        // clear contents of list to avoid adding appointments more than once
+        Customer.getCustomerAppointments().clear();
+
+        try {
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            if(appointmentEnd != null) {
+                getAppointments = conn.prepareStatement(sortedStatement);
+                getAppointments.setInt(1, customer.getCustomerID());
+                getAppointments.setDate(2, Date.valueOf(appointmentStart));
+                getAppointments.setDate(3, Date.valueOf(appointmentEnd));
+            } else {
+                getAppointments = conn.prepareStatement(sqlStatement);
+                getAppointments.setInt(1, customer.getCustomerID());
+            }
+
+            result = getAppointments.executeQuery();
+            while(result.next()) {
+                int appointmentID = result.getInt(Query.COLUMN_APPOINTMENT_ID);
+                int userID = result.getInt(Query.COLUMN_USER_ID);
+                String location = result.getString(Query.COLUMN_LOCATION);
+                String contact = result.getString(Query.COLUMN_CONTACT);
+                String type = result.getString(Query.COLUMN_TYPE);
+                String start = result.getString(Query.COLUMN_START);
+                String end = result.getString(Query.COLUMN_END);
+                Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
+                String createdBy = result.getString(Query.COLUMN_CREATED_BY);
+                Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
+                String lastUpdateBy = result.getString(Query.COLUMN_LAST_UPDATE_BY);
+                Appointment appointmentResult = new Appointment(appointmentID, customer.getCustomerName(), userID,
+                        location, contact, type, start, end, createDate, createdBy, lastUpdate, lastUpdateBy);
+                Customer.addCustomerAppointment(appointmentResult);
+            }
+            return Customer.getCustomerAppointments();
+        } catch (SQLException | ParseException e) {
+            e.printStackTrace();
+            return null;
+            // close all jdbc resources
+        } finally {
+            if (getAppointments != null) {
+                getAppointments.close();
+            }
+            if (result != null) {
+                result.close();
+            }
+            conn.setAutoCommit(true);
+        }
     }
 
     /**
@@ -167,6 +250,10 @@ public class CustomerDaoImpl {
             System.out.println("Customer Addition failed: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public static void addAppointment(Appointment appointment) {
+        Customer.addCustomerAppointment(appointment);
     }
 
     /**

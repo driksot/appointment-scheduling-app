@@ -11,7 +11,7 @@ import java.util.Calendar;
  */
 
 public class Customer {
-    private ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
+    private static ObservableList<Appointment> customerAppointments = FXCollections.observableArrayList();
     private int customerID;
     private String customerName;
     private String address;
@@ -73,7 +73,7 @@ public class Customer {
     }
 
     // Add Appointment Object to customerAppointments list
-    public void addCustomerAppointment(Appointment appointment) {
+    public static void addCustomerAppointment(Appointment appointment) {
         customerAppointments.add(appointment);
     }
 
@@ -85,14 +85,14 @@ public class Customer {
     // Lookup a specific Appointment buy Customer or appointmentID in customerAppointments list
     public Appointment lookupCustomerAppointment(String searchItem) {
         for(Appointment a:customerAppointments) {
-            if(a.getCustomer().getCustomerName().contains(searchItem) || new Integer(a.getAppointmentID()).toString().equals(searchItem)) return a;
+            if(a.getCustomer().contains(searchItem) || Integer.toString(a.getAppointmentID()).equals(searchItem)) return a;
         }
         return null;
     }
 
     // Getters
 
-    public ObservableList<Appointment> getCustomerAppointments() {
+    public static ObservableList<Appointment> getCustomerAppointments() {
         return customerAppointments;
     }
 

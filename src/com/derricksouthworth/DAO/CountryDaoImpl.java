@@ -19,7 +19,7 @@ import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
 public class CountryDaoImpl {
 
     private static Connection conn = DBConnect.getInstance().getConn();
-    private static String currentUser = UserDaoImpl.getCurrentUser().getUserName();
+    private static String currentUser = DBConnect.getCurrentUser().getUserName();
     private static ObservableList<Country> allCountries = FXCollections.observableArrayList();
 
     private static Country buildCountry(ResultSet result, String countryName) throws SQLException, ParseException {

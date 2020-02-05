@@ -1,9 +1,8 @@
 package com.derricksouthworth.DAO;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import com.derricksouthworth.model.User;
+
+import java.sql.*;
 
 /**
  * Setup database connection info
@@ -28,6 +27,8 @@ public class DBConnect {
 
     private PreparedStatement queryAllCustomers;
     private PreparedStatement queryAllCities;
+
+    private static User currentUser;
 
     // Connect to database
     public boolean makeConnection() {
@@ -59,6 +60,25 @@ public class DBConnect {
         }
     }
 
+    public static Boolean login(String userName, String password) {
+        try {
+            Statement statement = conn.createStatement();
+            String sqlStatement = Query.buildQueryUser(userName, password);
+            ResultSet result = statement.executeQuery(sqlStatement);
+            if(result.next()) {
+                currentUser = new User(result.getInt(Query.COLUMN_USER_ID),
+                        result.getString(Query.COLUMN_USER_NAME),
+                        result.getString(Query.COLUMN_USER_PASSWORD));
+                statement.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
+    }
+
     public static Connection getConn() {
         return conn;
     }
@@ -71,5 +91,9 @@ public class DBConnect {
 
     public static DBConnect getInstance() {
         return instance;
+    }
+
+    public static User getCurrentUser() {
+        return currentUser;
     }
 }

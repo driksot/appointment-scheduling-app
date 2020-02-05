@@ -19,7 +19,7 @@ import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
 public class CityDaoImpl {
 
     private static Connection conn = DBConnect.getInstance().getConn();
-    private static String currentUser = UserDaoImpl.getCurrentUser().getUserName();
+    private static String currentUser = DBConnect.getCurrentUser().getUserName();
     private static ObservableList<City> allCities = FXCollections.observableArrayList();
     /**
      * Take results from ResultSet and Construct City

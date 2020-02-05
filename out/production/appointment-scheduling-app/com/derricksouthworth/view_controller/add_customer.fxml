@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../utilities/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.AddCustomerController">
+   <children>
+      <VBox layoutX="142.0" layoutY="69.0" prefHeight="400.0" prefWidth="600.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="lblAddCustomer" text="Add Customer">
+                     <font>
+                        <Font name="Arial" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <JFXTextField fx:id="txtCustomerID" editable="false" labelFloat="true" promptText="Customer ID" />
+            <JFXTextField fx:id="txtCustomerName" labelFloat="true" promptText="Customer Name" />
+            <JFXTextField fx:id="txtAddress" labelFloat="true" promptText="Address" />
+            <JFXTextField fx:id="txtAddress2" labelFloat="true" promptText="Address (Cont.)" />
+            <HBox spacing="20.0">
+               <children>
+                  <JFXComboBox fx:id="cmbCity" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <JFXButton fx:id="btnAddCity" maxWidth="1.7976931348623157E308" minWidth="64.0" onAction="#addCity" styleClass="btn-plain" text="New City" />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <JFXTextField fx:id="txtPostalCode" labelFloat="true" promptText="Postal Code" />
+            <JFXTextField fx:id="txtPhone" labelFloat="true" promptText="Phone Number" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <JFXButton fx:id="btnCancel" onAction="#cancelAddCustomer" styleClass="btn-plain" text="Cancel" />
+                  <JFXButton fx:id="btnSubmit" onAction="#addCustomer" styleClass="btn-plain" text="Submit" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="40.0" left="100.0" right="100.0" top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

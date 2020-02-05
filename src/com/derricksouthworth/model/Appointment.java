@@ -9,13 +9,13 @@ import java.util.Calendar;
 
 public class Appointment {
     private int appointmentID;
-    private Customer customer;
-    private User user;
+    private String customer;
+    private int userID;
     private String location;
     private String contact;
     private String type;
-    private Calendar start;
-    private Calendar end;
+    private String start;
+    private String end;
     private Calendar createDate;
     private String createdBy;
     private Calendar lastUpdate;
@@ -25,7 +25,7 @@ public class Appointment {
      * Constructor
      * @param appointmentID
      * @param customer
-     * @param user
+     * @param userID
      * @param location
      * @param contact
      * @param type
@@ -36,10 +36,10 @@ public class Appointment {
      * @param lastUpdate
      * @param lastUpdateBy
      */
-    public Appointment(int appointmentID, Customer customer, User user, String location, String contact, String type, Calendar start, Calendar end, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdateBy) {
+    public Appointment(int appointmentID, String customer, int userID, String location, String contact, String type, String start, String end, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdateBy) {
         this.appointmentID = appointmentID;
         this.customer = customer;
-        this.user = user;
+        this.userID = userID;
         this.location = location;
         this.contact = contact;
         this.type = type;
@@ -57,12 +57,12 @@ public class Appointment {
         return appointmentID;
     }
 
-    public Customer getCustomer() {
+    public String getCustomer() {
         return customer;
     }
 
-    public User getUser() {
-        return user;
+    public int getUserID() {
+        return userID;
     }
 
     public String getLocation() {
@@ -77,11 +77,11 @@ public class Appointment {
         return type;
     }
 
-    public Calendar getStart() {
+    public String getStart() {
         return start;
     }
 
-    public Calendar getEnd() {
+    public String getEnd() {
         return end;
     }
 
@@ -107,12 +107,12 @@ public class Appointment {
         this.appointmentID = appointmentID;
     }
 
-    public void setCustomer(Customer customer) {
+    public void setCustomer(String customer) {
         this.customer = customer;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public void setLocation(String location) {
@@ -127,11 +127,11 @@ public class Appointment {
         this.type = type;
     }
 
-    public void setStart(Calendar start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public void setEnd(Calendar end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 

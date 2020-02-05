@@ -1,0 +1,131 @@
+/*
+    Author: derrick.southworth
+ */
+
+/***********************************************************************************************************************
+    COLOR PALETTE
+***********************************************************************************************************************/
+{
+    -fx-primary-color: #3f51b5;
+    -fx-primary-color-light: #757de8;
+    -fx-primary-color-dark: #002984;
+    -fx-secondary-color: #90a4ae;
+    -fx-secondary-color-light: #c1d5e0;
+    -fx-secondary-color-dark: #62757f;
+    -fx-text-light: #ffffff;
+    -fx-text-dark: #000000;
+}
+
+/***********************************************************************************************************************
+    NAVIGATION
+***********************************************************************************************************************/
+
+#main-nav {
+    -fx-text-fill: -fx-secondary-color-light;
+}
+
+#main-nav .tab {
+    -fx-background-color: -fx-primary-color;
+}
+
+#main-nav *.tab-header-background {
+    -fx-background-color: -fx-primary-color;
+}
+
+.jfx-tab-pane .tab-selected-line {
+    -fx-background-color: -fx-primary-color-dark;
+    -fx-pref-height: 3px;
+}
+
+.sub-nav .tab {
+    -fx-background-color: transparent !important;
+}
+
+.sub-nav *.tab-header-background {
+    -fx-background-color: transparent !important;
+    -fx-border-color: -fx-primary-color-light;
+    -fx-border-width: 0px 0px 2px 0px;
+}
+
+.sub-nav .tab-label {
+    -fx-text-fill: -fx-primary-color-dark;
+}
+
+/***********************************************************************************************************************
+    BUTTONS
+***********************************************************************************************************************/
+
+.btn-plain {
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: -fx-text-light;
+}
+
+.btn-transparent {
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-primary-color;
+    -fx-font-size: 16px;
+}
+
+/***********************************************************************************************************************
+    TABLE VIEWS
+***********************************************************************************************************************/
+
+.table-view, .table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color:-fx-secondary-color-light;
+    -fx-border-width: 0 0 2 0;
+    -fx-prompt-text-fill: -fx-lightest-color;
+    -fx-highlight-fill: -fx-lightest-color;
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-dark;
+}
+
+.table-view {
+    -fx-table-header-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: -fx-secondary-color-light;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: -fx-secondary-color-light;
+}
+
+.table-row-cell:selected:hover {
+    -fx-background-color: -fx-secondary-color-light;
+}
+
+.table-row-cell:hover:focused {
+    -fx-background-color: -fx-secondary-color-light;
+}
+
+.table-row-cell:selected:focused {
+    -fx-background-color: -fx-secondary-color;
+}
+
+.table-row-cell:selected:hover:focused {
+    -fx-background-color: -fx-secondary-color;
+}
+
+.table-cell, .table-cell:even, .table-cell:odd {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-dark;
+    -fx-padding: 8px 4px 8px 4px;
+    -fx-wrap-text: true;
+}
+
+.table-view .column-header .label, .table-view .filler .label, .table-view .column-drag-header .label {
+    -fx-alignment: baseline-left;
+}

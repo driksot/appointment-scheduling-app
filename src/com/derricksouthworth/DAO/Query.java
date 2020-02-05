@@ -3,6 +3,7 @@ package com.derricksouthworth.DAO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 /**
  * Construct sql database queries
@@ -37,10 +38,21 @@ public class Query {
     public static final String COLUMN_COUNTRY_ID = "countryId";
     public static final String COLUMN_COUNTRY_NAME = "country";
 
+    public static final String TABLE_APPOINTMENT = "appointment";
+    public static final String COLUMN_APPOINTMENT_ID = "appointmentId";
+    public static final String COLUMN_LOCATION = "location";
+    public static final String COLUMN_CONTACT = "contact";
+    public static final String COLUMN_TYPE = "type";
+    public static final String COLUMN_START = "start";
+    public static final String COLUMN_END = "end";
+
     public static final String COLUMN_CREATE_DATE = "createDate";
     public static final String COLUMN_CREATED_BY = "createdBy";
     public static final String COLUMN_LAST_UPDATE = "lastUpdate";
     public static final String COLUMN_LAST_UPDATE_BY = "lastUpdateBy";
+
+    public static final String SORT_BY_WEEK = "week";
+    public static final String SORT_BY_MONTH = "month";
 
     public static final String QUERY_GET_ALL_CUSTOMERS =
             "SELECT " + TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_ID + ", " +
@@ -99,6 +111,30 @@ public class Query {
                     TABLE_CUSTOMER + "." + COLUMN_ADDRESS_ID + " = " +
                     TABLE_ADDRESS + "." + COLUMN_ADDRESS_ID + " WHERE " +
                     COLUMN_CUSTOMER_ID + " = ?";
+
+    public static final String GET_CUSTOMER_APPOINTMENTS =
+            "SELECT * FROM " + TABLE_APPOINTMENT + " WHERE " +
+                    COLUMN_CUSTOMER_ID + " = ?";
+
+    public static final String GET_SORTED_CUSTOMER_APPOINTMENTS =
+            "SELECT * FROM " + TABLE_APPOINTMENT + " WHERE " +
+                    COLUMN_CUSTOMER_ID + " = ? AND " + COLUMN_START +
+                    " >= ? AND " + COLUMN_START + " <= ?";
+
+    public static final String INSERT_APPOINTMENT =
+            "INSERT INTO " + TABLE_APPOINTMENT + " SET " +
+                    COLUMN_APPOINTMENT_ID + " = ?, " +
+                    COLUMN_CUSTOMER_ID + " = ?, " +
+                    COLUMN_USER_ID + " = ?, " +
+                    COLUMN_LOCATION + " = ?, " +
+                    COLUMN_CONTACT + " = ?, " +
+                    COLUMN_TYPE + " = ?, " +
+                    COLUMN_START + " = ?, " +
+                    COLUMN_END + " = ?, " +
+                    COLUMN_CREATE_DATE + " = NOW(), " +
+                    COLUMN_CREATED_BY + " = ?, " +
+                    COLUMN_LAST_UPDATE + " = NOW(), " +
+                    COLUMN_LAST_UPDATE_BY + " = ?";
 
     public static final String INSERT_ADDRESS =
             "INSERT INTO " + TABLE_ADDRESS + " SET " +

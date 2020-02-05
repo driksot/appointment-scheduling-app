@@ -1,5 +1,7 @@
 package com.derricksouthworth.utilities;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,6 +22,13 @@ public class TimeFiles {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         cal.setTime(sdf.parse(strDate));
+        return cal;
+    }
+
+    public static Calendar timeStampToCalendar(Timestamp time) {
+        if (time == null) return null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time.getTime());
         return cal;
     }
 
