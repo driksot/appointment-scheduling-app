@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Calendar;
 
-import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
+import static com.derricksouthworth.utilities.TimeFiles.*;
 
 /**
  * Implement CRUD for Customer Objects
@@ -145,8 +145,8 @@ public class CustomerDaoImpl {
                 String location = result.getString(Query.COLUMN_LOCATION);
                 String contact = result.getString(Query.COLUMN_CONTACT);
                 String type = result.getString(Query.COLUMN_TYPE);
-                String start = result.getString(Query.COLUMN_START);
-                String end = result.getString(Query.COLUMN_END);
+                String start = timeToLocal(result.getString(Query.COLUMN_START));
+                String end = timeToLocal(result.getString(Query.COLUMN_END));
                 Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
                 String createdBy = result.getString(Query.COLUMN_CREATED_BY);
                 Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));

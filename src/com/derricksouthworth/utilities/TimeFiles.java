@@ -4,6 +4,10 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 /**
@@ -25,14 +29,36 @@ public class TimeFiles {
         return cal;
     }
 
-    public static Calendar timeStampToCalendar(Timestamp time) {
-        if (time == null) return null;
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(time.getTime());
-        return cal;
+    // TODO Convert time to UTC
+    public static String timeToUTC(String time) throws ParseException {
+        Calendar calendar = stringToCalendar(time);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
+        ZonedDateTime toUTC = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.of("UTC"));
+        return toUTC.format(df);
     }
 
-    // TODO Convert time to UTC
-
     // TODO Convert time to Local Time
+    public static String timeToLocal(String time) throws ParseException {
+        Calendar calendar = stringToCalendar(time);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
+        ZonedDateTime toLocal = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
+        return toLocal.format(df);
+    }
+
+//    // TODO Convert time to UTC
+//    public static String timeToUTC(Timestamp ts) {
+//        LocalDateTime ldt = ts.toLocalDateTime();
+//        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
+//        ZonedDateTime utczdt = zdt.withZoneSameInstant(ZoneId.of("UTC"));
+//        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
+//        return utczdt.format(df);
+//    }
+//
+//    // TODO Convert time to Local Time
+//    public static String timeToLocal(Timestamp ts) {
+//        LocalDateTime ldt = ts.toLocalDateTime();
+//        ZonedDateTime zdt = ldt.atZone(ZoneId.of(ZoneId.systemDefault().toString()));
+//        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
+//        return zdt.format(df);
+//    }
 }
