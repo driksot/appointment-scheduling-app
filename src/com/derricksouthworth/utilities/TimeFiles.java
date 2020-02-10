@@ -16,6 +16,9 @@ import java.util.Calendar;
  */
 
 public class TimeFiles {
+
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
+
     /**
      * Convert given String to Calendar
      * @param strDate
@@ -32,17 +35,15 @@ public class TimeFiles {
     // TODO Convert time to UTC
     public static String timeToUTC(String time) throws ParseException {
         Calendar calendar = stringToCalendar(time);
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
         ZonedDateTime toUTC = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.of("UTC"));
-        return toUTC.format(df);
+        return toUTC.format(DATE_TIME_FORMATTER);
     }
 
     // TODO Convert time to Local Time
     public static String timeToLocal(String time) throws ParseException {
         Calendar calendar = stringToCalendar(time);
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
         ZonedDateTime toLocal = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
-        return toLocal.format(df);
+        return toLocal.format(DATE_TIME_FORMATTER);
     }
 
 //    // TODO Convert time to UTC

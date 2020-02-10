@@ -51,6 +51,28 @@ public class Appointment {
         this.lastUpdateBy = lastUpdateBy;
     }
 
+    /**
+     * Constructor
+     * @param appointmentID
+     * @param customer
+     * @param userID
+     * @param location
+     * @param contact
+     * @param type
+     * @param start
+     * @param end
+     */
+    public Appointment(int appointmentID, String customer, int userID, String location, String contact, String type, String start, String end) {
+        this.appointmentID = appointmentID;
+        this.customer = customer;
+        this.userID = userID;
+        this.location = location;
+        this.contact = contact;
+        this.type = type;
+        this.start = start;
+        this.end = end;
+    }
+
     // Getters
 
     public int getAppointmentID() {

@@ -145,7 +145,7 @@ public class MainController implements Initializable {
     //  OTHER GLOBAL VARIABLES
     //******************************************************************************************************************
 
-    private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+    private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
     //******************************************************************************************************************
     //******************************************************************************************************************
@@ -296,7 +296,7 @@ public class MainController implements Initializable {
      * and then all appointments associated with each customer
      * @return
      */
-    private ObservableList<Appointment> getAllAppointments(String sortBy) throws SQLException {
+    public static ObservableList<Appointment> getAllAppointments(String sortBy) throws SQLException {
         if (getAllCustomers() == null) {
             return null;
         }
