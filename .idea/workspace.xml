@@ -5,13 +5,11 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/DAO/CustomerDaoImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/DAO/CustomerDaoImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/utilities/TimeFiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/utilities/TimeFiles.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/view_controller/AddCustomerController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/view_controller/AddCustomerController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/view_controller/MainController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/view_controller/MainController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/model/Appointment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/model/Appointment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/DAO/Query.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/DAO/Query.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/utilities/TimeFiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/utilities/TimeFiles.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/AddAppointmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/AddAppointmentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/add_appointment.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/add_appointment.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -278,6 +276,7 @@
       <workItem from="1580925190034" duration="4103000" />
       <workItem from="1580946025332" duration="1288000" />
       <workItem from="1580959487486" duration="1914000" />
+      <workItem from="1581370154224" duration="3784000" />
     </task>
     <servers />
   </component>
@@ -327,34 +326,34 @@
     </state>
     <state x="740" y="276" key="FileChooserDialogImpl/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1580873330363" />
     <state x="2336" y="397" key="FileChooserDialogImpl/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@1920.-102.1080.1880" timestamp="1580354732195" />
-    <state width="1877" height="281" key="GridCell.Tab.0.bottom" timestamp="1580961377825">
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom" timestamp="1581373852768">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="281" key="GridCell.Tab.0.bottom/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1580961377825" />
+    <state width="1877" height="281" key="GridCell.Tab.0.bottom/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581373852768" />
     <state width="1037" height="281" key="GridCell.Tab.0.bottom/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@1920.-102.1080.1880" timestamp="1580554464468" />
-    <state width="1877" height="281" key="GridCell.Tab.0.center" timestamp="1580961377824">
+    <state width="1877" height="281" key="GridCell.Tab.0.center" timestamp="1581373852767">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="281" key="GridCell.Tab.0.center/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1580961377824" />
+    <state width="1877" height="281" key="GridCell.Tab.0.center/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581373852767" />
     <state width="1037" height="281" key="GridCell.Tab.0.center/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@1920.-102.1080.1880" timestamp="1580554464468" />
-    <state width="1877" height="281" key="GridCell.Tab.0.left" timestamp="1580961377824">
+    <state width="1877" height="281" key="GridCell.Tab.0.left" timestamp="1581373852767">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="281" key="GridCell.Tab.0.left/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1580961377824" />
+    <state width="1877" height="281" key="GridCell.Tab.0.left/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581373852767" />
     <state width="1037" height="281" key="GridCell.Tab.0.left/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@1920.-102.1080.1880" timestamp="1580554464467" />
-    <state width="1877" height="281" key="GridCell.Tab.0.right" timestamp="1580961377824">
+    <state width="1877" height="281" key="GridCell.Tab.0.right" timestamp="1581373852768">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="281" key="GridCell.Tab.0.right/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1580961377824" />
+    <state width="1877" height="281" key="GridCell.Tab.0.right/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581373852768" />
     <state width="1037" height="281" key="GridCell.Tab.0.right/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@1920.-102.1080.1880" timestamp="1580554464468" />
     <state x="461" y="163" key="SettingsEditor" timestamp="1580540713498">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="163" key="SettingsEditor/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1580540713498" />
-    <state x="655" y="345" key="com.intellij.ide.util.TipDialog" timestamp="1580959489139">
+    <state x="655" y="345" key="com.intellij.ide.util.TipDialog" timestamp="1581370155348">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="655" y="345" key="com.intellij.ide.util.TipDialog/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1580959489139" />
+    <state x="655" y="345" key="com.intellij.ide.util.TipDialog/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581370155348" />
     <state x="664" y="414" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1580548325854">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -363,6 +362,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="1180" y="439" key="extract.method.dialog/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1580241619300" />
+    <state x="342" y="223" key="new project wizard" timestamp="1581371241799">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="342" y="223" key="new project wizard/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581371241799" />
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1580347287282">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

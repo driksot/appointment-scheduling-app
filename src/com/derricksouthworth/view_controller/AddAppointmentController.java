@@ -23,9 +23,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ResourceBundle;
 
 import static com.derricksouthworth.DAO.CustomerDaoImpl.getCustomer;
+import static com.derricksouthworth.utilities.TimeFiles.timeToUTC;
 
 public class AddAppointmentController implements Initializable {
 
@@ -80,8 +82,11 @@ public class AddAppointmentController implements Initializable {
     }
 
     @FXML
-    void submitAddAppointment(ActionEvent event) throws SQLException, IOException {
+    void submitAddAppointment(ActionEvent event) throws SQLException, IOException, ParseException {
         Customer customer = getCustomer(txtCustomerName.getText());
+        String startTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().format(TimeFiles.TIME_FORMATTER);
+        String endTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().plusMinutes(30).format(TimeFiles.TIME_FORMATTER);
+
         if(customer == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("ERROR adding appointment");
@@ -96,10 +101,10 @@ public class AddAppointmentController implements Initializable {
             String location = txtLocation.getText();
             String contact = txtContact.getText();
             String type = cmbType.getSelectionModel().getSelectedItem();
-            String start = timeStartTime.getValue().format(TimeFiles.DATE_TIME_FORMATTER);
-            String end = timeStartTime.getValue().plusMinutes(30).format(TimeFiles.DATE_TIME_FORMATTER);
+            String start = timeToUTC(startTime);
+            String end = timeToUTC(endTime);
 
-            Appointment addAppointment = new Appointment(appointmentID, customerName, userID, location, contact, type,
+            Appointment addAppointment = new Appointment(appointmentID, customerName, userID, location, contact, "test",
                     start, end);
 
             boolean isValid = true;

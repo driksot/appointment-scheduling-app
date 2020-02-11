@@ -40,9 +40,12 @@ public class Query {
 
     public static final String TABLE_APPOINTMENT = "appointment";
     public static final String COLUMN_APPOINTMENT_ID = "appointmentId";
+    public static final String COLUMN_TITLE = "title";
+    public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_LOCATION = "location";
     public static final String COLUMN_CONTACT = "contact";
     public static final String COLUMN_TYPE = "type";
+    public static final String COLUMN_URL = "url";
     public static final String COLUMN_START = "start";
     public static final String COLUMN_END = "end";
 
@@ -126,9 +129,12 @@ public class Query {
                     COLUMN_APPOINTMENT_ID + " = ?, " +
                     COLUMN_CUSTOMER_ID + " = ?, " +
                     COLUMN_USER_ID + " = ?, " +
+                    COLUMN_TITLE + " = 'not needed', " +
+                    COLUMN_DESCRIPTION + " = 'not needed', " +
                     COLUMN_LOCATION + " = ?, " +
                     COLUMN_CONTACT + " = ?, " +
                     COLUMN_TYPE + " = ?, " +
+                    COLUMN_URL + " = 'not needed', " +
                     COLUMN_START + " = ?, " +
                     COLUMN_END + " = ?, " +
                     COLUMN_CREATE_DATE + " = NOW(), " +

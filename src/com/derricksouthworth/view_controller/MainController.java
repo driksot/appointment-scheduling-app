@@ -300,6 +300,7 @@ public class MainController implements Initializable {
         if (getAllCustomers() == null) {
             return null;
         }
+        allAppointments.clear();
         // Loop through all Customer objects
         for(Customer customer: getAllCustomers()) {
             // Find every appointment for given customer and add to allAppointments
