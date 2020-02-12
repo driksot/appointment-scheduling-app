@@ -24,10 +24,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import static com.derricksouthworth.DAO.CustomerDaoImpl.getCustomer;
-import static com.derricksouthworth.utilities.TimeFiles.timeToUTC;
 
 public class AddAppointmentController implements Initializable {
 
@@ -101,8 +103,8 @@ public class AddAppointmentController implements Initializable {
             String location = txtLocation.getText();
             String contact = txtContact.getText();
             String type = cmbType.getSelectionModel().getSelectedItem();
-            String start = timeToUTC(startTime);
-            String end = timeToUTC(endTime);
+            String start = TimeFiles.timeToUTC(startTime);
+            String end = TimeFiles.timeToUTC(endTime);
 
             Appointment addAppointment = new Appointment(appointmentID, customerName, userID, location, contact, "test",
                     start, end);

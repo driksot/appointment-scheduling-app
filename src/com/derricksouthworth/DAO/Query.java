@@ -142,6 +142,10 @@ public class Query {
                     COLUMN_LAST_UPDATE + " = NOW(), " +
                     COLUMN_LAST_UPDATE_BY + " = ?";
 
+    public static final String DELETE_APPOINTMENT =
+            "DELETE FROM " + TABLE_APPOINTMENT + " WHERE " +
+                    COLUMN_APPOINTMENT_ID + " = ?";
+
     public static final String INSERT_ADDRESS =
             "INSERT INTO " + TABLE_ADDRESS + " SET " +
                     COLUMN_ADDRESS_ID + " = ?, " +

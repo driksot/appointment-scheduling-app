@@ -54,6 +54,10 @@ public class MainController implements Initializable {
     @FXML
     private JFXButton btnAddAppointment;
     @FXML
+    private JFXButton btnUpdateAppointment;
+    @FXML
+    private JFXButton btnDeleteAppointment;
+    @FXML
     private JFXButton btnAppointmentByWeek;
     @FXML
     private JFXButton btnAppointmentByMonth;
@@ -166,10 +170,50 @@ public class MainController implements Initializable {
     }
 
     @FXML
+    public void updateAppointment(ActionEvent actionEvent) {
+    }
+
+    /**
+     * Remove selected appointment from database
+     * @param actionEvent
+     */
+    @FXML
+    public void deleteAppointment(ActionEvent actionEvent) {
+        int appointmentID = tblAppointments.getSelectionModel().getSelectedItem().getAppointmentID();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Confirm Appointment Deletion?");
+        alert.setContentText("Are you sure you want to delete this appointment?");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+            System.out.println("Appointment deletion confirmed.");
+            try {
+                CustomerDaoImpl.deleteAppointment(appointmentID);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            loadAppointmentTable(null);
+        } else {
+            System.out.println("Canceled appointment deletion.");
+        }
+    }
+
+    /**
+     * Show appointment in the upcoming month
+     * @param event
+     */
+    @FXML
     void loadTableAppointmentsByMonth(ActionEvent event) {
         loadAppointmentTable(Query.SORT_BY_MONTH);
     }
 
+    /**
+     * Show appointments in the upcoming week
+     * @param event
+     */
     @FXML
     void loadTableAppointmentsByWeek(ActionEvent event) {
         loadAppointmentTable(Query.SORT_BY_WEEK);
@@ -188,6 +232,11 @@ public class MainController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Update customer on database with given information
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void updateCustomer(ActionEvent event) throws IOException {
         if(tblCustomers.getSelectionModel().getSelectedItem() != null) {

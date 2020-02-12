@@ -1,14 +1,11 @@
 package com.derricksouthworth.utilities;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  *
@@ -34,34 +31,36 @@ public class TimeFiles {
         return cal;
     }
 
-    // TODO Convert time to UTC
+    /**
+     * Convert string time from local to UTC time
+     * @param time
+     * @return
+     * @throws ParseException
+     */
     public static String timeToUTC(String time) throws ParseException {
         Calendar calendar = stringToCalendar(time);
         ZonedDateTime toUTC = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.of("UTC"));
         return toUTC.format(DATE_TIME_FORMATTER);
     }
 
-    // TODO Convert time to Local Time
+    /**
+     * Convert string time from UTC to local time
+     * @param time
+     * @return
+     * @throws ParseException
+     */
     public static String timeToLocal(String time) throws ParseException {
+        // Save system timezone to set default back to correct value later
+        TimeZone localTimeZone = TimeZone.getDefault();
+
+        // Set default timezone to UTC so that Calendar object will be instantiated in UTC timezone to match
+        // string time timezone from database
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         Calendar calendar = stringToCalendar(time);
+
+        // Reset default timezone to correct local timezone
+        TimeZone.setDefault(TimeZone.getTimeZone(localTimeZone.getID()));
         ZonedDateTime toLocal = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
         return toLocal.format(DATE_TIME_FORMATTER);
     }
-
-//    // TODO Convert time to UTC
-//    public static String timeToUTC(Timestamp ts) {
-//        LocalDateTime ldt = ts.toLocalDateTime();
-//        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
-//        ZonedDateTime utczdt = zdt.withZoneSameInstant(ZoneId.of("UTC"));
-//        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
-//        return utczdt.format(df);
-//    }
-//
-//    // TODO Convert time to Local Time
-//    public static String timeToLocal(Timestamp ts) {
-//        LocalDateTime ldt = ts.toLocalDateTime();
-//        ZonedDateTime zdt = ldt.atZone(ZoneId.of(ZoneId.systemDefault().toString()));
-//        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
-//        return zdt.format(df);
-//    }
 }

@@ -2,12 +2,15 @@ package com.derricksouthworth.DAO;
 
 import com.derricksouthworth.model.Appointment;
 import com.derricksouthworth.model.Customer;
+import com.derricksouthworth.utilities.TimeFiles;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 
 import static com.derricksouthworth.utilities.TimeFiles.*;
@@ -146,8 +149,8 @@ public class CustomerDaoImpl {
                 String location = result.getString(Query.COLUMN_LOCATION);
                 String contact = result.getString(Query.COLUMN_CONTACT);
                 String type = result.getString(Query.COLUMN_TYPE);
-                String start = timeToLocal(result.getString(Query.COLUMN_START));
-                String end = timeToLocal(result.getString(Query.COLUMN_END));
+                String start = TimeFiles.timeToLocal(result.getString(Query.COLUMN_START));
+                String end = TimeFiles.timeToLocal(result.getString(Query.COLUMN_END));
                 Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
                 String createdBy = result.getString(Query.COLUMN_CREATED_BY);
                 Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
@@ -216,6 +219,35 @@ public class CustomerDaoImpl {
         } catch (SQLException e) {
             System.out.println("Customer Record Delete failed: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handles DELETE task for given Appointment Object
+     * @param appointmentID
+     * @throws SQLException
+     */
+    public static void deleteAppointment(int appointmentID) throws SQLException {
+        PreparedStatement deleteAppointment = null;
+
+        try {
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            deleteAppointment = conn.prepareStatement(Query.DELETE_APPOINTMENT);
+            deleteAppointment.setInt(1, appointmentID);
+
+            int rowsDeleted = deleteAppointment.executeUpdate();
+            if(rowsDeleted > 0) {
+                System.out.println("Appointment was deleted successfully.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (deleteAppointment != null) {
+                deleteAppointment.close();
+            }
+            conn.setAutoCommit(true);
         }
     }
 
