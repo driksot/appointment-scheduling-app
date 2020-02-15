@@ -20,35 +20,17 @@
     NAVIGATION
 ***********************************************************************************************************************/
 
+.main-app {
+    -fx-background-color: #fcfcfc;
+}
+
 #main-nav {
     -fx-text-fill: -fx-secondary-color-light;
-}
-
-#main-nav .tab {
     -fx-background-color: -fx-primary-color;
 }
 
-#main-nav *.tab-header-background {
-    -fx-background-color: -fx-primary-color;
-}
-
-.jfx-tab-pane .tab-selected-line {
-    -fx-background-color: -fx-primary-color-dark;
-    -fx-pref-height: 3px;
-}
-
-.sub-nav .tab {
-    -fx-background-color: transparent !important;
-}
-
-.sub-nav *.tab-header-background {
-    -fx-background-color: transparent !important;
-    -fx-border-color: -fx-primary-color-light;
-    -fx-border-width: 0px 0px 2px 0px;
-}
-
-.sub-nav .tab-label {
-    -fx-text-fill: -fx-primary-color-dark;
+.btn-main-nav {
+    -fx-text-fill: -fx-secondary-color-light;
 }
 
 /***********************************************************************************************************************

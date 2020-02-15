@@ -7,6 +7,7 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -14,8 +15,11 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-public class LoginController {
+public class LoginController implements Initializable {
 
     //******************************************************************************************************************
     //******************************************************************************************************************
@@ -37,6 +41,19 @@ public class LoginController {
     @FXML
     private Label lblSignIn;
 
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  OTHER GLOBAL VARIABLES
+    //******************************************************************************************************************
+
+    Locale userLocale;
+    ResourceBundle rb;
+
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  METHODS
+    //******************************************************************************************************************
+
     /**
      * Verify that user name/ password pair exist in database prior to loading main.fxml
      * @param event
@@ -54,11 +71,21 @@ public class LoginController {
             stage.show();
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Login failed!");
-            alert.setHeaderText("Login failed!");
-            alert.setContentText("Incorrect username or password!");
+            alert.setTitle(rb.getString("logInErrorTitle"));
+            alert.setHeaderText(rb.getString("logInErrorHeader"));
+            alert.setContentText(rb.getString("logInErrorContent"));
             alert.showAndWait();
         }
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.userLocale = Locale.getDefault();
+        this.rb = ResourceBundle.getBundle("com/derricksouthworth/utilities/Login", this.userLocale);
+
+        lblSignIn.setText(this.rb.getString("signInLabel"));
+        txtUserName.setPromptText(this.rb.getString("usernamePrompt"));
+        pwdPassword.setPromptText(this.rb.getString("passwordPrompt"));
+        btnSignIn.setText(this.rb.getString("submitButton"));
+    }
 }

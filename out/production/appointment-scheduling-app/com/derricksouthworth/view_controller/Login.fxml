@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="270.0" prefWidth="250.0" stylesheets="@../utilities/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.derricksouthworth.view_controller.LoginController">
    <children>
-      <Label fx:id="lblSignIn" alignment="CENTER" layoutX="265.0" layoutY="114.0" text="Sign In" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Label fx:id="lblSignIn" alignment="CENTER" layoutX="265.0" layoutY="114.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <padding>
             <Insets top="30.0" />
          </padding>
@@ -18,8 +18,8 @@
             <Font name="Arial" size="24.0" />
          </font>
       </Label>
-      <JFXTextField fx:id="txtUserName" focusColor="#3f51b5" labelFloat="true" layoutX="233.0" layoutY="119.0" promptText="User Name" unFocusColor="#90a4ae" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="87.0" />
-      <JFXPasswordField fx:id="pwdPassword" focusColor="#3f51b5" labelFloat="true" layoutX="233.0" layoutY="211.0" promptText="Password" unFocusColor="#90a4ae" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="152.0" />
-      <JFXButton fx:id="btnSignIn" layoutX="105.0" layoutY="218.0" onAction="#submitSignIn" styleClass="btn-plain" text="Submit" AnchorPane.bottomAnchor="27.0" AnchorPane.leftAnchor="97.0" AnchorPane.rightAnchor="97.0" />
+      <JFXTextField fx:id="txtUserName" focusColor="#3f51b5" labelFloat="true" layoutX="233.0" layoutY="119.0" unFocusColor="#90a4ae" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="87.0" />
+      <JFXPasswordField fx:id="pwdPassword" focusColor="#3f51b5" labelFloat="true" layoutX="233.0" layoutY="211.0" unFocusColor="#90a4ae" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="152.0" />
+      <JFXButton fx:id="btnSignIn" layoutX="105.0" layoutY="218.0" onAction="#submitSignIn" styleClass="btn-plain" AnchorPane.bottomAnchor="27.0" AnchorPane.leftAnchor="97.0" AnchorPane.rightAnchor="97.0" />
    </children>
 </AnchorPane>

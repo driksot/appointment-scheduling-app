@@ -17,6 +17,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
@@ -24,9 +26,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.derricksouthworth.DAO.CustomerDaoImpl.getCustomer;
@@ -47,7 +47,9 @@ public class AddAppointmentController implements Initializable {
     @FXML
     private JFXTextField txtContact;
     @FXML
-    private JFXComboBox<String> cmbType;
+    private JFXTextField txtType;
+    @FXML
+    private JFXComboBox<String> cmbDuration;
     @FXML
     private JFXTimePicker timeStartTime;
     @FXML
@@ -86,15 +88,35 @@ public class AddAppointmentController implements Initializable {
     @FXML
     void submitAddAppointment(ActionEvent event) throws SQLException, IOException, ParseException {
         Customer customer = getCustomer(txtCustomerName.getText());
+
+        int duration = (cmbDuration.getSelectionModel().getSelectedIndex() + 1) * 15;
+
         String startTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().format(TimeFiles.TIME_FORMATTER);
-        String endTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().plusMinutes(30).format(TimeFiles.TIME_FORMATTER);
+        String endTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().plusMinutes(duration).format(TimeFiles.TIME_FORMATTER);
 
         if(customer == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("ERROR adding appointment");
             alert.setHeaderText("Invalid customer");
-            alert.setContentText("Please input the name of an existing customer.");
-            alert.showAndWait();
+            alert.setContentText("Please input the name of an existing customer or create a new record.");
+
+            ButtonType buttonTypeNewCustomer = new ButtonType("New Customer");
+            ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            alert.getButtonTypes().setAll(buttonTypeNewCustomer, buttonTypeCancel);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == buttonTypeNewCustomer) {
+                Stage stage = (Stage) btnSubmit.getScene().getWindow();
+                Parent scene = FXMLLoader.load(getClass().getResource("add_customer.fxml"));
+                stage.setScene(new Scene(scene));
+                stage.show();
+            } else {
+                Stage stage = (Stage) btnSubmit.getScene().getWindow();
+                Parent scene = FXMLLoader.load(getClass().getResource("add_appointment.fxml"));
+                stage.setScene(new Scene(scene));
+                stage.show();
+            }
         } else {
             int appointmentID = Integer.parseInt(txtAppointmentID.getText());
 
@@ -102,11 +124,11 @@ public class AddAppointmentController implements Initializable {
             int userID = DBConnect.getCurrentUser().getUserID();
             String location = txtLocation.getText();
             String contact = txtContact.getText();
-            String type = cmbType.getSelectionModel().getSelectedItem();
+            String type = txtType.getText();
             String start = TimeFiles.timeToUTC(startTime);
             String end = TimeFiles.timeToUTC(endTime);
 
-            Appointment addAppointment = new Appointment(appointmentID, customerName, userID, location, contact, "test",
+            Appointment addAppointment = new Appointment(appointmentID, customerName, userID, location, contact, type,
                     start, end);
 
             boolean isValid = true;
@@ -133,6 +155,7 @@ public class AddAppointmentController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        cmbDuration.getItems().addAll("15 minutes", "30 minutes", "45 minutes", "60 minutes");
         try {
             txtAppointmentID.setText(Integer.toString(MainController.getAllAppointments(null).size() + 1));
         } catch (SQLException e) {

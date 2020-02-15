@@ -9,8 +9,6 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 
 import static com.derricksouthworth.utilities.TimeFiles.*;
@@ -23,34 +21,55 @@ import static com.derricksouthworth.utilities.TimeFiles.*;
 
 public class CustomerDaoImpl {
 
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  GLOBAL VARIABLES
+    //******************************************************************************************************************
+
     private static Connection conn = DBConnect.getInstance().getConn();
     private static String currentUser = DBConnect.getCurrentUser().getUserName();
     private static int currentUserID = DBConnect.getCurrentUser().getUserID();
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
 
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  CUSTOMER METHODS
+    //******************************************************************************************************************
+
     /**
-     * Take results from ResultSet and Construct Customer
-     * @param result
-     * @param customerName
-     * @return
-     * @throws SQLException
-     * @throws ParseException
+     * Handles CREATE task for given Customer Object
+     * @param customer
      */
-    private static Customer buildCustomer(ResultSet result, String customerName) throws SQLException, ParseException {
-        int customerID = result.getInt(Query.COLUMN_CUSTOMER_ID);
-        String address = result.getString(Query.COLUMN_ADDRESS);
-        String address2 = result.getString(Query.COLUMN_ADDRESS_2);
-        String city = result.getString(Query.COLUMN_CITY_NAME);
-        String postalCode = result.getString(Query.COLUMN_POSTAL_CODE);
-        String phone = result.getString(Query.COLUMN_PHONE);
-        Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
-        String createdBy = result.getString(Query.COLUMN_CREATED_BY);
-        Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
-        String lastUpdateBy = result.getString(Query.COLUMN_LAST_UPDATE_BY);
-        Customer customer = new Customer(customerID, customerName, address, address2, city, postalCode, phone,
-                createDate, createdBy, lastUpdate, lastUpdateBy);
-        return customer;
+    public static void addCustomer(Customer customer, int cityID) {
+        int maxAddressID = getMaxAddressID();
+        try {
+            PreparedStatement addressStatement = conn.prepareStatement(Query.INSERT_ADDRESS);
+            addressStatement.setInt(1, maxAddressID);
+            addressStatement.setString(2, customer.getAddress());
+            addressStatement.setString(3, customer.getAddress2());
+            addressStatement.setInt(4, cityID);
+            addressStatement.setString(5, customer.getPostalCode());
+            addressStatement.setString(6, customer.getPhone());
+            addressStatement.setString(7, currentUser);
+            addressStatement.setString(8, currentUser);
+            addressStatement.executeUpdate();
+
+            PreparedStatement customerStatement = conn.prepareStatement(Query.INSERT_CUSTOMER);
+            customerStatement.setInt(1, customer.getCustomerID());
+            customerStatement.setString(2, customer.getCustomerName());
+            customerStatement.setInt(3, maxAddressID);
+            customerStatement.setString(4, currentUser);
+            customerStatement.setString(5, currentUser);
+            customerStatement.executeUpdate();
+
+            addressStatement.close();
+            customerStatement.close();
+        } catch (SQLException e) {
+            System.out.println("Customer Addition failed: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * Handles READ task for all Customer Objects
@@ -107,6 +126,99 @@ public class CustomerDaoImpl {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+
+    /**
+     * Handles UPDATE task for given Customer Object
+     * @param customer
+     */
+    public static void updateCustomer(Customer customer) {
+        try {
+            PreparedStatement statement = conn.prepareStatement(Query.UPDATE_CUSTOMER);
+            statement.setString(1, customer.getCustomerName());
+            statement.setString(2, customer.getAddress());
+            statement.setString(3, customer.getAddress2());
+            statement.setString(4, customer.getPostalCode());
+            statement.setString(5, customer.getPhone());
+            statement.setString(6, currentUser);
+            statement.setString(7, currentUser);
+            statement.setInt(8, customer.getCustomerID());
+
+            int rowsUpdated = statement.executeUpdate();
+            if(rowsUpdated > 0) {
+                System.out.println("Customer record was updated successfully.");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            System.out.println("Customer Update failed: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handles DELETE task for given Customer Object
+     * @param customerID
+     */
+    public static void deleteCustomer(int customerID) {
+        try {
+            PreparedStatement statement = conn.prepareStatement(Query.DELETE_CUSTOMER);
+            statement.setInt(1, customerID);
+
+            int rowsDeleted = statement.executeUpdate();
+            if(rowsDeleted > 0) {
+                System.out.println("Customer record was deleted successfully.");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            System.out.println("Customer Record Delete failed: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  APPOINTMENT METHODS
+    //******************************************************************************************************************
+
+    /**
+     * Handles CREATE task for appointments associated with give customer
+     * @param appointment
+     * @param customerID
+     * @throws SQLException
+     */
+    public static void addAppointment(Appointment appointment, int customerID) throws SQLException {
+        PreparedStatement addAppointment = null;
+        String sqlStatement = Query.INSERT_APPOINTMENT;
+
+        try {
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            addAppointment = conn.prepareStatement(sqlStatement);
+            addAppointment.setInt(1, appointment.getAppointmentID());
+            addAppointment.setInt(2, customerID);
+            addAppointment.setInt(3, currentUserID);
+            addAppointment.setString(4, appointment.getLocation());
+            addAppointment.setString(5, appointment.getContact());
+            addAppointment.setString(6, appointment.getType());
+            addAppointment.setString(7, appointment.getStart());
+            addAppointment.setString(8, appointment.getEnd());
+            addAppointment.setString(9, currentUser);
+            addAppointment.setString(10, currentUser);
+
+            addAppointment.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // close all jdbc resources
+        } finally {
+            if (addAppointment != null) {
+                addAppointment.close();
+            }
+            conn.setAutoCommit(true);
+        }
     }
 
     /**
@@ -176,53 +288,6 @@ public class CustomerDaoImpl {
     }
 
     /**
-     * Handles UPDATE task for given Customer Object
-     * @param customer
-     */
-    public static void updateCustomer(Customer customer) {
-        try {
-            PreparedStatement statement = conn.prepareStatement(Query.UPDATE_CUSTOMER);
-            statement.setString(1, customer.getCustomerName());
-            statement.setString(2, customer.getAddress());
-            statement.setString(3, customer.getAddress2());
-            statement.setString(4, customer.getPostalCode());
-            statement.setString(5, customer.getPhone());
-            statement.setString(6, currentUser);
-            statement.setString(7, currentUser);
-            statement.setInt(8, customer.getCustomerID());
-
-            int rowsUpdated = statement.executeUpdate();
-            if(rowsUpdated > 0) {
-                System.out.println("Customer record was updated successfully.");
-            }
-            statement.close();
-        } catch (SQLException e) {
-            System.out.println("Customer Update failed: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Handles DELETE task for given Customer Object
-     * @param customerID
-     */
-    public static void deleteCustomer(int customerID) {
-        try {
-            PreparedStatement statement = conn.prepareStatement(Query.DELETE_CUSTOMER);
-            statement.setInt(1, customerID);
-
-            int rowsDeleted = statement.executeUpdate();
-            if(rowsDeleted > 0) {
-                System.out.println("Customer record was deleted successfully.");
-            }
-            statement.close();
-        } catch (SQLException e) {
-            System.out.println("Customer Record Delete failed: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Handles DELETE task for given Appointment Object
      * @param appointmentID
      * @throws SQLException
@@ -251,72 +316,47 @@ public class CustomerDaoImpl {
         }
     }
 
-    /**
-     * Handles CREATE task for given Customer Object
-     * @param customer
-     */
-    public static void addCustomer(Customer customer, int cityID) {
-        int maxAddressID = getMaxAddressID();
-        try {
-            PreparedStatement addressStatement = conn.prepareStatement(Query.INSERT_ADDRESS);
-            addressStatement.setInt(1, maxAddressID);
-            addressStatement.setString(2, customer.getAddress());
-            addressStatement.setString(3, customer.getAddress2());
-            addressStatement.setInt(4, cityID);
-            addressStatement.setString(5, customer.getPostalCode());
-            addressStatement.setString(6, customer.getPhone());
-            addressStatement.setString(7, currentUser);
-            addressStatement.setString(8, currentUser);
-            addressStatement.executeUpdate();
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  CUSTOMER AND APPOINTMENT REPORT METHODS
+    //******************************************************************************************************************
 
-            PreparedStatement customerStatement = conn.prepareStatement(Query.INSERT_CUSTOMER);
-            customerStatement.setInt(1, customer.getCustomerID());
-            customerStatement.setString(2, customer.getCustomerName());
-            customerStatement.setInt(3, maxAddressID);
-            customerStatement.setString(4, currentUser);
-            customerStatement.setString(5, currentUser);
-            customerStatement.executeUpdate();
-
-            addressStatement.close();
-            customerStatement.close();
-        } catch (SQLException e) {
-            System.out.println("Customer Addition failed: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public static void addAppointment(Appointment appointment, int customerID) throws SQLException {
-        PreparedStatement addAppointment = null;
-        String sqlStatement = Query.INSERT_APPOINTMENT;
+    public static String getAppointmentTypeByMonth() throws SQLException {
+        PreparedStatement getAppointments = null;
+        String sqlStatement = Query.QUERY_GET_APPOINTMENT_TYPE_BY_MONTH;
+        StringBuilder appointmentTypeByMonth = new StringBuilder();
+        ResultSet result = null;
 
         try {
             // Avoid committing before transaction is complete
             conn.setAutoCommit(false);
 
-            addAppointment = conn.prepareStatement(sqlStatement);
-            addAppointment.setInt(1, appointment.getAppointmentID());
-            addAppointment.setInt(2, customerID);
-            addAppointment.setInt(3, currentUserID);
-            addAppointment.setString(4, appointment.getLocation());
-            addAppointment.setString(5, appointment.getContact());
-            addAppointment.setString(6, appointment.getType());
-            addAppointment.setString(7, appointment.getStart());
-            addAppointment.setString(8, appointment.getEnd());
-            addAppointment.setString(9, currentUser);
-            addAppointment.setString(10, currentUser);
-
-            addAppointment.executeUpdate();
-
+            getAppointments = conn.prepareStatement(sqlStatement);
+            result = getAppointments.executeQuery();
+            while (result.next()) {
+                appointmentTypeByMonth.append(String.format("%1$-55s %2$-55s %3$d \n",
+                        result.getString("Month"),
+                        result.getString("Appointment Type"),
+                        result.getInt("Total")));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            // close all jdbc resources
         } finally {
-            if (addAppointment != null) {
-                addAppointment.close();
+            if (getAppointments != null) {
+                getAppointments.close();
+            }
+            if (result != null) {
+                result.close();
             }
             conn.setAutoCommit(true);
         }
+        return appointmentTypeByMonth.toString();
     }
+
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  UTILITY METHODS
+    //******************************************************************************************************************
 
     /**
      * Query to get new max ID for Address Table
@@ -336,5 +376,29 @@ public class CustomerDaoImpl {
             e.printStackTrace();
         }
         return maxID + 1;
+    }
+
+    /**
+     * Take results from ResultSet and Construct Customer
+     * @param result
+     * @param customerName
+     * @return
+     * @throws SQLException
+     * @throws ParseException
+     */
+    private static Customer buildCustomer(ResultSet result, String customerName) throws SQLException, ParseException {
+        int customerID = result.getInt(Query.COLUMN_CUSTOMER_ID);
+        String address = result.getString(Query.COLUMN_ADDRESS);
+        String address2 = result.getString(Query.COLUMN_ADDRESS_2);
+        String city = result.getString(Query.COLUMN_CITY_NAME);
+        String postalCode = result.getString(Query.COLUMN_POSTAL_CODE);
+        String phone = result.getString(Query.COLUMN_PHONE);
+        Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
+        String createdBy = result.getString(Query.COLUMN_CREATED_BY);
+        Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
+        String lastUpdateBy = result.getString(Query.COLUMN_LAST_UPDATE_BY);
+        Customer customer = new Customer(customerID, customerName, address, address2, city, postalCode, phone,
+                createDate, createdBy, lastUpdate, lastUpdateBy);
+        return customer;
     }
 }

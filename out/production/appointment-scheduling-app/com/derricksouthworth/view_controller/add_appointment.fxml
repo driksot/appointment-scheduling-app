@@ -34,12 +34,17 @@
             <JFXTextField fx:id="txtContact" labelFloat="true" promptText="Contact" />
             <HBox spacing="20.0">
                <children>
-                  <JFXComboBox fx:id="cmbType" labelFloat="true" maxWidth="1.7976931348623157E308" minWidth="250.0" promptText="Type" HBox.hgrow="ALWAYS" />
-                  <JFXTimePicker fx:id="timeStartTime" defaultColor="#62757f" minWidth="80.0" promptText="Start Time" HBox.hgrow="ALWAYS" />
+                  <JFXTextField fx:id="txtType" labelFloat="true" promptText="Type" HBox.hgrow="ALWAYS" />
+                  <JFXComboBox fx:id="cmbDuration" labelFloat="true" promptText="Duration                    " HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <JFXDatePicker fx:id="dateStartDate" defaultColor="#62757f" promptText="Date" />
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+            <HBox spacing="20.0">
+               <children>
+                  <JFXDatePicker fx:id="dateStartDate" defaultColor="#62757f" prefWidth="250.0" promptText="Date" HBox.hgrow="ALWAYS" />
+                  <JFXTimePicker fx:id="timeStartTime" defaultColor="#62757f" prefWidth="250.0" promptText="Start Time" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" spacing="20.0">
                <children>
                   <JFXButton fx:id="btnCancel" onAction="#cancelAddAppointment" styleClass="btn-plain" text="Cancel" />
                   <JFXButton fx:id="btnSubmit" onAction="#submitAddAppointment" styleClass="btn-plain" text="Submit" />

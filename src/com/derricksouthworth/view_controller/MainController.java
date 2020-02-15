@@ -16,7 +16,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -27,29 +28,34 @@ import java.util.Calendar;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.derricksouthworth.DAO.CustomerDaoImpl.getAllCustomers;
-import static com.derricksouthworth.DAO.CustomerDaoImpl.getCustomerAppointments;
+import static com.derricksouthworth.DAO.CustomerDaoImpl.*;
 
 public class MainController implements Initializable {
 
     //******************************************************************************************************************
     //******************************************************************************************************************
-    //  MAIN CONTAINERS
+    //  MAIN NAVIGATION
     //******************************************************************************************************************
 
     @FXML
-    private Tab tabAppointments;
+    private BorderPane bpaneMain;
+
     @FXML
-    private Tab tabCustomers;
+    private JFXButton btnAppointmentsPane;
     @FXML
-    private Tab tabReports;
+    private JFXButton btnCustomersPane;
     @FXML
-    private Tab tabExit;
+    private JFXButton btnReportsPane;
+    @FXML
+    private JFXButton btnExitApp;
 
     //******************************************************************************************************************
     //******************************************************************************************************************
     //  APPOINTMENTS CONTROLS
     //******************************************************************************************************************
+
+    @FXML
+    private VBox vBoxAppointments;
 
     @FXML
     private JFXButton btnAddAppointment;
@@ -61,6 +67,8 @@ public class MainController implements Initializable {
     private JFXButton btnAppointmentByWeek;
     @FXML
     private JFXButton btnAppointmentByMonth;
+    @FXML
+    private JFXButton btnAppointmentByAll;
     @FXML
     private TableView<Appointment> tblAppointments;
     @FXML
@@ -75,13 +83,14 @@ public class MainController implements Initializable {
     private TableColumn<Appointment, Calendar> colAppointmentStart;
     @FXML
     private TableColumn<Appointment, Calendar> colAppointmentEnd;
-    @FXML
-    private GridPane gridCalendar;
 
     //******************************************************************************************************************
     //******************************************************************************************************************
     //  CUSTOMERS CONTROLS
     //******************************************************************************************************************
+
+    @FXML
+    private VBox vBoxCustomers;
 
     @FXML
     private JFXButton btnAddCustomer;
@@ -112,11 +121,14 @@ public class MainController implements Initializable {
     //******************************************************************************************************************
 
     @FXML
+    private VBox vBoxReports;
+
+    @FXML
     private JFXButton btnReportAppointmentByMonth;
     @FXML
     private JFXButton btnReportConsultantSchedule;
     @FXML
-    private JFXButton btnReportLastWeekEdits;
+    private JFXButton btnReportCustomerAppointmentTotal;
     @FXML
     private JFXButton btnGenerateReport;
 
@@ -153,7 +165,32 @@ public class MainController implements Initializable {
 
     //******************************************************************************************************************
     //******************************************************************************************************************
-    //  UI CONTROL METHODS
+    //  NAVIGATION UI CONTROL METHODS
+    //******************************************************************************************************************
+
+    @FXML
+    void loadAppointmentsPane(ActionEvent event) {
+        vBoxAppointments.toFront();
+    }
+
+    @FXML
+    void loadCustomersPane(ActionEvent event) {
+        vBoxCustomers.toFront();
+    }
+
+    @FXML
+    void loadReportsPane(ActionEvent event) {
+        vBoxReports.toFront();
+    }
+
+    @FXML
+    void exitApp(ActionEvent event) {
+
+    }
+
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  APPOINTMENTS UI CONTROL METHODS
     //******************************************************************************************************************
 
     /**
@@ -201,23 +238,10 @@ public class MainController implements Initializable {
         }
     }
 
-    /**
-     * Show appointment in the upcoming month
-     * @param event
-     */
-    @FXML
-    void loadTableAppointmentsByMonth(ActionEvent event) {
-        loadAppointmentTable(Query.SORT_BY_MONTH);
-    }
-
-    /**
-     * Show appointments in the upcoming week
-     * @param event
-     */
-    @FXML
-    void loadTableAppointmentsByWeek(ActionEvent event) {
-        loadAppointmentTable(Query.SORT_BY_WEEK);
-    }
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  CUSTOMERS UI CONTROL METHODS
+    //******************************************************************************************************************
 
     /**
      * Open add_customer.fxml stage in new window
@@ -280,6 +304,11 @@ public class MainController implements Initializable {
         }
     }
 
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  REPORTS UI CONTROL METHODS
+    //******************************************************************************************************************
+
     @FXML
     void generateReport(ActionEvent event) {
 
@@ -287,7 +316,12 @@ public class MainController implements Initializable {
 
     @FXML
     void showReportAppointmentByMonth(ActionEvent event) {
-
+        txtShowReport.clear();
+        try {
+            txtShowReport.setText(getAppointmentTypeByMonth());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -296,34 +330,19 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    void showReportLastWeekEdits(ActionEvent event) {
+    void showReportCustomerAppointmentTotal(ActionEvent event) {
 
     }
 
     //******************************************************************************************************************
     //******************************************************************************************************************
-    //  UTILITY METHODS
+    //  APPOINTMENT UTILITY METHODS
     //******************************************************************************************************************
 
     /**
-     * Populate Customer table using getAllCustomers from CustomerDaoImpl
+     * Populate Appointments table from database in given time frame
+     * @param sortBy
      */
-    private void loadCustomerTable() {
-        colCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
-        colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        colCustomerAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
-        colCustomerAddress2.setCellValueFactory(new PropertyValueFactory<>("address2"));
-        colCustomerCity.setCellValueFactory(new PropertyValueFactory<>("city"));
-        colCustomerPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
-        colCustomerPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
-
-        try {
-            tblCustomers.setItems(getAllCustomers());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void loadAppointmentTable(String sortBy) {
         tblAppointments.getItems().clear();
         colAppointmentCustomer.setCellValueFactory(new PropertyValueFactory<>("customer"));
@@ -331,10 +350,12 @@ public class MainController implements Initializable {
         colAppointmentLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
         colAppointmentContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         colAppointmentStart.setCellValueFactory(new PropertyValueFactory<>("start"));
+        colAppointmentStart.setSortType(TableColumn.SortType.ASCENDING);
         colAppointmentEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
 
         try {
             tblAppointments.setItems(getAllAppointments(sortBy));
+            tblAppointments.getSortOrder().add(colAppointmentStart);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -360,12 +381,69 @@ public class MainController implements Initializable {
     }
 
     /**
+     * Show appointment in the upcoming month
+     * @param event
+     */
+    @FXML
+    void loadTableAppointmentsByMonth(ActionEvent event) {
+        loadAppointmentTable(Query.SORT_BY_MONTH);
+    }
+
+    /**
+     * Show appointments in the upcoming week
+     * @param event
+     */
+    @FXML
+    void loadTableAppointmentsByWeek(ActionEvent event) {
+        loadAppointmentTable(Query.SORT_BY_WEEK);
+    }
+
+    /**
+     * Show all appointments
+     * @param event
+     */
+    @FXML
+    void loadTableAppointmentsByAll(ActionEvent event) {
+        loadAppointmentTable(null);
+    }
+
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  CUSTOMER UTILITY METHODS
+    //******************************************************************************************************************
+
+    /**
+     * Populate Customer table using getAllCustomers from CustomerDaoImpl
+     */
+    private void loadCustomerTable() {
+        colCustomerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        colCustomerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        colCustomerAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        colCustomerAddress2.setCellValueFactory(new PropertyValueFactory<>("address2"));
+        colCustomerCity.setCellValueFactory(new PropertyValueFactory<>("city"));
+        colCustomerPostalCode.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        colCustomerPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
+
+        try {
+            tblCustomers.setItems(getAllCustomers());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //******************************************************************************************************************
+    //******************************************************************************************************************
+    //  INITIALIZE
+    //******************************************************************************************************************
+
+    /**
      * Initialize and populate tables
      * @param location
      * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        vBoxAppointments.toFront();
         loadCustomerTable();
         loadAppointmentTable(null);
     }

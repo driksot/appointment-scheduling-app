@@ -74,14 +74,30 @@ public class UpdateCustomerController implements Initializable {
     //  UI CONTROL METHODS
     //******************************************************************************************************************
 
+    /**
+     * Open add_city.fxml stage in new window
+     * @param event
+     * @throws IOException
+     */
     @FXML
-    void addCity(ActionEvent event) {
-
+    void addCity(ActionEvent event) throws IOException {
+        Stage stage = (Stage) btnAddCity.getScene().getWindow();
+        Parent scene = FXMLLoader.load(getClass().getResource("add_customer.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
     }
 
+    /**
+     * Discard form and return to main.fxml
+     * @param event
+     * @throws IOException
+     */
     @FXML
-    void cancelUpdateCustomer(ActionEvent event) {
-
+    void cancelUpdateCustomer(ActionEvent event) throws IOException {
+        Stage stage = (Stage) btnCancel.getScene().getWindow();
+        Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));
+        stage.setScene(new Scene(scene));
+        stage.show();
     }
 
     /**
