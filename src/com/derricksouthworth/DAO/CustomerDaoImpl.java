@@ -15,7 +15,6 @@ import java.sql.*;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Collections;
 
 import static com.derricksouthworth.utilities.TimeFiles.*;
 
@@ -46,11 +45,19 @@ public class CustomerDaoImpl {
     /**
      * Handles CREATE task for given Customer Object
      * @param customer
+     * @param cityID
+     * @throws SQLException
      */
-    public static void addCustomer(Customer customer, int cityID) {
+    public static void addCustomer(Customer customer, int cityID) throws SQLException {
         int maxAddressID = getMaxAddressID();
+        PreparedStatement addressStatement = null;
+        PreparedStatement customerStatement = null;
+
         try {
-            PreparedStatement addressStatement = conn.prepareStatement(Query.INSERT_ADDRESS);
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            addressStatement = conn.prepareStatement(Query.INSERT_ADDRESS);
             addressStatement.setInt(1, maxAddressID);
             addressStatement.setString(2, customer.getAddress());
             addressStatement.setString(3, customer.getAddress2());
@@ -61,7 +68,7 @@ public class CustomerDaoImpl {
             addressStatement.setString(8, currentUser);
             addressStatement.executeUpdate();
 
-            PreparedStatement customerStatement = conn.prepareStatement(Query.INSERT_CUSTOMER);
+            customerStatement = conn.prepareStatement(Query.INSERT_CUSTOMER);
             customerStatement.setInt(1, customer.getCustomerID());
             customerStatement.setString(2, customer.getCustomerName());
             customerStatement.setInt(3, maxAddressID);
@@ -69,11 +76,18 @@ public class CustomerDaoImpl {
             customerStatement.setString(5, currentUser);
             customerStatement.executeUpdate();
 
-            addressStatement.close();
-            customerStatement.close();
         } catch (SQLException e) {
             System.out.println("Customer Addition failed: " + e.getMessage());
-            e.printStackTrace();
+
+            // close database resources
+        } finally {
+            if (addressStatement != null) {
+                addressStatement.close();
+            }
+            if (customerStatement != null) {
+                customerStatement.close();
+            }
+            conn.setAutoCommit(true);
         }
     }
 
@@ -81,6 +95,7 @@ public class CustomerDaoImpl {
     /**
      * Handles READ task for all Customer Objects
      * @return
+     * @throws SQLException
      */
     public static ObservableList<Customer> getAllCustomers() throws SQLException {
         Statement statement = null;
@@ -89,6 +104,7 @@ public class CustomerDaoImpl {
 
         // clear contents of list to avoid adding a customer more than once
         allCustomers.clear();
+
         try {
             // Avoid committing before transaction is complete
             conn.setAutoCommit(false);
@@ -100,10 +116,13 @@ public class CustomerDaoImpl {
                 String customerName = result.getString(Query.COLUMN_CUSTOMER_NAME);
                 allCustomers.add(buildCustomer(result, customerName));
             }
+
             return allCustomers;
+
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
             return null;
+
             // close all jdbc resources
         } finally {
             if (statement != null) {
@@ -120,30 +139,54 @@ public class CustomerDaoImpl {
      * Handles READ task for desired Customer Object
      * @param customerName
      * @return
+     * @throws SQLException
      */
-    public static Customer getCustomer(String customerName) {
+    public static Customer getCustomer(String customerName) throws SQLException {
+        Statement statement = null;
+        String sqlStatement = String.format("%s%s\"", Query.QUERY_GET_CUSTOMER, customerName);
+        ResultSet result = null;
+
         try {
-            Statement statement = conn.createStatement();
-            String sqlStatement = String.format("%s%s\"", Query.QUERY_GET_CUSTOMER, customerName);
-            ResultSet result = statement.executeQuery(sqlStatement);
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.createStatement();
+            result = statement.executeQuery(sqlStatement);
             if(result.next()) {
                 return buildCustomer(result, customerName);
             }
+
         } catch (SQLException | ParseException e) {
-            e.printStackTrace();
+            System.out.println("Unable to retrieve customer record: " + e.getMessage());
+
+            // close jdbc resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (result != null) {
+                result.close();
+            }
+            conn.setAutoCommit(true);
         }
+
         return null;
     }
-
 
 
     /**
      * Handles UPDATE task for given Customer Object
      * @param customer
+     * @throws SQLException
      */
-    public static void updateCustomer(Customer customer) {
+    public static void updateCustomer(Customer customer) throws SQLException {
+        PreparedStatement statement = null;
+
         try {
-            PreparedStatement statement = conn.prepareStatement(Query.UPDATE_CUSTOMER);
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.prepareStatement(Query.UPDATE_CUSTOMER);
             statement.setString(1, customer.getCustomerName());
             statement.setString(2, customer.getAddress());
             statement.setString(3, customer.getAddress2());
@@ -157,10 +200,16 @@ public class CustomerDaoImpl {
             if(rowsUpdated > 0) {
                 System.out.println("Customer record was updated successfully.");
             }
-            statement.close();
+
         } catch (SQLException e) {
             System.out.println("Customer Update failed: " + e.getMessage());
-            e.printStackTrace();
+
+            // close jdbc resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            conn.setAutoCommit(true);
         }
     }
 
@@ -168,19 +217,30 @@ public class CustomerDaoImpl {
      * Handles DELETE task for given Customer Object
      * @param customerID
      */
-    public static void deleteCustomer(int customerID) {
+    public static void deleteCustomer(int customerID) throws SQLException {
+        PreparedStatement statement = null;
+
         try {
-            PreparedStatement statement = conn.prepareStatement(Query.DELETE_CUSTOMER);
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.prepareStatement(Query.DELETE_CUSTOMER);
             statement.setInt(1, customerID);
 
             int rowsDeleted = statement.executeUpdate();
             if(rowsDeleted > 0) {
                 System.out.println("Customer record was deleted successfully.");
             }
-            statement.close();
+
         } catch (SQLException e) {
             System.out.println("Customer Record Delete failed: " + e.getMessage());
-            e.printStackTrace();
+
+            // close jdbc resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            conn.setAutoCommit(true);
         }
     }
 
@@ -218,7 +278,8 @@ public class CustomerDaoImpl {
             addAppointment.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Unable to add appointment: " + e.getMessage());
+
             // close all jdbc resources
         } finally {
             if (addAppointment != null) {
@@ -231,6 +292,7 @@ public class CustomerDaoImpl {
     /**
      * Handles READ task for appointments associated with give customer
      * @param customer
+     * @param sortBy
      * @return
      * @throws SQLException
      */
@@ -241,6 +303,8 @@ public class CustomerDaoImpl {
         ResultSet result = null;
         LocalDate appointmentStart = LocalDate.now();
         LocalDate appointmentEnd = null;
+
+        // constrain query to the coming week or month
         if(sortBy == Query.SORT_BY_WEEK) appointmentEnd = LocalDate.now().plusWeeks(1);
         if(sortBy == Query.SORT_BY_MONTH) appointmentEnd = LocalDate.now().plusMonths(1);
 
@@ -251,6 +315,7 @@ public class CustomerDaoImpl {
             // Avoid committing before transaction is complete
             conn.setAutoCommit(false);
 
+            // apply query constraints if given
             if(appointmentEnd != null) {
                 getAppointments = conn.prepareStatement(sortedStatement);
                 getAppointments.setInt(1, customer.getCustomerID());
@@ -278,10 +343,13 @@ public class CustomerDaoImpl {
                         location, contact, type, start, end, createDate, createdBy, lastUpdate, lastUpdateBy);
                 Customer.addCustomerAppointment(appointmentResult);
             }
+
             return Customer.getCustomerAppointments();
+
         } catch (SQLException | ParseException e) {
-            e.printStackTrace();
+            System.out.println("Unable to retrieve appointments: " + e.getMessage());
             return null;
+
             // close all jdbc resources
         } finally {
             if (getAppointments != null) {
@@ -294,6 +362,12 @@ public class CustomerDaoImpl {
         }
     }
 
+    /**
+     * Handle UPDATE task for given customer appointment
+     * @param appointment
+     * @param customerID
+     * @throws SQLException
+     */
     public static void updateAppointment(Appointment appointment, int customerID) throws SQLException {
         PreparedStatement updateAppointment = null;
 
@@ -318,7 +392,8 @@ public class CustomerDaoImpl {
             }
         } catch (SQLException e) {
             System.out.println("Appointment Update failed: " + e.getMessage());
-            e.printStackTrace();
+
+            // close jdbc resources
         } finally {
             if (updateAppointment != null) {
                 updateAppointment.close();
@@ -347,7 +422,9 @@ public class CustomerDaoImpl {
                 System.out.println("Appointment was deleted successfully.");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Unable to delete appointment");
+
+            // close jdbc resources
         } finally {
             if (deleteAppointment != null) {
                 deleteAppointment.close();
@@ -361,6 +438,12 @@ public class CustomerDaoImpl {
     //  CUSTOMER AND APPOINTMENT REPORT METHODS
     //******************************************************************************************************************
 
+    /**
+     * Query database for given fields and populate table view
+     * @param tblReports
+     * @param query
+     * @throws SQLException
+     */
     public static void getReportData(TableView tblReports, String query) throws SQLException {
         PreparedStatement getData = null;
         String sqlStatement = query;
@@ -374,6 +457,7 @@ public class CustomerDaoImpl {
             getData = conn.prepareStatement(sqlStatement);
             result = getData.executeQuery();
 
+            // dynamically add table columns
             for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
                 final int j = i;
                 TableColumn col = new TableColumn(result.getMetaData().getColumnName(i + 1));
@@ -385,6 +469,7 @@ public class CustomerDaoImpl {
                 tblReports.getColumns().addAll(col);
             }
 
+            // populate table rows
             while (result.next()) {
                 ObservableList<String> row = FXCollections.observableArrayList();
                 for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
@@ -394,8 +479,11 @@ public class CustomerDaoImpl {
             }
 
             tblReports.setItems(report);
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Unable to generate report: " + e.getMessage());
+
+            // close jdbc resources
         } finally {
             if (getData != null) {
                 getData.close();
@@ -415,19 +503,36 @@ public class CustomerDaoImpl {
     /**
      * Query to get new max ID for Address Table
      * @return
+     * @throws SQLException
      */
-    private static int getMaxAddressID() {
+    private static int getMaxAddressID() throws SQLException {
         int maxID = 0;
+        Statement statement = null;
         String sqlStatement = Query.QUERY_MAX_ID_FROM_ADDRESS;
+        ResultSet result = null;
+
         try {
-            Statement statement = conn.createStatement();
-            ResultSet result = statement.executeQuery(sqlStatement);
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.createStatement();
+            result = statement.executeQuery(sqlStatement);
             if(result.next()) {
                 maxID = result.getInt(1);
             }
+
         } catch (SQLException e) {
             System.out.println("Unable to get max address ID: " + e.getMessage());
-            e.printStackTrace();
+
+            // close jdbc resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (result != null) {
+                result.close();
+            }
+            conn.setAutoCommit(true);
         }
         return maxID + 1;
     }

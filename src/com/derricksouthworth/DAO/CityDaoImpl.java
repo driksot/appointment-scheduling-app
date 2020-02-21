@@ -43,62 +43,111 @@ public class CityDaoImpl {
     /**
      * Handles READ task for CRUD on all City Objects
      * @return
+     * @throws SQLException
      */
-    public static ObservableList<City> getAllCities() {
+    public static ObservableList<City> getAllCities() throws SQLException {
+        // clear list to avoid adding cities more than once
         allCities.clear();
+        Statement statement = null;
+        String sqlStatement = Query.QUERY_GET_ALL_CITIES;
+        ResultSet result = null;
+
         try {
-            Statement statement = conn.createStatement();
-            String sqlStatement = Query.QUERY_GET_ALL_CITIES;
-            ResultSet result = statement.executeQuery(sqlStatement);
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.createStatement();
+            result = statement.executeQuery(sqlStatement);
             while(result.next()) {
                 String cityName = result.getString(Query.COLUMN_CITY_NAME);
                 allCities.add(buildCity(result, cityName));
             }
-            result.close();
-            statement.close();
+
             return allCities;
+
         } catch (SQLException | ParseException e) {
-            e.printStackTrace();
+            System.out.println("Unable to retrieve cities: " + e.getMessage());
             return null;
+
+            // close all database resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (result != null) {
+                result.close();
+            }
+            conn.setAutoCommit(true);
         }
     }
 
     /**
      * Handles READ task for CRUD on a desired City Object
      * @param cityName
+     * @throws SQLException
      * @return
      */
-    public static City getCity(String cityName) {
+    public static City getCity(String cityName) throws SQLException {
+        Statement statement = null;
+        String sqlStatement = String.format("%s%s\"", Query.QUERY_GET_CITY, cityName);
+        ResultSet result = null;
+
         try {
-            Statement statement = conn.createStatement();
-            String sqlStatement = String.format("%s%s\"", Query.QUERY_GET_CITY, cityName);
-            ResultSet result = statement.executeQuery(sqlStatement);
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.createStatement();
+            result = statement.executeQuery(sqlStatement);
             if(result.next()) {
                 return buildCity(result, cityName);
             }
+
         } catch (ParseException | SQLException e) {
             e.printStackTrace();
+
+            // close all database resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (result != null) {
+                result.close();
+            }
+            conn.setAutoCommit(true);
         }
+
         return null;
     }
 
     /**
      * Handles DELETE task for CRUD for given City Object
      * @param city
+     * @throws SQLException
      */
-    public static void deleteCity(City city) {
+    public static void deleteCity(City city) throws SQLException {
+        PreparedStatement statement = null;
+
         try {
-            PreparedStatement statement = conn.prepareStatement(Query.DELETE_CITY);
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.prepareStatement(Query.DELETE_CITY);
             statement.setInt(1, city.getCityID());
 
             int rowsDeleted = statement.executeUpdate();
             if(rowsDeleted > 0) {
                 System.out.println("City record was deleted successfully.");
             }
-            statement.close();
+
         } catch (SQLException e) {
             System.out.println("City Record Delete failed: " + e.getMessage());
-            e.printStackTrace();
+
+            // close all database resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            conn.setAutoCommit(true);
         }
     }
 
@@ -106,10 +155,16 @@ public class CityDaoImpl {
      * Handles CREATE task for given City Object
      * @param city
      * @param countryID
+     * @throws SQLException
      */
-    public static void addCity(City city, int countryID) {
+    public static void addCity(City city, int countryID) throws SQLException {
+        PreparedStatement statement = null;
+
         try {
-            PreparedStatement statement = conn.prepareStatement(Query.INSERT_CITY);
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.prepareStatement(Query.INSERT_CITY);
             statement.setInt(1, city.getCityID());
             statement.setString(2, city.getCityName());
             statement.setInt(3, countryID);
@@ -117,10 +172,15 @@ public class CityDaoImpl {
             statement.setString(5, currentUser);
             statement.executeUpdate();
 
-            statement.close();
         } catch (SQLException e) {
             System.out.println("Failed to create city: " + e.getMessage());
-            e.printStackTrace();
+
+            // close all database resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            conn.setAutoCommit(true);
         }
     }
 }

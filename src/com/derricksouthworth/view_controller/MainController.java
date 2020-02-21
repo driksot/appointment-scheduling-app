@@ -315,7 +315,11 @@ public class MainController implements Initializable {
 
         if (result.get() == ButtonType.OK) {
             System.out.println("Customer record deletion confirmed.");
-            CustomerDaoImpl.deleteCustomer(customerID);
+            try {
+                CustomerDaoImpl.deleteCustomer(customerID);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             loadCustomerTable();
         } else {
             System.out.println("Canceled customer record deletion.");

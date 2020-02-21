@@ -111,7 +111,11 @@ public class AddCustomerController implements Initializable {
 
         boolean isValid = true;
         if(isValid) {
-            CustomerDaoImpl.addCustomer(customer, cityID);
+            try {
+                CustomerDaoImpl.addCustomer(customer, cityID);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             Stage stage = (Stage) btnSubmit.getScene().getWindow();
             Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));
             stage.setScene(new Scene(scene));
@@ -135,7 +139,12 @@ public class AddCustomerController implements Initializable {
      * @return
      */
     private ObservableList<String> getCities() {
-        ObservableList<City> allCities = getAllCities();
+        ObservableList<City> allCities = null;
+        try {
+            allCities = getAllCities();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         ObservableList<String> result = FXCollections.observableArrayList();
         for (City city : allCities) {
             result.add(city.getCityName());
