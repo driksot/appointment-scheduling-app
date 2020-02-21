@@ -3,13 +3,19 @@ package com.derricksouthworth.DAO;
 import com.derricksouthworth.model.Appointment;
 import com.derricksouthworth.model.Customer;
 import com.derricksouthworth.utilities.TimeFiles;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.util.Callback;
 
 import java.sql.*;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Collections;
 
 import static com.derricksouthworth.utilities.TimeFiles.*;
 
@@ -30,6 +36,7 @@ public class CustomerDaoImpl {
     private static String currentUser = DBConnect.getCurrentUser().getUserName();
     private static int currentUserID = DBConnect.getCurrentUser().getUserID();
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+    private static ObservableList<ObservableList> report;
 
     //******************************************************************************************************************
     //******************************************************************************************************************
@@ -287,6 +294,39 @@ public class CustomerDaoImpl {
         }
     }
 
+    public static void updateAppointment(Appointment appointment, int customerID) throws SQLException {
+        PreparedStatement updateAppointment = null;
+
+        try {
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            updateAppointment = conn.prepareStatement(Query.UPDATE_APPOINTMENT);
+            updateAppointment.setInt(1, customerID);
+            updateAppointment.setInt(2, currentUserID);
+            updateAppointment.setString(3, appointment.getLocation());
+            updateAppointment.setString(4, appointment.getContact());
+            updateAppointment.setString(5, appointment.getType());
+            updateAppointment.setString(6, appointment.getStart());
+            updateAppointment.setString(7, appointment.getEnd());
+            updateAppointment.setString(8, currentUser);
+            updateAppointment.setInt(9, appointment.getAppointmentID());
+
+            int rowsUpdated = updateAppointment.executeUpdate();
+            if(rowsUpdated > 0) {
+                System.out.println("Appointment was updated successfully.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Appointment Update failed: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (updateAppointment != null) {
+                updateAppointment.close();
+            }
+            conn.setAutoCommit(true);
+        }
+    }
+
     /**
      * Handles DELETE task for given Appointment Object
      * @param appointmentID
@@ -321,36 +361,50 @@ public class CustomerDaoImpl {
     //  CUSTOMER AND APPOINTMENT REPORT METHODS
     //******************************************************************************************************************
 
-    public static String getAppointmentTypeByMonth() throws SQLException {
-        PreparedStatement getAppointments = null;
-        String sqlStatement = Query.QUERY_GET_APPOINTMENT_TYPE_BY_MONTH;
-        StringBuilder appointmentTypeByMonth = new StringBuilder();
+    public static void getReportData(TableView tblReports, String query) throws SQLException {
+        PreparedStatement getData = null;
+        String sqlStatement = query;
         ResultSet result = null;
+        report = FXCollections.observableArrayList();
 
         try {
             // Avoid committing before transaction is complete
             conn.setAutoCommit(false);
 
-            getAppointments = conn.prepareStatement(sqlStatement);
-            result = getAppointments.executeQuery();
-            while (result.next()) {
-                appointmentTypeByMonth.append(String.format("%1$-55s %2$-55s %3$d \n",
-                        result.getString("Month"),
-                        result.getString("Appointment Type"),
-                        result.getInt("Total")));
+            getData = conn.prepareStatement(sqlStatement);
+            result = getData.executeQuery();
+
+            for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
+                final int j = i;
+                TableColumn col = new TableColumn(result.getMetaData().getColumnName(i + 1));
+                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+                        return new SimpleStringProperty(param.getValue().get(j).toString());
+                    }
+                });
+                tblReports.getColumns().addAll(col);
             }
+
+            while (result.next()) {
+                ObservableList<String> row = FXCollections.observableArrayList();
+                for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
+                    row.add(result.getString(i));
+                }
+                report.add(row);
+            }
+
+            tblReports.setItems(report);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (getAppointments != null) {
-                getAppointments.close();
+            if (getData != null) {
+                getData.close();
             }
             if (result != null) {
                 result.close();
             }
             conn.setAutoCommit(true);
         }
-        return appointmentTypeByMonth.toString();
     }
 
     //******************************************************************************************************************

@@ -179,6 +179,19 @@ public class Query {
             "SELECT * FROM " + TABLE_APPOINTMENT + " WHERE " +
                     COLUMN_CUSTOMER_ID + " = ?";
 
+    public static final String UPDATE_APPOINTMENT =
+            "UPDATE " + TABLE_APPOINTMENT + " SET " +
+                    COLUMN_CUSTOMER_ID + " = ?, " +
+                    COLUMN_USER_ID + " = ?, " +
+                    COLUMN_LOCATION + " = ?, " +
+                    COLUMN_CONTACT + " = ?, " +
+                    COLUMN_TYPE + " = ?, " +
+                    COLUMN_START + " = ?, " +
+                    COLUMN_END + " = ?, " +
+                    COLUMN_LAST_UPDATE + " = NOW(), " +
+                    COLUMN_LAST_UPDATE_BY + " = ? WHERE " +
+                    COLUMN_APPOINTMENT_ID + " = ?";
+
     // Appointment DELETE
     public static final String DELETE_APPOINTMENT =
             "DELETE FROM " + TABLE_APPOINTMENT + " WHERE " +
@@ -287,7 +300,7 @@ public class Query {
                     TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_NAME + ", " +
                     TABLE_APPOINTMENT + "." + COLUMN_START + ", " +
                     TABLE_APPOINTMENT + "." + COLUMN_END +
-                    " FROM " + TABLE_APPOINTMENT + "JOIN " + TABLE_CUSTOMER + " ON " +
+                    " FROM " + TABLE_APPOINTMENT + " JOIN " + TABLE_CUSTOMER + " ON " +
                     TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_ID + " = " +
                     TABLE_APPOINTMENT + "." + COLUMN_CUSTOMER_ID +
                     " GROUP BY " + TABLE_APPOINTMENT + "." + COLUMN_CONTACT + ", " +
@@ -300,7 +313,7 @@ public class Query {
                     TABLE_CUSTOMER + " JOIN " + TABLE_APPOINTMENT + " ON " +
                     TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_ID + " = " +
                     TABLE_APPOINTMENT + "." + COLUMN_CUSTOMER_ID +
-                    " GROUP BY " + COLUMN_CUSTOMER_ID;
+                    " GROUP BY " + TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_ID;
 
     //******************************************************************************************************************
     //******************************************************************************************************************

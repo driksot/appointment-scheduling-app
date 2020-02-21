@@ -124,6 +124,9 @@ public class MainController implements Initializable {
     private VBox vBoxReports;
 
     @FXML
+    private TableView<String> tblReports;
+
+    @FXML
     private JFXButton btnReportAppointmentByMonth;
     @FXML
     private JFXButton btnReportConsultantSchedule;
@@ -207,7 +210,22 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void updateAppointment(ActionEvent actionEvent) {
+    public void updateAppointment(ActionEvent actionEvent) throws IOException {
+        if(tblAppointments.getSelectionModel().getSelectedItem() != null) {
+            Appointment appointment = tblAppointments.getSelectionModel().getSelectedItem();
+            UpdateAppointmentController.setAppointmentToUpdate(appointment);
+
+            Stage stage = (Stage) btnUpdateAppointment.getScene().getWindow();
+            Parent scene = FXMLLoader.load(getClass().getResource("update_appointment.fxml"));
+            stage.setScene(new Scene(scene));
+            stage.show();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Unable to update record.");
+            alert.setHeaderText("Failed to update appointment record.");
+            alert.setContentText("Please select a valid appointment.");
+            alert.showAndWait();
+        }
     }
 
     /**
@@ -316,9 +334,9 @@ public class MainController implements Initializable {
 
     @FXML
     void showReportAppointmentByMonth(ActionEvent event) {
-        txtShowReport.clear();
+        tblReports.getColumns().clear();
         try {
-            txtShowReport.setText(getAppointmentTypeByMonth());
+            CustomerDaoImpl.getReportData(tblReports, Query.QUERY_GET_APPOINTMENT_TYPE_BY_MONTH);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -326,12 +344,22 @@ public class MainController implements Initializable {
 
     @FXML
     void showReportConsultantSchedule(ActionEvent event) {
-
+        tblReports.getColumns().clear();
+        try {
+            CustomerDaoImpl.getReportData(tblReports, Query.QUERY_GET_CONSULTANT_SCHEDULES);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     void showReportCustomerAppointmentTotal(ActionEvent event) {
-
+        tblReports.getColumns().clear();
+        try {
+            CustomerDaoImpl.getReportData(tblReports, Query.QUERY_GET_CUSTOMER_APPOINTMENT_TOTALS);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     //******************************************************************************************************************

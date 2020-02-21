@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -108,7 +107,7 @@
                   </TableView>
                </children>
             </VBox>
-            <VBox fx:id="vBoxCustomers" prefHeight="765.0" prefWidth="1000.0" styleClass="main-app">
+            <VBox fx:id="vBoxCustomers" prefHeight="765.0" prefWidth="1000.0" styleClass="main-app" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <HBox spacing="10.0">
                      <children>
@@ -152,7 +151,7 @@
                   </TableView>
                </children>
             </VBox>
-            <VBox fx:id="vBoxReports" prefHeight="765.0" prefWidth="1000.0" styleClass="main-app">
+            <VBox fx:id="vBoxReports" prefHeight="765.0" prefWidth="1000.0" styleClass="main-app" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <HBox spacing="10.0">
                      <children>
@@ -177,11 +176,14 @@
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                      </padding>
                   </HBox>
-                  <JFXTextArea fx:id="txtShowReport" VBox.vgrow="ALWAYS">
-                     <padding>
+                  <TableView fx:id="tblReports" stylesheets="@../utilities/main.css" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
                         <Insets bottom="20.0" left="20.0" right="20.0" />
-                     </padding>
-                  </JFXTextArea>
+                     </VBox.margin>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
                   <HBox alignment="CENTER">
                      <children>
                         <JFXButton fx:id="btnGenerateReport" onAction="#generateReport" styleClass="btn-plain" text="Generate Report" />

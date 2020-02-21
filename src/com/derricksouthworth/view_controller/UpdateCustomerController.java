@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static com.derricksouthworth.DAO.CityDaoImpl.getAllCities;
-import static com.derricksouthworth.DAO.CustomerDaoImpl.getAllCustomers;
 
 public class UpdateCustomerController implements Initializable {
 
