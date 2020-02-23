@@ -31,6 +31,11 @@ import java.util.ResourceBundle;
 
 import static com.derricksouthworth.DAO.CustomerDaoImpl.getCustomer;
 
+/**
+ *
+ * @author derrick.southworth
+ */
+
 public class AddAppointmentController implements Initializable {
 
     //******************************************************************************************************************

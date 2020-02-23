@@ -189,10 +189,4 @@ public class Customer {
     public void setLastUpdateBy(String lastUpdateBy) {
         this.lastUpdateBy = lastUpdateBy;
     }
-
-    public static boolean isValidCustomerName(String customerName) {
-        if(!customerName.matches("[A-Z]+([ '-][a-zA-Z]+)*")) return false;
-        if(customerName.length() == 0) return false;
-        return true;
-    }
 }

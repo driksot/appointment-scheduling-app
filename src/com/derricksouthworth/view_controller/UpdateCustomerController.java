@@ -25,6 +25,11 @@ import java.util.ResourceBundle;
 
 import static com.derricksouthworth.DAO.CityDaoImpl.getAllCities;
 
+/**
+ *
+ * @author derrick.southworth
+ */
+
 public class UpdateCustomerController implements Initializable {
 
     //******************************************************************************************************************
@@ -117,8 +122,7 @@ public class UpdateCustomerController implements Initializable {
         // TODO validate input
         Customer customer = new Customer(customerID, customerName, address, address2, city, postalCode, phone);
 
-        boolean isValid = true;
-        if(isValid) {
+        if(isValidCustomer(customer)) {
             try {
                 CustomerDaoImpl.updateCustomer(customer);
             } catch (SQLException e) {
@@ -128,13 +132,7 @@ public class UpdateCustomerController implements Initializable {
             Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));
             stage.setScene(new Scene(scene));
             stage.show();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Unable to add record.");
-            alert.setHeaderText("Failed to add customer record.");
-            alert.setContentText("Invalid entry.");
-            alert.showAndWait();
-        }
+        } 
     }
 
     //******************************************************************************************************************
@@ -166,6 +164,47 @@ public class UpdateCustomerController implements Initializable {
      */
     public static void setCustomerToUpdate(Customer customerToUpdate) {
         UpdateCustomerController.customerToUpdate = customerToUpdate;
+    }
+
+    private boolean isValidCustomer(Customer customer) {
+        String errorMessage = "";
+
+        // validate customer name
+        if (!(customer.getCustomerName().matches("[a-zA-z]+([ '-][a-zA-Z]+)*"))) {
+            errorMessage += "Please enter a valid customer name. \n";
+        }
+        if (customer.getCustomerName().length() == 0 || customer.getCustomerName() == null) {
+            errorMessage += "Please enter a customer's name. \n";
+        }
+
+        // validate address
+        if (!(customer.getAddress().matches("\\d+\\s+([a-zA-Z]+|[a-zA-Z]+\\s[a-zA-A]+)"))) {
+            errorMessage += "Please enter a valid address. \n";
+        }
+        if (customer.getAddress().length() == 0 || customer.getAddress() == null) {
+            errorMessage += "Please enter an address. \n";
+        }
+
+        // validate phone number
+        if (!(customer.getPhone().matches("[1-9]\\d{2}-[1-9]\\d{2}-\\d{4}"))) {
+            errorMessage += "Please enter a valid phone number. \n";
+        }
+        if (customer.getPhone().length() == 0 || customer.getPhone() == null) {
+            errorMessage += "Please enter a phone number. \n";
+        }
+
+        if (errorMessage.length() == 0) {
+            return true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding customer");
+            alert.setHeaderText("Invalid customer information");
+            alert.setContentText(errorMessage);
+
+            alert.showAndWait();
+
+            return false;
+        }
     }
 
     /**

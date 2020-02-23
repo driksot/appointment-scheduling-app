@@ -20,6 +20,6 @@
       </Label>
       <JFXTextField fx:id="txtUserName" focusColor="#3f51b5" labelFloat="true" layoutX="233.0" layoutY="119.0" unFocusColor="#90a4ae" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="87.0" />
       <JFXPasswordField fx:id="pwdPassword" focusColor="#3f51b5" labelFloat="true" layoutX="233.0" layoutY="211.0" unFocusColor="#90a4ae" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="152.0" />
-      <JFXButton fx:id="btnSignIn" layoutX="105.0" layoutY="218.0" onAction="#submitSignIn" styleClass="btn-plain" AnchorPane.bottomAnchor="27.0" AnchorPane.leftAnchor="97.0" AnchorPane.rightAnchor="97.0" />
+      <JFXButton fx:id="btnSignIn" layoutX="105.0" layoutY="218.0" onAction="#submitSignIn" styleClass="btn-plain" AnchorPane.bottomAnchor="27.0" AnchorPane.topAnchor="216.0" />
    </children>
 </AnchorPane>

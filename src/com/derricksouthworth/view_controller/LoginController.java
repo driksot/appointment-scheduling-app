@@ -19,6 +19,11 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ *
+ * @author derrick.southworth
+ */
+
 public class LoginController implements Initializable {
 
     //******************************************************************************************************************

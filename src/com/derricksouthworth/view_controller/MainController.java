@@ -30,6 +30,11 @@ import java.util.ResourceBundle;
 
 import static com.derricksouthworth.DAO.CustomerDaoImpl.*;
 
+/**
+ *
+ * @author derrick.southworth
+ */
+
 public class MainController implements Initializable {
 
     //******************************************************************************************************************
