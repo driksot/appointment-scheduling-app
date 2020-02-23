@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -68,7 +69,12 @@ public class LoginController implements Initializable {
     void submitSignIn(ActionEvent event) throws IOException {
         String userName = txtUserName.getText();
         String password = pwdPassword.getText();
-        boolean isValid = DBConnect.login(userName, password);
+        boolean isValid = false;
+        try {
+            isValid = DBConnect.login(userName, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if(isValid) {
             Stage stage = (Stage) btnSignIn.getScene().getWindow();
             Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));

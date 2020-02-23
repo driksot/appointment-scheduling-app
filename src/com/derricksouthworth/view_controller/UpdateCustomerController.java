@@ -132,7 +132,7 @@ public class UpdateCustomerController implements Initializable {
             Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));
             stage.setScene(new Scene(scene));
             stage.show();
-        } 
+        }
     }
 
     //******************************************************************************************************************

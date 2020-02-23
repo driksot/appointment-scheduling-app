@@ -2,7 +2,12 @@ package com.derricksouthworth.DAO;
 
 import com.derricksouthworth.model.User;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Setup database connection info
@@ -27,6 +32,8 @@ public class DBConnect {
 
     private PreparedStatement queryAllCustomers;
     private PreparedStatement queryAllCities;
+
+    private static Logger logger = Logger.getLogger("ScheduleLog.txt");
 
     private static User currentUser;
 
@@ -60,11 +67,16 @@ public class DBConnect {
         }
     }
 
-    public static Boolean login(String userName, String password) {
+    public static Boolean login(String userName, String password) throws SQLException {
+        Statement statement = null;
+        String sqlStatement = Query.buildQueryUser(userName, password);
+        ResultSet result = null;
+
         try {
-            Statement statement = conn.createStatement();
-            String sqlStatement = Query.buildQueryUser(userName, password);
-            ResultSet result = statement.executeQuery(sqlStatement);
+            conn.setAutoCommit(false);
+
+            statement = conn.createStatement();
+            result = statement.executeQuery(sqlStatement);
             if(result.next()) {
                 currentUser = new User(result.getInt(Query.COLUMN_USER_ID),
                         result.getString(Query.COLUMN_USER_NAME),
@@ -73,8 +85,17 @@ public class DBConnect {
                 return true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Unable to log in: " + e.getMessage());
             return false;
+        } finally {
+            createLogFile();
+            if (statement != null) {
+                statement.close();
+            }
+            if (result != null) {
+                result.close();
+            }
+            conn.setAutoCommit(true);
         }
         return false;
     }
@@ -95,5 +116,23 @@ public class DBConnect {
 
     public static User getCurrentUser() {
         return currentUser;
+    }
+
+    public static void createLogFile() {
+        try {
+            FileHandler fh = new FileHandler("ScheduleLog.txt", true);
+            SimpleFormatter sf = new SimpleFormatter();
+            fh.setFormatter(sf);
+            logger.addHandler(fh);
+        } catch (IOException | SecurityException e) {
+            System.out.println("Error creating log file: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        if (currentUser != null) {
+            logger.log(Level.INFO, "LOGIN: User {0} logged in", getCurrentUser().getUserName());
+        } else {
+            logger.log(Level.INFO, "UNSUCCESSFUL LOGIN.");
+        }
     }
 }
