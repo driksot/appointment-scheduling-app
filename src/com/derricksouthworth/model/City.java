@@ -36,6 +36,12 @@ public class City {
         this.lastUpdateBy = lastUpdateBy;
     }
 
+    public City(int cityID, String cityName, String country) {
+        this.cityID = cityID;
+        this.cityName = cityName;
+        this.country = country;
+    }
+
     // Getters
 
     public int getCityID() {

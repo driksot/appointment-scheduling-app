@@ -71,7 +71,29 @@ public class CountryDaoImpl {
 
     }
 
-    public static void addCountry() {
+    public static void addCountry(Country country) throws SQLException {
+        PreparedStatement statement = null;
 
+        try {
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.prepareStatement(Query.INSERT_COUNTRY);
+            statement.setInt(1, country.getCountryID());
+            statement.setString(2, country.getCountryName());
+            statement.setString(3, currentUser);
+            statement.setString(4, currentUser);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Failed to create country: " + e.getMessage());
+
+            // close all database resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            conn.setAutoCommit(true);
+        }
     }
 }

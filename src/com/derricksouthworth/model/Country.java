@@ -33,6 +33,11 @@ public class Country {
         this.lastUpdateBy = lastUpdateBy;
     }
 
+    public Country(int countryID, String countryName) {
+        this.countryID = countryID;
+        this.countryName = countryName;
+    }
+
     // Getters
 
     public int getCountryID() {
