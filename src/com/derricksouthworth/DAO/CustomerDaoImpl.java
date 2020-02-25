@@ -35,6 +35,7 @@ public class CustomerDaoImpl {
     private static String currentUser = DBConnect.getCurrentUser().getUserName();
     private static int currentUserID = DBConnect.getCurrentUser().getUserID();
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+    private static ObservableList<Appointment> appointmentsIn15 = FXCollections.observableArrayList();
     private static ObservableList<ObservableList> report;
 
     //******************************************************************************************************************
@@ -360,6 +361,63 @@ public class CustomerDaoImpl {
             }
             conn.setAutoCommit(true);
         }
+    }
+
+    /**
+     * Get a list of appointments scheduled to start in the next 15 minutes
+     * @return
+     * @throws SQLException
+     */
+    public static ObservableList<Appointment> getAppointmentsWithinFifteenMinutes() throws SQLException {
+        Statement statement = null;
+        String sqlStatement = Query.GET_APPOINTMENTS_WITHIN_FIFTEEN_MINUTES;
+        ResultSet result = null;
+
+        appointmentsIn15.clear();
+
+        try {
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.createStatement();
+            result = statement.executeQuery(sqlStatement);
+
+            while (result.next()) {
+                int appointmentID = result.getInt(Query.COLUMN_APPOINTMENT_ID);
+                String customerName = result.getString(Query.COLUMN_CUSTOMER_NAME);
+                int userID = result.getInt(Query.COLUMN_USER_ID);
+                String location = result.getString(Query.COLUMN_LOCATION);
+                String contact = result.getString(Query.COLUMN_CONTACT);
+                String type = result.getString(Query.COLUMN_TYPE);
+                String start = result.getString(Query.COLUMN_START);
+                String end = result.getString(Query.COLUMN_END);
+                Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
+                String createdBy = result.getString(Query.COLUMN_CREATED_BY);
+                Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
+                String lastUpdateBy = result.getString(Query.COLUMN_LAST_UPDATE_BY);
+
+                Appointment appointment = new Appointment(appointmentID, customerName, userID, location,
+                        contact, type, start, end, createDate, createdBy, lastUpdate, lastUpdateBy);
+
+                appointmentsIn15.add(appointment);
+            }
+
+            return appointmentsIn15;
+
+        } catch (SQLException | ParseException e) {
+            System.out.println("Unable to get appointments coming up in 15 minutes: " + e.getMessage());
+
+            // close jdbc resources and commit transaction
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (result != null) {
+                result.close();
+            }
+            conn.setAutoCommit(true);
+        }
+        return null;
     }
 
     /**

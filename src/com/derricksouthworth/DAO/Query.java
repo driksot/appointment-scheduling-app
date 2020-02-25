@@ -179,6 +179,35 @@ public class Query {
             "SELECT * FROM " + TABLE_APPOINTMENT + " WHERE " +
                     COLUMN_CUSTOMER_ID + " = ?";
 
+    public static final String GET_APPOINTMENTS_WITHIN_FIFTEEN_MINUTES =
+            "SELECT " + TABLE_APPOINTMENT + "." + COLUMN_APPOINTMENT_ID + ", " +
+                    TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_NAME + ", " +
+                    TABLE_APPOINTMENT + "." + COLUMN_USER_ID + ", " +
+                    TABLE_APPOINTMENT + "." + COLUMN_LOCATION + ", " +
+                    TABLE_APPOINTMENT + "." + COLUMN_CONTACT + ", " +
+                    TABLE_APPOINTMENT + "." + COLUMN_TYPE + ", " +
+                    TABLE_APPOINTMENT + "." + COLUMN_START + ", " +
+                    TABLE_APPOINTMENT + "." + COLUMN_END + ", " +
+                    TABLE_APPOINTMENT + "." + COLUMN_CREATE_DATE + ", " +
+                    TABLE_APPOINTMENT + "." + COLUMN_CREATED_BY + ", " +
+                    TABLE_APPOINTMENT + "." + COLUMN_LAST_UPDATE + ", " +
+                    TABLE_APPOINTMENT + "." + COLUMN_LAST_UPDATE_BY +
+                    " FROM " + TABLE_APPOINTMENT + " INNER JOIN " + TABLE_CUSTOMER +
+                    " ON " + TABLE_APPOINTMENT + "." + COLUMN_CUSTOMER_ID + " = " +
+                    TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_ID + " WHERE " +
+                    TABLE_APPOINTMENT + "." + COLUMN_START + " BETWEEN NOW() " +
+                    "AND DATE_ADD(now(), INTERVAL 15 MINUTE)";
+
+
+//            "SELECT * FROM " + TABLE_APPOINTMENT + " WHERE " +
+//                    COLUMN_START + " BETWEEN NOW() AND DATE_ADD" +
+//                    "(now(), INTERVAL 15 MINUTE)";
+
+//    SELECT * FROM appointment
+//    WHERE `start` BETWEEN
+//    NOW() and DATE_ADD(now(), INTERVAL 15 MINUTE);
+
+
     public static final String UPDATE_APPOINTMENT =
             "UPDATE " + TABLE_APPOINTMENT + " SET " +
                     COLUMN_CUSTOMER_ID + " = ?, " +

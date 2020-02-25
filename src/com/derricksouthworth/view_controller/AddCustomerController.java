@@ -79,6 +79,11 @@ public class AddCustomerController implements Initializable {
     //  UI CONTROL METHODS
     //******************************************************************************************************************
 
+    /**
+     * Changes scene to add_city.fxml
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void addCity(ActionEvent event) throws IOException {
         Stage stage = (Stage) btnCancel.getScene().getWindow();
@@ -114,7 +119,7 @@ public class AddCustomerController implements Initializable {
         int cityID = cmbCity.getSelectionModel().getSelectedIndex() + 1;
         String postalCode = txtPostalCode.getText();
         String phone = txtPhone.getText();
-        // TODO validate input
+
         Customer customer = new Customer(customerID, customerName, address, address2, city, postalCode, phone);
 
         if(isValidCustomer(customer)) {
@@ -153,6 +158,12 @@ public class AddCustomerController implements Initializable {
         return result;
     }
 
+    /**
+     * Validate customer fields and return ERROR alert notifying user of needed
+     * changes
+     * @param customer
+     * @return
+     */
     private boolean isValidCustomer(Customer customer) {
         String errorMessage = "";
 
@@ -170,6 +181,11 @@ public class AddCustomerController implements Initializable {
         }
         if (customer.getAddress().length() == 0 || customer.getAddress() == null) {
             errorMessage += "Please enter an address. \n";
+        }
+
+        // validate postal code
+        if (customer.getPostalCode().length() == 0 || customer.getPostalCode() == null) {
+            errorMessage += "Please enter a postal code \n";
         }
 
         // validate phone number

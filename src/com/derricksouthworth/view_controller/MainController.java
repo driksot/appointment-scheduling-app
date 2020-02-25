@@ -170,6 +170,7 @@ public class MainController implements Initializable {
     //******************************************************************************************************************
 
     private static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+    private static ObservableList<Appointment> appointmentsWithin15Minutes = FXCollections.observableArrayList();
 
     //******************************************************************************************************************
     //******************************************************************************************************************
@@ -391,10 +392,35 @@ public class MainController implements Initializable {
         colAppointmentEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
 
         try {
-            tblAppointments.setItems(getAllAppointments(sortBy));
+            if (sortBy == "15 minutes") {
+                tblAppointments.setItems(getAppointmentsWithinFifteenMinutes());
+            } else {
+                tblAppointments.setItems(getAllAppointments(sortBy));
+            }
             tblAppointments.getSortOrder().add(colAppointmentStart);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Unable to populate appointment table: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Alert user to appointment coming up within 15 minutes and populate table with those
+     * appointments, if no such appointments, no alert and populate table with all appointments
+     * @throws SQLException
+     */
+    private void upcomingAppointmentNotification() throws SQLException {
+        appointmentsWithin15Minutes = CustomerDaoImpl.getAppointmentsWithinFifteenMinutes();
+        if (appointmentsWithin15Minutes.size() != 0) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Upcoming Appointment.");
+            alert.setHeaderText("You have an appointment.");
+            alert.setContentText("Number of appointments in next 15 minutes: " +
+                    appointmentsWithin15Minutes.size() + "\n Please review your appointments.");
+            alert.showAndWait();
+
+            loadAppointmentTable("15 minutes");
+        } else {
+            loadAppointmentTable(null);
         }
     }
 
@@ -482,7 +508,11 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         vBoxAppointments.toFront();
         loadCustomerTable();
-        loadAppointmentTable(null);
+        try {
+            upcomingAppointmentNotification();
+        } catch (SQLException e) {
+            System.out.println("Unable to populate appointment table: " + e.getMessage());
+        }
     }
 }
 
