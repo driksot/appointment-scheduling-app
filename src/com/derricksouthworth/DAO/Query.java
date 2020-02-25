@@ -179,6 +179,7 @@ public class Query {
             "SELECT * FROM " + TABLE_APPOINTMENT + " WHERE " +
                     COLUMN_CUSTOMER_ID + " = ?";
 
+    // Appointment READ within upcoming 15 minutes
     public static final String GET_APPOINTMENTS_WITHIN_FIFTEEN_MINUTES =
             "SELECT " + TABLE_APPOINTMENT + "." + COLUMN_APPOINTMENT_ID + ", " +
                     TABLE_CUSTOMER + "." + COLUMN_CUSTOMER_NAME + ", " +
@@ -198,16 +199,13 @@ public class Query {
                     TABLE_APPOINTMENT + "." + COLUMN_START + " BETWEEN NOW() " +
                     "AND DATE_ADD(now(), INTERVAL 15 MINUTE)";
 
+    // Appointment READ start and end times by contact
+    public static final String GET_APPOINTMENT_TIMES_FOR_CONTACT =
+            "SELECT " + COLUMN_START + ", " + COLUMN_END +
+                    " FROM " + TABLE_APPOINTMENT + " WHERE " +
+                    COLUMN_CONTACT + " = \"";
 
-//            "SELECT * FROM " + TABLE_APPOINTMENT + " WHERE " +
-//                    COLUMN_START + " BETWEEN NOW() AND DATE_ADD" +
-//                    "(now(), INTERVAL 15 MINUTE)";
-
-//    SELECT * FROM appointment
-//    WHERE `start` BETWEEN
-//    NOW() and DATE_ADD(now(), INTERVAL 15 MINUTE);
-
-
+    // Appointment UPDATE with given values
     public static final String UPDATE_APPOINTMENT =
             "UPDATE " + TABLE_APPOINTMENT + " SET " +
                     COLUMN_CUSTOMER_ID + " = ?, " +

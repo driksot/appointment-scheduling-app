@@ -11,10 +11,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 import static com.derricksouthworth.utilities.TimeFiles.*;
 
@@ -37,6 +40,8 @@ public class CustomerDaoImpl {
     private static ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     private static ObservableList<Appointment> appointmentsIn15 = FXCollections.observableArrayList();
     private static ObservableList<ObservableList> report;
+    private static List<Calendar> startTimes = Collections.emptyList();
+    private static List<Calendar> endTimes = Collections.emptyList();
 
     //******************************************************************************************************************
     //******************************************************************************************************************
@@ -418,6 +423,54 @@ public class CustomerDaoImpl {
             conn.setAutoCommit(true);
         }
         return null;
+    }
+
+    /**
+     * check to see if given times overlap with appointments for given contact/consultant
+     * @param contact
+     * @param appointmentStart
+     * @param appointmentEnd
+     * @return
+     * @throws SQLException
+     */
+    public static boolean isOverlappingAppointmentTime(String contact, Calendar appointmentStart, Calendar appointmentEnd) throws SQLException {
+        Statement statement = null;
+        String sqlStatement = String.format("%s%s\"", Query.GET_APPOINTMENT_TIMES_FOR_CONTACT, contact);
+        ResultSet result = null;
+
+        try {
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.createStatement();
+            result = statement.executeQuery(sqlStatement);
+
+            while (result.next()) {
+                Calendar startTime = stringToCalendar(result.getString(Query.COLUMN_START));
+                Calendar endTime = stringToCalendar(result.getString(Query.COLUMN_END));
+
+                if ((appointmentStart.after(startTime) && appointmentStart.before(endTime)) ||
+                        (appointmentEnd.after(startTime) && appointmentEnd.before(endTime))) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL error: " + e.getMessage());
+
+        } catch (ParseException e) {
+            System.out.println("Parsing error: " + e.getMessage());
+
+            // close jdbc resources and commit transaction
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (result != null) {
+                result.close();
+            }
+            conn.setAutoCommit(true);
+        }
+        return false;
     }
 
     /**

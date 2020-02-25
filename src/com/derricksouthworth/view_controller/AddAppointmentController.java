@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.derricksouthworth.DAO.CustomerDaoImpl.getCustomer;
+import static com.derricksouthworth.utilities.TimeFiles.stringToCalendar;
 
 /**
  *
@@ -96,59 +97,72 @@ public class AddAppointmentController implements Initializable {
 
         int duration = (cmbDuration.getSelectionModel().getSelectedIndex() + 1) * 15;
 
-        String startTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().format(TimeFiles.TIME_FORMATTER);
-        String endTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().plusMinutes(duration).format(TimeFiles.TIME_FORMATTER);
+        if (dateStartDate.getValue() == null || timeStartTime.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding appointment");
+            alert.setHeaderText("Date or time not selected");
+            alert.setContentText("Please select a date and time.");
 
-        if(customer == null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("ERROR adding appointment");
-            alert.setHeaderText("Invalid customer");
-            alert.setContentText("Please input the name of an existing customer or create a new record.");
+            alert.showAndWait();
 
-            ButtonType buttonTypeNewCustomer = new ButtonType("New Customer");
-            ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-            alert.getButtonTypes().setAll(buttonTypeNewCustomer, buttonTypeCancel);
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == buttonTypeNewCustomer) {
-                Stage stage = (Stage) btnSubmit.getScene().getWindow();
-                Parent scene = FXMLLoader.load(getClass().getResource("add_customer.fxml"));
-                stage.setScene(new Scene(scene));
-                stage.show();
-            } else {
-                Stage stage = (Stage) btnSubmit.getScene().getWindow();
-                Parent scene = FXMLLoader.load(getClass().getResource("add_appointment.fxml"));
-                stage.setScene(new Scene(scene));
-                stage.show();
-            }
         } else {
-            int appointmentID = Integer.parseInt(txtAppointmentID.getText());
+            String startTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().format(TimeFiles.TIME_FORMATTER);
+            String endTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().plusMinutes(duration).format(TimeFiles.TIME_FORMATTER);
 
-            String customerName = customer.getCustomerName();
-            int userID = DBConnect.getCurrentUser().getUserID();
-            String location = txtLocation.getText();
-            String contact = txtContact.getText();
-            String type = txtType.getText();
-            String start = TimeFiles.timeToUTC(startTime);
-            String end = TimeFiles.timeToUTC(endTime);
+            if (customer == null) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("ERROR adding appointment");
+                alert.setHeaderText("Invalid customer");
+                alert.setContentText("Please input the name of an existing customer or create a new record.");
 
-            Appointment addAppointment = new Appointment(appointmentID, customerName, userID, location, contact, type,
-                    start, end);
+                ButtonType buttonTypeNewCustomer = new ButtonType("New Customer");
+                ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-            boolean isValid = true;
-            if(isValid) {
-                CustomerDaoImpl.addAppointment(addAppointment, customer.getCustomerID());
-                Stage stage = (Stage) btnSubmit.getScene().getWindow();
-                Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));
-                stage.setScene(new Scene(scene));
-                stage.show();
+                alert.getButtonTypes().setAll(buttonTypeNewCustomer, buttonTypeCancel);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == buttonTypeNewCustomer) {
+                    Stage stage = (Stage) btnSubmit.getScene().getWindow();
+                    Parent scene = FXMLLoader.load(getClass().getResource("add_customer.fxml"));
+                    stage.setScene(new Scene(scene));
+                    stage.show();
+
+                } else {
+                    Stage stage = (Stage) btnSubmit.getScene().getWindow();
+                    Parent scene = FXMLLoader.load(getClass().getResource("add_appointment.fxml"));
+                    stage.setScene(new Scene(scene));
+                    stage.show();
+                }
+
             } else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Unable to add record.");
-                alert.setHeaderText("Failed to add appointment.");
-                alert.setContentText("Invalid entry.");
-                alert.showAndWait();
+                int appointmentID = Integer.parseInt(txtAppointmentID.getText());
+
+                String customerName = customer.getCustomerName();
+                int userID = DBConnect.getCurrentUser().getUserID();
+                String location = txtLocation.getText();
+                String contact = txtContact.getText();
+                String type = txtType.getText();
+                String start = TimeFiles.timeToUTC(startTime);
+                String end = TimeFiles.timeToUTC(endTime);
+
+                Appointment addAppointment = new Appointment(appointmentID, customerName, userID, location, contact, type,
+                        start, end);
+
+                if (CustomerDaoImpl.isOverlappingAppointmentTime(contact, stringToCalendar(start), stringToCalendar(end))) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error adding appointment");
+                    alert.setHeaderText(contact + " has another appointment at this time.");
+                    alert.setContentText("Please select another time or consultant.");
+
+                    alert.showAndWait();
+
+                } else if (isValidAppointment(addAppointment)) {
+                    CustomerDaoImpl.addAppointment(addAppointment, customer.getCustomerID());
+                    Stage stage = (Stage) btnSubmit.getScene().getWindow();
+                    Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));
+                    stage.setScene(new Scene(scene));
+                    stage.show();
+                }
             }
         }
     }
@@ -157,6 +171,61 @@ public class AddAppointmentController implements Initializable {
     //******************************************************************************************************************
     //  UTILITY METHODS
     //******************************************************************************************************************
+
+    private boolean isValidAppointment(Appointment appointment) {
+        String errorMessage = "";
+
+        // validate customer name
+        if (!(appointment.getCustomer().matches("[a-zA-z]+([ '-][a-zA-Z]+)*"))) {
+            errorMessage += "Please enter a valid customer name. \n";
+        }
+        if (appointment.getCustomer().length() == 0 || appointment.getCustomer() == null) {
+            errorMessage += "Please enter a customer's name. \n";
+        }
+
+        // validate location
+        if (appointment.getLocation().length() == 0 || appointment.getLocation() == null) {
+            errorMessage += "Please enter a location. \n";
+        }
+
+        // validate contact
+        if (appointment.getContact().length() == 0 || appointment.getContact() == null) {
+            errorMessage += "Please enter a contact. \n";
+        }
+
+        // validate type
+        if (appointment.getType().length() == 0 || appointment.getType() == null) {
+            errorMessage += "Please enter an appointment type. \n";
+        }
+
+        // validate duration
+        if (cmbDuration.getSelectionModel().isEmpty()) {
+            errorMessage += "Please select an appointment duration. \n";
+        }
+
+        // validate date
+        if (dateStartDate.getValue() == null) {
+            errorMessage += "Please select an appointment date. \n";
+        }
+
+        // validate time
+        if (timeStartTime.getValue() == null) {
+            errorMessage += "Please select an appointment start time. \n";
+        }
+
+        if (errorMessage.length() == 0) {
+            return true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding appointment");
+            alert.setHeaderText("Invalid appointment information");
+            alert.setContentText(errorMessage);
+
+            alert.showAndWait();
+
+            return false;
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
