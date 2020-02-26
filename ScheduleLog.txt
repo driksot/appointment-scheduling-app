@@ -72,3 +72,9 @@ Feb 25, 2020 10:11:09 PM com.derricksouthworth.DAO.DBConnect createLogFile
 INFO: LOGIN: User test logged in
 Feb 25, 2020 10:19:49 PM com.derricksouthworth.DAO.DBConnect createLogFile
 INFO: LOGIN: User test logged in
+Feb 26, 2020 8:47:41 AM com.derricksouthworth.DAO.DBConnect createLogFile
+INFO: LOGIN: User test logged in
+Feb 26, 2020 8:49:13 AM com.derricksouthworth.DAO.DBConnect createLogFile
+INFO: LOGIN: User test logged in
+Feb 26, 2020 8:49:38 AM com.derricksouthworth.DAO.DBConnect createLogFile
+INFO: LOGIN: User test logged in

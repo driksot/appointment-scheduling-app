@@ -2,6 +2,7 @@ package com.derricksouthworth.DAO;
 
 import com.derricksouthworth.model.Appointment;
 import com.derricksouthworth.model.Customer;
+import com.derricksouthworth.utilities.TimeFiles;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -340,12 +341,16 @@ public class CustomerDaoImpl {
                 String type = result.getString(Query.COLUMN_TYPE);
                 LocalDateTime start = timeToLocal(result.getTimestamp(Query.COLUMN_START));
                 LocalDateTime end = timeToLocal(result.getTimestamp(Query.COLUMN_END));
+
+                String startString = start.format(DATE_TIME_FORMATTER);
+                String endString = end.format(DATE_TIME_FORMATTER);
+
                 Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
                 String createdBy = result.getString(Query.COLUMN_CREATED_BY);
                 Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
                 String lastUpdateBy = result.getString(Query.COLUMN_LAST_UPDATE_BY);
                 Appointment appointmentResult = new Appointment(appointmentID, customer.getCustomerName(), userID,
-                        location, contact, type, start, end, createDate, createdBy, lastUpdate, lastUpdateBy);
+                        location, contact, type, start, end, startString, endString, createDate, createdBy, lastUpdate, lastUpdateBy);
                 Customer.addCustomerAppointment(appointmentResult);
             }
 
@@ -395,13 +400,17 @@ public class CustomerDaoImpl {
                 String type = result.getString(Query.COLUMN_TYPE);
                 LocalDateTime start = result.getTimestamp(Query.COLUMN_START).toLocalDateTime();
                 LocalDateTime end = result.getTimestamp(Query.COLUMN_END).toLocalDateTime();
+
+                String startString = start.format(DATE_TIME_FORMATTER);
+                String endString = end.format(DATE_TIME_FORMATTER);
+
                 Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
                 String createdBy = result.getString(Query.COLUMN_CREATED_BY);
                 Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
                 String lastUpdateBy = result.getString(Query.COLUMN_LAST_UPDATE_BY);
 
                 Appointment appointment = new Appointment(appointmentID, customerName, userID, location,
-                        contact, type, start, end, createDate, createdBy, lastUpdate, lastUpdateBy);
+                        contact, type, start, end, startString, endString, createDate, createdBy, lastUpdate, lastUpdateBy);
 
                 appointmentsIn15.add(appointment);
             }

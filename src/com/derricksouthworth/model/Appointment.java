@@ -19,6 +19,8 @@ public class Appointment {
     private String type;
     private LocalDateTime start;
     private LocalDateTime end;
+    private String startString;
+    private String endString;
     private Calendar createDate;
     private String createdBy;
     private Calendar lastUpdate;
@@ -39,7 +41,7 @@ public class Appointment {
      * @param lastUpdate
      * @param lastUpdateBy
      */
-    public Appointment(int appointmentID, String customer, int userID, String location, String contact, String type, LocalDateTime start, LocalDateTime end, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdateBy) {
+    public Appointment(int appointmentID, String customer, int userID, String location, String contact, String type, LocalDateTime start, LocalDateTime end, String startString, String endString, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdateBy) {
         this.appointmentID = appointmentID;
         this.customer = customer;
         this.userID = userID;
@@ -48,6 +50,8 @@ public class Appointment {
         this.type = type;
         this.start = start;
         this.end = end;
+        this.startString = startString;
+        this.endString = endString;
         this.createDate = createDate;
         this.createdBy = createdBy;
         this.lastUpdate = lastUpdate;
@@ -110,6 +114,10 @@ public class Appointment {
         return end;
     }
 
+    public String getStartString() { return startString; }
+
+    public String getEndString() { return endString; }
+
     public Calendar getCreateDate() {
         return createDate;
     }
@@ -159,6 +167,10 @@ public class Appointment {
     public void setEnd(LocalDateTime end) {
         this.end = end;
     }
+
+    public void setStartString(String startString) { this.startString = startString; }
+
+    public void setEndString(String endString) { this.endString = endString; }
 
     public void setCreateDate(Calendar createDate) {
         this.createDate = createDate;

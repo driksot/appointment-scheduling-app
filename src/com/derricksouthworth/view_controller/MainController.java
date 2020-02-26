@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -178,24 +177,51 @@ public class MainController implements Initializable {
     //  NAVIGATION UI CONTROL METHODS
     //******************************************************************************************************************
 
+    /**
+     * move appointments to front of scene
+     * @param event
+     */
     @FXML
     void loadAppointmentsPane(ActionEvent event) {
         vBoxAppointments.toFront();
     }
 
+    /**
+     * move customers to front of scene
+     * @param event
+     */
     @FXML
     void loadCustomersPane(ActionEvent event) {
         vBoxCustomers.toFront();
     }
 
+    /**
+     * move reports to front of scene
+     * @param event
+     */
     @FXML
     void loadReportsPane(ActionEvent event) {
         vBoxReports.toFront();
     }
 
+    /**
+     * ask for confirmation before exiting application
+     * @param event
+     */
     @FXML
     void exitApp(ActionEvent event) {
-
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Confirmation Needed");
+        alert.setHeaderText("Confirm Exit");
+        alert.setContentText("Are you sure you want to exit?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get() == ButtonType.OK) {
+            System.out.println("Ok selected. Program exited");
+            System.exit(0);
+        } else {
+            System.out.println("Cancel clicked.");
+        }
     }
 
     //******************************************************************************************************************
@@ -216,6 +242,11 @@ public class MainController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Load new scene with form to edit selected appointment
+     * @param actionEvent
+     * @throws IOException
+     */
     @FXML
     public void updateAppointment(ActionEvent actionEvent) throws IOException {
         if(tblAppointments.getSelectionModel().getSelectedItem() != null) {
@@ -338,11 +369,10 @@ public class MainController implements Initializable {
     //  REPORTS UI CONTROL METHODS
     //******************************************************************************************************************
 
-    @FXML
-    void generateReport(ActionEvent event) {
-
-    }
-
+    /**
+     * populate table view with appointments by month
+     * @param event
+     */
     @FXML
     void showReportAppointmentByMonth(ActionEvent event) {
         tblReports.getColumns().clear();
@@ -353,6 +383,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * populate table view with consultant schedules
+     * @param event
+     */
     @FXML
     void showReportConsultantSchedule(ActionEvent event) {
         tblReports.getColumns().clear();
@@ -363,6 +397,10 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * populate table view with customer appointment totals
+     * @param event
+     */
     @FXML
     void showReportCustomerAppointmentTotal(ActionEvent event) {
         tblReports.getColumns().clear();
@@ -388,9 +426,9 @@ public class MainController implements Initializable {
         colAppointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colAppointmentLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
         colAppointmentContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
-        colAppointmentStart.setCellValueFactory(new PropertyValueFactory<>("start"));
+        colAppointmentStart.setCellValueFactory(new PropertyValueFactory<>("startString"));
         colAppointmentStart.setSortType(TableColumn.SortType.ASCENDING);
-        colAppointmentEnd.setCellValueFactory(new PropertyValueFactory<>("end"));
+        colAppointmentEnd.setCellValueFactory(new PropertyValueFactory<>("endString"));
 
         try {
             if (sortBy == "15 minutes") {

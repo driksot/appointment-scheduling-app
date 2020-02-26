@@ -184,14 +184,6 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <HBox alignment="CENTER">
-                     <children>
-                        <JFXButton fx:id="btnGenerateReport" onAction="#generateReport" styleClass="btn-plain" text="Generate Report" />
-                     </children>
-                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" />
-                     </padding>
-                  </HBox>
                </children>
             </VBox>
          </children>

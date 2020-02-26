@@ -50,17 +50,12 @@ public class TimeFiles {
      * @return
      */
     public static LocalDateTime timeToLocal(Timestamp ts) {
-        System.out.println(ts);
         LocalDateTime ldt = ts.toLocalDateTime();
-        System.out.println(ldt);
         TimeZone localTimeZone = TimeZone.getDefault();
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         ZonedDateTime utczdt = ldt.atZone(ZoneId.systemDefault());
-        System.out.println(utczdt);
         TimeZone.setDefault(localTimeZone);
         ZonedDateTime localzdt = utczdt.withZoneSameInstant(ZoneId.systemDefault());
-        System.out.println(localzdt);
-        System.out.println(localzdt.toLocalDateTime());
         return localzdt.toLocalDateTime();
     }
 }
