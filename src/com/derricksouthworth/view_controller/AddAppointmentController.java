@@ -16,16 +16,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -75,6 +76,14 @@ public class AddAppointmentController implements Initializable {
 
     //******************************************************************************************************************
     //******************************************************************************************************************
+    //  OTHER GLOBAL VARIABLES
+    //******************************************************************************************************************
+
+    private LocalTime startOfBusiness = LocalTime.of(9, 0);
+    private LocalTime endOfBusiness = LocalTime.of(17, 0);
+
+    //******************************************************************************************************************
+    //******************************************************************************************************************
     //  UI CONTROL METHODS
     //******************************************************************************************************************
 
@@ -85,6 +94,8 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     void cancelAddAppointment(ActionEvent event) throws IOException {
+        System.out.println(timeStartTime.getValue().getClass().getSimpleName());
+
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));
         stage.setScene(new Scene(scene));
@@ -96,8 +107,11 @@ public class AddAppointmentController implements Initializable {
         Customer customer = getCustomer(txtCustomerName.getText());
 
         int duration = (cmbDuration.getSelectionModel().getSelectedIndex() + 1) * 15;
+        LocalDate localStartDate = dateStartDate.getValue();
+        LocalTime localStartTime = timeStartTime.getValue();
+        LocalTime localEndTime = timeStartTime.getValue().plusMinutes(duration);
 
-        if (dateStartDate.getValue() == null || timeStartTime.getValue() == null) {
+        if (localStartDate == null || localStartTime == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error adding appointment");
             alert.setHeaderText("Date or time not selected");
@@ -105,9 +119,21 @@ public class AddAppointmentController implements Initializable {
 
             alert.showAndWait();
 
+            // alert user if appointment lands outside of business hours
+        } else if (localStartTime.isBefore(startOfBusiness) || localEndTime.isAfter(endOfBusiness)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding appointment");
+            alert.setHeaderText("Outside of business hours");
+            alert.setContentText("Please select a new appointment time.");
+
+            alert.showAndWait();
+
         } else {
-            String startTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().format(TimeFiles.TIME_FORMATTER);
-            String endTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue().plusMinutes(duration).format(TimeFiles.TIME_FORMATTER);
+            String startTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + OffsetTime.of(timeStartTime.getValue(), OffsetTime.now().getOffset()).format(TimeFiles.TIME_FORMATTER);
+            String endTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + OffsetTime.of(timeStartTime.getValue().plusMinutes(duration), OffsetTime.now().getOffset()).format(TimeFiles.TIME_FORMATTER);
+
+            System.out.println(startTime);
+            System.out.println(endTime);
 
             if (customer == null) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -231,9 +257,21 @@ public class AddAppointmentController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         cmbDuration.getItems().addAll("15 minutes", "30 minutes", "45 minutes", "60 minutes");
         try {
-            txtAppointmentID.setText(Integer.toString(MainController.getAllAppointments(null).size() + 1));
+            txtAppointmentID.setText(Integer.toString(CustomerDaoImpl.getMaxAppointmentID()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // disable weekends and past days so that appointments can't be scheduled for those dates
+        dateStartDate.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty ||
+                    date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                    date.getDayOfWeek() == DayOfWeek.SUNDAY ||
+                    date.isBefore(LocalDate.now()));
+            }
+        });
     }
 }

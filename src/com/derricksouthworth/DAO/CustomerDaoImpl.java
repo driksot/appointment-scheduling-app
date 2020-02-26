@@ -276,8 +276,8 @@ public class CustomerDaoImpl {
             addAppointment.setString(4, appointment.getLocation());
             addAppointment.setString(5, appointment.getContact());
             addAppointment.setString(6, appointment.getType());
-            addAppointment.setString(7, appointment.getStart());
-            addAppointment.setString(8, appointment.getEnd());
+            addAppointment.setDate(7, stringToDate(appointment.getStart()));
+            addAppointment.setDate(8, stringToDate(appointment.getEnd()));
             addAppointment.setString(9, currentUser);
             addAppointment.setString(10, currentUser);
 
@@ -610,6 +610,38 @@ public class CustomerDaoImpl {
     //******************************************************************************************************************
     //  UTILITY METHODS
     //******************************************************************************************************************
+
+    public static int getMaxAppointmentID() throws SQLException {
+        int maxID = 0;
+        Statement statement = null;
+        String sqlStatement = Query.QUERY_MAX_ID_FROM_APPOINTMENT;
+        ResultSet result = null;
+
+        try {
+            // Avoid committing before transaction is complete
+            conn.setAutoCommit(false);
+
+            statement = conn.createStatement();
+            result = statement.executeQuery(sqlStatement);
+            if(result.next()) {
+                maxID = result.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Unable to get max appointment ID: " + e.getMessage());
+
+            // close jdbc resources
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (result != null) {
+                result.close();
+            }
+            conn.setAutoCommit(true);
+        }
+        return maxID + 1;
+    }
 
     /**
      * Query to get new max ID for Address Table

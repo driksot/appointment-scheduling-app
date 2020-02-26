@@ -347,6 +347,14 @@ public class Query {
     //  UTILITY QUERIES
     //******************************************************************************************************************
 
+    // Get max Customer ID from Customer table
+    public static final String QUERY_MAX_ID_FROM_CUSTOMER =
+            "SELECT MAX(" + COLUMN_CUSTOMER_ID + ") FROM " + TABLE_CUSTOMER;
+
+    // Get max Appointment ID from Appointment table
+    public static final String QUERY_MAX_ID_FROM_APPOINTMENT =
+            "SELECT MAX(" + COLUMN_APPOINTMENT_ID + ") FROM " + TABLE_APPOINTMENT;
+
     // Get max Address ID from Address table
     public static final String QUERY_MAX_ID_FROM_ADDRESS =
             "SELECT MAX(" + COLUMN_ADDRESS_ID + ") FROM " + TABLE_ADDRESS;

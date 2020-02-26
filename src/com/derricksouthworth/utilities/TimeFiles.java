@@ -1,5 +1,6 @@
 package com.derricksouthworth.utilities;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -14,9 +15,12 @@ import java.util.TimeZone;
 
 public class TimeFiles {
 
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss a Z");
+//    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("kk:mm:ss");
+//    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("kk:mm:ss.SSSSSSSSS");
+    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("kk:mm:ss a Z");
+
 
     /**
      * Convert given String to Calendar
@@ -26,7 +30,7 @@ public class TimeFiles {
      */
     public static Calendar stringToCalendar (String strDate) throws ParseException {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a Z");
         cal.setTime(sdf.parse(strDate));
         return cal;
     }
@@ -40,6 +44,8 @@ public class TimeFiles {
     public static String timeToUTC(String time) throws ParseException {
         Calendar calendar = stringToCalendar(time);
         ZonedDateTime toUTC = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.of("UTC"));
+        System.out.println(toUTC);
+        System.out.println(toUTC.format(DATE_TIME_FORMATTER));
         return toUTC.format(DATE_TIME_FORMATTER);
     }
 
@@ -62,5 +68,21 @@ public class TimeFiles {
         TimeZone.setDefault(TimeZone.getTimeZone(localTimeZone.getID()));
         ZonedDateTime toLocal = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
         return toLocal.format(DATE_TIME_FORMATTER);
+    }
+
+    public static Date stringToDate(String date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a Z"); // your template here
+        java.util.Date dateStr = null;
+        try {
+            dateStr = formatter.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (dateStr != null) {
+            return new Date(dateStr.getTime());
+        }
+
+        return null;
     }
 }
