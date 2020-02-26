@@ -1,10 +1,12 @@
 package com.derricksouthworth.utilities;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -15,12 +17,8 @@ import java.util.TimeZone;
 
 public class TimeFiles {
 
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss a Z");
-//    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("kk:mm:ss.SSSSSSSSS");
-    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("kk:mm:ss a Z");
-
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
+//    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
 
     /**
      * Convert given String to Calendar
@@ -30,59 +28,39 @@ public class TimeFiles {
      */
     public static Calendar stringToCalendar (String strDate) throws ParseException {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a Z");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         cal.setTime(sdf.parse(strDate));
         return cal;
     }
 
     /**
-     * Convert string time from local to UTC time
-     * @param time
+     * convert LocalDateTime from POJO to UTC Timestamp to store in database
+     * @param ldt
      * @return
-     * @throws ParseException
      */
-    public static String timeToUTC(String time) throws ParseException {
-        Calendar calendar = stringToCalendar(time);
-        ZonedDateTime toUTC = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.of("UTC"));
-        System.out.println(toUTC);
-        System.out.println(toUTC.format(DATE_TIME_FORMATTER));
-        return toUTC.format(DATE_TIME_FORMATTER);
+    public static Timestamp timeToUTC(LocalDateTime ldt) {
+        ZonedDateTime utcTime = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
+        return Timestamp.valueOf(String.valueOf(utcTime));
     }
 
     /**
-     * Convert string time from UTC to local time
-     * @param time
+     * convert UTC Timestamp from database to LocalDateTime for timezone change
+     * and POJO creation
+     * @param ts
      * @return
-     * @throws ParseException
      */
-    public static String timeToLocal(String time) throws ParseException {
-        // Save system timezone to set default back to correct value later
+    public static LocalDateTime timeToLocal(Timestamp ts) {
+        System.out.println(ts);
+        LocalDateTime ldt = ts.toLocalDateTime();
+        System.out.println(ldt);
         TimeZone localTimeZone = TimeZone.getDefault();
-
-        // Set default timezone to UTC so that Calendar object will be instantiated in UTC timezone to match
-        // string time timezone from database
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        Calendar calendar = stringToCalendar(time);
-
-        // Reset default timezone to correct local timezone
-        TimeZone.setDefault(TimeZone.getTimeZone(localTimeZone.getID()));
-        ZonedDateTime toLocal = ZonedDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
-        return toLocal.format(DATE_TIME_FORMATTER);
-    }
-
-    public static Date stringToDate(String date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a Z"); // your template here
-        java.util.Date dateStr = null;
-        try {
-            dateStr = formatter.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if (dateStr != null) {
-            return new Date(dateStr.getTime());
-        }
-
-        return null;
+        ZonedDateTime utczdt = ldt.atZone(ZoneId.systemDefault());
+        System.out.println(utczdt);
+        TimeZone.setDefault(localTimeZone);
+        ZonedDateTime localzdt = utczdt.withZoneSameInstant(ZoneId.systemDefault());
+        System.out.println(localzdt);
+        System.out.println(localzdt.toLocalDateTime());
+        return localzdt.toLocalDateTime();
     }
 }

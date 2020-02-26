@@ -17,8 +17,8 @@ public class Appointment {
     private String location;
     private String contact;
     private String type;
-    private String start;
-    private String end;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private Calendar createDate;
     private String createdBy;
     private Calendar lastUpdate;
@@ -39,7 +39,7 @@ public class Appointment {
      * @param lastUpdate
      * @param lastUpdateBy
      */
-    public Appointment(int appointmentID, String customer, int userID, String location, String contact, String type, String start, String end, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdateBy) {
+    public Appointment(int appointmentID, String customer, int userID, String location, String contact, String type, LocalDateTime start, LocalDateTime end, Calendar createDate, String createdBy, Calendar lastUpdate, String lastUpdateBy) {
         this.appointmentID = appointmentID;
         this.customer = customer;
         this.userID = userID;
@@ -65,7 +65,7 @@ public class Appointment {
      * @param start
      * @param end
      */
-    public Appointment(int appointmentID, String customer, int userID, String location, String contact, String type, String start, String end) {
+    public Appointment(int appointmentID, String customer, int userID, String location, String contact, String type, LocalDateTime start, LocalDateTime end) {
         this.appointmentID = appointmentID;
         this.customer = customer;
         this.userID = userID;
@@ -102,11 +102,11 @@ public class Appointment {
         return type;
     }
 
-    public String getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public String getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
@@ -152,11 +152,11 @@ public class Appointment {
         this.type = type;
     }
 
-    public void setStart(String start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public void setEnd(String end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 

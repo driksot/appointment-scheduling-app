@@ -2,7 +2,6 @@ package com.derricksouthworth.DAO;
 
 import com.derricksouthworth.model.Appointment;
 import com.derricksouthworth.model.Customer;
-import com.derricksouthworth.utilities.TimeFiles;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -11,10 +10,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -276,8 +275,8 @@ public class CustomerDaoImpl {
             addAppointment.setString(4, appointment.getLocation());
             addAppointment.setString(5, appointment.getContact());
             addAppointment.setString(6, appointment.getType());
-            addAppointment.setDate(7, stringToDate(appointment.getStart()));
-            addAppointment.setDate(8, stringToDate(appointment.getEnd()));
+            addAppointment.setTimestamp(7, timeToUTC(appointment.getStart()));
+            addAppointment.setTimestamp(8, timeToUTC(appointment.getEnd()));
             addAppointment.setString(9, currentUser);
             addAppointment.setString(10, currentUser);
 
@@ -339,8 +338,8 @@ public class CustomerDaoImpl {
                 String location = result.getString(Query.COLUMN_LOCATION);
                 String contact = result.getString(Query.COLUMN_CONTACT);
                 String type = result.getString(Query.COLUMN_TYPE);
-                String start = TimeFiles.timeToLocal(result.getString(Query.COLUMN_START));
-                String end = TimeFiles.timeToLocal(result.getString(Query.COLUMN_END));
+                LocalDateTime start = timeToLocal(result.getTimestamp(Query.COLUMN_START));
+                LocalDateTime end = timeToLocal(result.getTimestamp(Query.COLUMN_END));
                 Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
                 String createdBy = result.getString(Query.COLUMN_CREATED_BY);
                 Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
@@ -394,8 +393,8 @@ public class CustomerDaoImpl {
                 String location = result.getString(Query.COLUMN_LOCATION);
                 String contact = result.getString(Query.COLUMN_CONTACT);
                 String type = result.getString(Query.COLUMN_TYPE);
-                String start = result.getString(Query.COLUMN_START);
-                String end = result.getString(Query.COLUMN_END);
+                LocalDateTime start = result.getTimestamp(Query.COLUMN_START).toLocalDateTime();
+                LocalDateTime end = result.getTimestamp(Query.COLUMN_END).toLocalDateTime();
                 Calendar createDate = stringToCalendar(result.getString(Query.COLUMN_CREATE_DATE));
                 String createdBy = result.getString(Query.COLUMN_CREATED_BY);
                 Calendar lastUpdate = stringToCalendar(result.getString(Query.COLUMN_LAST_UPDATE));
@@ -433,10 +432,12 @@ public class CustomerDaoImpl {
      * @return
      * @throws SQLException
      */
-    public static boolean isOverlappingAppointmentTime(String contact, Calendar appointmentStart, Calendar appointmentEnd) throws SQLException {
+    public static boolean isOverlappingAppointmentTime(String contact, LocalDateTime appointmentStart, LocalDateTime appointmentEnd) throws SQLException {
         Statement statement = null;
         String sqlStatement = String.format("%s%s\"", Query.GET_APPOINTMENT_TIMES_FOR_CONTACT, contact);
         ResultSet result = null;
+        Timestamp startTs = Timestamp.valueOf(appointmentStart);
+        Timestamp endTs = Timestamp.valueOf(appointmentEnd);
 
         try {
             // Avoid committing before transaction is complete
@@ -446,21 +447,17 @@ public class CustomerDaoImpl {
             result = statement.executeQuery(sqlStatement);
 
             while (result.next()) {
-                Calendar startTime = stringToCalendar(result.getString(Query.COLUMN_START));
-                Calendar endTime = stringToCalendar(result.getString(Query.COLUMN_END));
+                Timestamp startTime = result.getTimestamp(Query.COLUMN_START);
+                Timestamp endTime = result.getTimestamp(Query.COLUMN_END);
 
-                if ((appointmentStart.after(startTime) && appointmentStart.before(endTime)) ||
-                        (appointmentEnd.after(startTime) && appointmentEnd.before(endTime))) {
+                if ((startTs.after(startTime) && startTs.before(endTime)) ||
+                        (endTs.after(startTime) && endTs.before(endTime))) {
                     return true;
                 }
             }
         } catch (SQLException e) {
             System.out.println("SQL error: " + e.getMessage());
 
-        } catch (ParseException e) {
-            System.out.println("Parsing error: " + e.getMessage());
-
-            // close jdbc resources and commit transaction
         } finally {
             if (statement != null) {
                 statement.close();
@@ -492,8 +489,8 @@ public class CustomerDaoImpl {
             updateAppointment.setString(3, appointment.getLocation());
             updateAppointment.setString(4, appointment.getContact());
             updateAppointment.setString(5, appointment.getType());
-            updateAppointment.setString(6, appointment.getStart());
-            updateAppointment.setString(7, appointment.getEnd());
+            updateAppointment.setTimestamp(6, timeToUTC(appointment.getStart()));
+            updateAppointment.setTimestamp(7, timeToUTC(appointment.getEnd()));
             updateAppointment.setString(8, currentUser);
             updateAppointment.setInt(9, appointment.getAppointmentID());
 

@@ -23,10 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetTime;
+import java.time.*;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -129,8 +126,8 @@ public class AddAppointmentController implements Initializable {
             alert.showAndWait();
 
         } else {
-            String startTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + OffsetTime.of(timeStartTime.getValue(), OffsetTime.now().getOffset()).format(TimeFiles.TIME_FORMATTER);
-            String endTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + OffsetTime.of(timeStartTime.getValue().plusMinutes(duration), OffsetTime.now().getOffset()).format(TimeFiles.TIME_FORMATTER);
+            LocalDateTime startTime = LocalDateTime.of(localStartDate, localStartTime);
+            LocalDateTime endTime = LocalDateTime.of(localStartDate, localEndTime);
 
             System.out.println(startTime);
             System.out.println(endTime);
@@ -168,13 +165,11 @@ public class AddAppointmentController implements Initializable {
                 String location = txtLocation.getText();
                 String contact = txtContact.getText();
                 String type = txtType.getText();
-                String start = TimeFiles.timeToUTC(startTime);
-                String end = TimeFiles.timeToUTC(endTime);
 
                 Appointment addAppointment = new Appointment(appointmentID, customerName, userID, location, contact, type,
-                        start, end);
+                        startTime, endTime);
 
-                if (CustomerDaoImpl.isOverlappingAppointmentTime(contact, stringToCalendar(start), stringToCalendar(end))) {
+                if (CustomerDaoImpl.isOverlappingAppointmentTime(contact, startTime, endTime)) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error adding appointment");
                     alert.setHeaderText(contact + " has another appointment at this time.");

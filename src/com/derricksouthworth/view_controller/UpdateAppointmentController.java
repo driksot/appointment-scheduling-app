@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -98,6 +101,9 @@ public class UpdateAppointmentController implements Initializable {
         Customer customer = getCustomer(txtCustomerName.getText());
 
         int duration = (cmbDuration.getSelectionModel().getSelectedIndex() + 1) * 15;
+        LocalDate localStartDate = dateStartDate.getValue();
+        LocalTime localStartTime = timeStartTime.getValue();
+        LocalTime localEndTime = timeStartTime.getValue().plusMinutes(duration);
 
         if (dateStartDate.getValue() == null || timeStartTime.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -109,10 +115,8 @@ public class UpdateAppointmentController implements Initializable {
 
         } else {
 
-            String startTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue()
-                    .format(TimeFiles.TIME_FORMATTER);
-            String endTime = dateStartDate.getValue().format(TimeFiles.DATE_FORMATTER) + " " + timeStartTime.getValue()
-                    .plusMinutes(duration).format(TimeFiles.TIME_FORMATTER);
+            LocalDateTime startTime = LocalDateTime.of(localStartDate, localStartTime);
+            LocalDateTime endTime = LocalDateTime.of(localStartDate, localEndTime);
 
             if (customer == null) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -145,13 +149,11 @@ public class UpdateAppointmentController implements Initializable {
                 String location = txtLocation.getText();
                 String contact = txtContact.getText();
                 String type = txtType.getText();
-                String start = TimeFiles.timeToUTC(startTime);
-                String end = TimeFiles.timeToUTC(endTime);
 
                 Appointment updateAppointment = new Appointment(appointmentID, customerName, userID, location, contact, type,
-                        start, end);
+                        startTime, endTime);
 
-                if (CustomerDaoImpl.isOverlappingAppointmentTime(contact, stringToCalendar(start), stringToCalendar(end))) {
+                if (CustomerDaoImpl.isOverlappingAppointmentTime(contact, startTime, endTime)) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error adding appointment");
                     alert.setHeaderText(contact + " has another appointment at this time.");

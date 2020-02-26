@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -85,9 +86,9 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Appointment, String> colAppointmentContact;
     @FXML
-    private TableColumn<Appointment, Calendar> colAppointmentStart;
+    private TableColumn<Appointment, LocalDateTime> colAppointmentStart;
     @FXML
-    private TableColumn<Appointment, Calendar> colAppointmentEnd;
+    private TableColumn<Appointment, LocalDateTime> colAppointmentEnd;
 
     //******************************************************************************************************************
     //******************************************************************************************************************
