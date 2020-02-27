@@ -18,7 +18,7 @@ import java.util.TimeZone;
 public class TimeFiles {
 
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
-//    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT);
+    public static final DateTimeFormatter TS_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Convert given String to Calendar
@@ -40,7 +40,8 @@ public class TimeFiles {
      */
     public static Timestamp timeToUTC(LocalDateTime ldt) {
         ZonedDateTime utcTime = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
-        return Timestamp.valueOf(String.valueOf(utcTime));
+        String utcTimeString = utcTime.format(TS_DATE_TIME_FORMATTER);
+        return Timestamp.valueOf(utcTimeString);
     }
 
     /**
