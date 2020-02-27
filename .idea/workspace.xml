@@ -5,10 +5,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ScheduleLog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ScheduleLog.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/DAO/CustomerDaoImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/DAO/CustomerDaoImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/utilities/TimeFiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/utilities/TimeFiles.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/view_controller/AddAppointmentController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/view_controller/AddAppointmentController$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/view_controller/AddAppointmentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/view_controller/AddAppointmentController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/utilities/TimeFiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/utilities/TimeFiles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/view_controller/UpdateAppointmentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/appointment-scheduling-app/com/derricksouthworth/view_controller/UpdateAppointmentController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/DAO/CustomerDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/DAO/CustomerDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/AddAppointmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/AddAppointmentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/UpdateAppointmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/derricksouthworth/view_controller/UpdateAppointmentController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -344,31 +346,31 @@
     <state x="-664" y="397" key="FileChooserDialogImpl/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@-1080.-102.1080.1880" timestamp="1581617768327" />
     <state x="740" y="276" key="FileChooserDialogImpl/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581652303604" />
     <state x="2336" y="397" key="FileChooserDialogImpl/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@1920.-102.1080.1880" timestamp="1580354732195" />
-    <state width="1238" height="212" key="GridCell.Tab.0.bottom" timestamp="1582824670503">
+    <state width="1238" height="212" key="GridCell.Tab.0.bottom" timestamp="1582829510882">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="212" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1582824670503" />
+    <state width="1238" height="212" key="GridCell.Tab.0.bottom/0.0.1280.800@0.0.1280.800" timestamp="1582829510882" />
     <state width="1238" height="212" key="GridCell.Tab.0.bottom/0.23.1280.722@0.23.1280.722" timestamp="1582315160834" />
     <state width="1877" height="281" key="GridCell.Tab.0.bottom/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581749487979" />
     <state width="1037" height="281" key="GridCell.Tab.0.bottom/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@1920.-102.1080.1880" timestamp="1580554464468" />
-    <state width="1238" height="212" key="GridCell.Tab.0.center" timestamp="1582824670501">
+    <state width="1238" height="212" key="GridCell.Tab.0.center" timestamp="1582829510880">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="212" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1582824670501" />
+    <state width="1238" height="212" key="GridCell.Tab.0.center/0.0.1280.800@0.0.1280.800" timestamp="1582829510880" />
     <state width="1238" height="212" key="GridCell.Tab.0.center/0.23.1280.722@0.23.1280.722" timestamp="1582315160833" />
     <state width="1877" height="281" key="GridCell.Tab.0.center/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581749487979" />
     <state width="1037" height="281" key="GridCell.Tab.0.center/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@1920.-102.1080.1880" timestamp="1580554464468" />
-    <state width="1238" height="212" key="GridCell.Tab.0.left" timestamp="1582824670500">
+    <state width="1238" height="212" key="GridCell.Tab.0.left" timestamp="1582829510879">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="212" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1582824670500" />
+    <state width="1238" height="212" key="GridCell.Tab.0.left/0.0.1280.800@0.0.1280.800" timestamp="1582829510879" />
     <state width="1238" height="212" key="GridCell.Tab.0.left/0.23.1280.722@0.23.1280.722" timestamp="1582315160832" />
     <state width="1877" height="281" key="GridCell.Tab.0.left/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581749487979" />
     <state width="1037" height="281" key="GridCell.Tab.0.left/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@1920.-102.1080.1880" timestamp="1580554464467" />
-    <state width="1238" height="212" key="GridCell.Tab.0.right" timestamp="1582824670502">
+    <state width="1238" height="212" key="GridCell.Tab.0.right" timestamp="1582829510881">
       <screen x="0" y="0" width="1280" height="800" />
     </state>
-    <state width="1238" height="212" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1582824670502" />
+    <state width="1238" height="212" key="GridCell.Tab.0.right/0.0.1280.800@0.0.1280.800" timestamp="1582829510881" />
     <state width="1238" height="212" key="GridCell.Tab.0.right/0.23.1280.722@0.23.1280.722" timestamp="1582315160833" />
     <state width="1877" height="281" key="GridCell.Tab.0.right/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@0.0.1920.1040" timestamp="1581749487979" />
     <state width="1037" height="281" key="GridCell.Tab.0.right/1920.-102.1080.1880/-1080.-102.1080.1880/0.0.1920.1040@1920.-102.1080.1880" timestamp="1580554464468" />

@@ -81,6 +81,8 @@ public class UpdateAppointmentController implements Initializable {
     //  OTHER GLOBAL VARIABLES
     //******************************************************************************************************************
 
+    private LocalTime startOfBusiness = LocalTime.of(9, 0);
+    private LocalTime endOfBusiness = LocalTime.of(17, 0);
     private static Appointment appointmentToUpdate;
 
     //******************************************************************************************************************
@@ -110,6 +112,15 @@ public class UpdateAppointmentController implements Initializable {
             alert.setTitle("Error adding appointment");
             alert.setHeaderText("Date or time not selected");
             alert.setContentText("Please select a date and time.");
+
+            alert.showAndWait();
+
+            // alert user if appointment lands outside of business hours
+        } else if (localStartTime.isBefore(startOfBusiness) || localEndTime.isAfter(endOfBusiness)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error adding appointment");
+            alert.setHeaderText("Outside of business hours");
+            alert.setContentText("Please select a new appointment time.");
 
             alert.showAndWait();
 

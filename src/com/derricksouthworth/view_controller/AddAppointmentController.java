@@ -91,8 +91,6 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     void cancelAddAppointment(ActionEvent event) throws IOException {
-        System.out.println(timeStartTime.getValue().getClass().getSimpleName());
-
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         Parent scene = FXMLLoader.load(getClass().getResource("main.fxml"));
         stage.setScene(new Scene(scene));

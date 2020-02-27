@@ -444,8 +444,6 @@ public class CustomerDaoImpl {
         Statement statement = null;
         String sqlStatement = String.format("%s%s\"", Query.GET_APPOINTMENT_TIMES_FOR_CONTACT, contact);
         ResultSet result = null;
-        Timestamp startTs = Timestamp.valueOf(appointmentStart);
-        Timestamp endTs = Timestamp.valueOf(appointmentEnd);
 
         try {
             // Avoid committing before transaction is complete
@@ -458,8 +456,8 @@ public class CustomerDaoImpl {
                 Timestamp startTime = result.getTimestamp(Query.COLUMN_START);
                 Timestamp endTime = result.getTimestamp(Query.COLUMN_END);
 
-                if ((startTs.after(startTime) && startTs.before(endTime)) ||
-                        (endTs.after(startTime) && endTs.before(endTime))) {
+                if ((appointmentStart.isAfter(timeToLocal(startTime)) && appointmentStart.isBefore(timeToLocal(endTime))) ||
+                        (appointmentEnd.isAfter(timeToLocal(startTime)) && appointmentEnd.isBefore(timeToLocal(endTime)))) {
                     return true;
                 }
             }
