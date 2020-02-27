@@ -2,7 +2,6 @@ package com.derricksouthworth.DAO;
 
 import com.derricksouthworth.model.Appointment;
 import com.derricksouthworth.model.Customer;
-import com.derricksouthworth.utilities.TimeFiles;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -578,11 +577,12 @@ public class CustomerDaoImpl {
             for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
                 final int j = i;
                 TableColumn col = new TableColumn(result.getMetaData().getColumnName(i + 1));
-                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
-                        return new SimpleStringProperty(param.getValue().get(j).toString());
-                    }
-                });
+
+                // use lambda to assign value to newly created table column
+                col.setCellValueFactory(
+                        (Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>)
+                                param -> new SimpleStringProperty(param.getValue().get(j).toString()));
+
                 tblReports.getColumns().addAll(col);
             }
 

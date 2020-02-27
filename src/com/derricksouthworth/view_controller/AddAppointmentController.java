@@ -257,16 +257,19 @@ public class AddAppointmentController implements Initializable {
             e.printStackTrace();
         }
 
-        // disable weekends and past days so that appointments can't be scheduled for those dates
-        dateStartDate.setDayCellFactory(picker -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                setDisable(empty ||
-                    date.getDayOfWeek() == DayOfWeek.SATURDAY ||
-                    date.getDayOfWeek() == DayOfWeek.SUNDAY ||
-                    date.isBefore(LocalDate.now()));
-            }
+        // use lambda to disable weekends and past days so that appointments can't be scheduled for
+        // those dates
+        dateStartDate.setDayCellFactory(picker -> {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate date, boolean empty) {
+                    super.updateItem(date, empty);
+                    setDisable(empty ||
+                            date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                            date.getDayOfWeek() == DayOfWeek.SUNDAY ||
+                            date.isBefore(LocalDate.now()));
+                }
+            };
         });
     }
 }
